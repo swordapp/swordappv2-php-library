@@ -26,10 +26,10 @@ class SWORDAPPClient {
 		array_push($headers, $sal_useragent);
 		if (!empty($sac_obo)) {
 			array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
-	        }
-	        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);	
+        }
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 		$sac_resp = curl_exec($sac_curl);
-	        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
 		curl_close($sac_curl);
 		
 		// Parse the result
@@ -37,8 +37,8 @@ class SWORDAPPClient {
 			try {
 				$sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status, $sac_resp);
 			} catch (Exception $e) {
-                		throw new Exception("Error parsing service document (" . $e->getMessage() . ")");
-                	}
+                throw new Exception("Error parsing service document (" . $e->getMessage() . ")");
+            }
 		} else {
 			$sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status);
 		}	
@@ -51,7 +51,7 @@ class SWORDAPPClient {
 	// on-behalf-of the specified user, and with the given file and formatnamespace and noop setting
 	function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, 
 	                 $sac_packaging= '', $sac_contenttype = '', 
-			 $sac_noop = false, $sac_verbose = false) {
+        			 $sac_noop = false, $sac_verbose = false) {
 		// Perform the deposit
 		$sac_curl = curl_init();
 
@@ -62,8 +62,8 @@ class SWORDAPPClient {
 		curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($sac_curl, CURLOPT_POST, true);
 		if(!empty($sac_u) && !empty($sac_p)) {
-	                curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-	        }
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+        }
 		$headers = array();
 		global $sal_useragent;
 		array_push($headers, $sal_useragent);
@@ -71,30 +71,30 @@ class SWORDAPPClient {
 		array_push($headers, "Content-MD5: " . $sac_md5);
 		if (!empty($sac_obo)) {
 			array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
-	        }
+        }
 		if (!empty($sac_packaging)) {
 			array_push($headers, "X-Packaging: " . $sac_packaging);
-	        }
+        }
 		if (!empty($sac_contenttype)) {
 			array_push($headers, "Content-Type: " . $sac_contenttype);
-	        }
+        }
 		array_push($headers, "Content-Length: " . filesize($sac_fname));
 		if ($sac_noop == true) {
 			array_push($headers, "X-No-Op: true");
-	        }
+        }
 		if ($sac_verbose == true) {
 			array_push($headers, "X-Verbose: true");
-	        }
+        }
 		$index = strpos(strrev($sac_fname), '/');
         if ($index === false) {
-                $index = strlen($sac_fname) - $index;
-                $sac_fname_trimmed = substr($sac_fname, $index);
+            $index = strlen($sac_fname) - $index;
+            $sac_fname_trimmed = substr($sac_fname, $index);
         } else {
-                $sac_fname_trimmed = $sac_fname;
+            $sac_fname_trimmed = $sac_fname;
         }
 		array_push($headers, "Content-Disposition: filename=" . $sac_fname_trimmed);
 		curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
-	        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 		
 		$sac_resp = curl_exec($sac_curl);
 		$sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
@@ -108,7 +108,7 @@ class SWORDAPPClient {
 			try {
 				// Get the deposit results
 				$sac_xml = @new SimpleXMLElement($sac_resp);
-		        	$sac_ns = $sac_xml->getNamespaces(true);
+                $sac_ns = $sac_xml->getNamespaces(true);
 
 				// Build the deposit response object
 				$sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
@@ -122,7 +122,7 @@ class SWORDAPPClient {
 				
 				// Get the deposit results
 				$sac_xml = @new SimpleXMLElement($sac_resp);
-		        	$sac_ns = $sac_xml->getNamespaces(true);
+                $sac_ns = $sac_xml->getNamespaces(true);
 
 				// Build the deposit response object
 				$sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
@@ -218,7 +218,7 @@ class SWORDAPPClient {
 			try {
 				// Get the deposit results
 				$sac_xml = @new SimpleXMLElement($sac_resp);
-		        	$sac_ns = $sac_xml->getNamespaces(true);
+		        $sac_ns = $sac_xml->getNamespaces(true);
 
 				// Build the deposit response object
 				$sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
@@ -232,7 +232,7 @@ class SWORDAPPClient {
 
 				// Get the deposit results
 				$sac_xml = @new SimpleXMLElement($sac_resp);
-		        	$sac_ns = $sac_xml->getNamespaces(true);
+		        $sac_ns = $sac_xml->getNamespaces(true);
 
 				// Build the deposit response object
 				$sac_dresponse->buildhierarchy($sac_xml, $sac_ns);

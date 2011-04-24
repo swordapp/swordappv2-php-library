@@ -16,7 +16,7 @@ class SWORDAPPEntry {
 	// The atom:id identifier
 	public $sac_id;
 
-	// The atom:content value
+	// The atom:content values
 	public $sac_content_src;
 	public $sac_content_type;
 	

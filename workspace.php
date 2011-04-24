@@ -25,7 +25,6 @@ class Workspace {
 			$sac_newcollection = new Collection(sac_clean($sac_collection->children($sac_ns['atom'])->title));
 			
 			// The location of the service document
-			//var_dump($sac_colls);
 			$href = $sac_collection->xpath("@href");
 			$sac_newcollection->sac_href = $href[0]['href'];
 			
@@ -43,7 +42,7 @@ class Workspace {
 			$sac_newcollection->sac_collpolicy = sac_clean($sac_collection->children($sac_ns['sword'])->collectionPolicy);
 			
 			// Add the collection abstract
-			// Check if dcterms is in the known namspaces. If not, might not be an abstract
+			// Check if dcterms is in the known namespaces. If not, might not be an abstract
 			if (array_key_exists('dcterms', $sac_ns)) {
 				$sac_newcollection->sac_abstract = sac_clean($sac_collection->children($sac_ns['dcterms'])->abstract);
 			}

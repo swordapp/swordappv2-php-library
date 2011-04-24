@@ -20,7 +20,7 @@ class SWORDAPPErrorDocument extends SWORDAPPEntry {
 		parent::buildhierarchy($sac_dr, $sac_ns);
 		foreach($sac_dr->attributes() as $key => $value) {
 		    if ($key == 'href') {
-			//$this->sac_erroruri = (string)$value;
+			    $this->sac_erroruri = (string)$value;
 		    }
 		}
 		$this->sac_erroruri = (string)$sac_dr->attributes()->href;

@@ -61,17 +61,16 @@ class SWORDAPPServiceDocument {
 		// Parse the xml if there is some
 		if ($sac_thexml != '') {
 			$sac_xml = @new SimpleXMLElement($sac_thexml);
-        	        $sac_ns = $sac_xml->getNamespaces(true);
+        	$sac_ns = $sac_xml->getNamespaces(true);
 			$this->sac_version = $sac_xml->children($sac_ns['sword'])->version;
-	                $this->sac_verbose = $sac_xml->children($sac_ns['sword'])->verbose;
-        	        $this->sac_noop = $sac_xml->children($sac_ns['sword'])->noOp;
-                	$this->sac_maxuploadsize = $sac_xml->children($sac_ns['sword'])->maxUploadSize;
+            $this->sac_verbose = $sac_xml->children($sac_ns['sword'])->verbose;
+            $this->sac_noop = $sac_xml->children($sac_ns['sword'])->noOp;
+            $this->sac_maxuploadsize = $sac_xml->children($sac_ns['sword'])->maxUploadSize;
 				
 			// Build the workspaces
 			$sac_ws = @$sac_xml->children($sac_ns['app']);
 			foreach ($sac_ws as $sac_workspace) {
-				$sac_newworkspace = new Workspace(
-			        	            $sac_workspace->children($sac_ns['atom'])->title);
+				$sac_newworkspace = new Workspace($sac_workspace->children($sac_ns['atom'])->title);
 				$sac_newworkspace->buildhierarchy(@$sac_workspace->children($sac_ns['app']), $sac_ns);
 				$this->sac_workspaces[] = $sac_newworkspace;
 			}
