@@ -3,7 +3,7 @@
 require("swordappservicedocument.php");
 require("swordappentry.php");
 require("swordapperrordocument.php");
-require("swordapplibraryversion.php");
+require("swordapplibraryuseragent.php");
 
 class SWORDAPPClient {
 	
@@ -19,12 +19,11 @@ class SWORDAPPClient {
 		
 		curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
 		if(!empty($sac_u) && !empty($sac_p)) {
-	                curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-	        }
+	        curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+	    }
 		$headers = array();
-		global $sal_version;
-		array_push($headers, "User-Agent: SWORDAPP PHP library (version " . $sal_version . ") " .
-		                     "http://php.swordapp.org/");
+		global $sal_useragent;
+		array_push($headers, $sal_useragent);
 		if (!empty($sac_obo)) {
 			array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
 	        }
@@ -66,9 +65,8 @@ class SWORDAPPClient {
 	                curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
 	        }
 		$headers = array();
-		global $sal_version;
-		array_push($headers, "User-Agent: SWORDAPP PHP library (version " . $sal_version . ") " .
-		                     "http://php.swordapp.org/");
+		global $sal_useragent;
+		array_push($headers, $sal_useragent);
 		$sac_md5 = md5_file($sac_fname);
 		array_push($headers, "Content-MD5: " . $sac_md5);
 		if (!empty($sac_obo)) {
@@ -88,12 +86,12 @@ class SWORDAPPClient {
 			array_push($headers, "X-Verbose: true");
 	        }
 		$index = strpos(strrev($sac_fname), '/');
-                if ($index) {
-                        $index = strlen($sac_fname) - $index;
-                        $sac_fname_trimmed = substr($sac_fname, $index);
-                } else {
-                        $sac_filename_trimmed = $sac_fname;
-	        }
+        if ($index === false) {
+                $index = strlen($sac_fname) - $index;
+                $sac_fname_trimmed = substr($sac_fname, $index);
+        } else {
+                $sac_fname_trimmed = $sac_fname;
+        }
 		array_push($headers, "Content-Disposition: filename=" . $sac_fname_trimmed);
 		curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
 	        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
@@ -105,7 +103,7 @@ class SWORDAPPClient {
 		// Parse the result
 		$sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
 
-		// Was it a succesful result?
+		// Was it a successful result?
 		if (($sac_status >= 200) || ($sac_status < 300)) {
 			try {
 				// Get the deposit results
@@ -184,15 +182,14 @@ class SWORDAPPClient {
 		curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
 		curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($sac_curl, CURLOPT_POST, true);
-        curl_setopt($sac_curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        //curl_setopt($sac_curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
 
         if(!empty($sac_u) && !empty($sac_p)) {
            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
 	    }
 		$headers = array();
-		global $sal_version;
-		array_push($headers, "User-Agent: SWORDAPP PHP library (version " . $sal_version . ") " .
-		                     "http://php.swordapp.org/");
+		global $sal_useragent;
+		array_push($headers, $sal_useragent);
 		$sac_md5 = md5_file($sac_package);
 		array_push($headers, "Content-MD5: " . $sac_md5);
 		if (!empty($sac_obo)) {
