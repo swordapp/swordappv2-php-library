@@ -70,10 +70,13 @@ class SWORDAPPEntry {
 			case 202:
 				$this->sac_statusmessage = "Accepted";
 				break;
-			case 401:
-				$this->sac_statusmessage = "Unauthorized";
-				break;
-			case 412:
+            case 400:
+                $this->sac_statusmessage = "Bad request";
+                break;
+            case 401:
+                $this->sac_statusmessage = "Unauthorized";
+                break;
+            case 412:
 				$this->sac_statusmessage = "Precondition failed";
 				break;
 			case 413:
@@ -83,7 +86,7 @@ class SWORDAPPEntry {
 				$this->sac_statusmessage = "Unsupported media type";
 				break;
 			default:
-				$this->sac_statusmessage = "Unknown erorr (status code " . $this->sac_status . ")";
+				$this->sac_statusmessage = "Unknown error (status code " . $this->sac_status . ")";
 				break;
 		}
 

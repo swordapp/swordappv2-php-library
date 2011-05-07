@@ -2,7 +2,7 @@
     // Test the V2 PHP client implementation using the Simple SWORD Server (SSS)
 
 	// The URL of the service document
-	$testurl = "http://localhost:8080/sd-uri";
+	$testurl = "http://localhost/sss/sd-uri";
 	
 	// The user (if required)
 	$testuser = "sword";
@@ -14,14 +14,13 @@
 	//$testobo = "user@swordapp.com";
 
 	// The URL of the example deposit collection
-	$testdepositurl = "http://localhost:8080/col-uri/176da419-7af6-431b-b1a8-b00a1898bcae";
+	$testdepositurl = "http://localhost/sss/col-uri/e6b163cb-a2bd-4dd6-b783-e241a2e67068";
 
 	// The test atom entry to deposit
 	$testatom = "test-files/atom_multipart/atom";
 
 	// The test file to deposit
 	$testfile = "test-files/atom_multipart_package.zip";
-	//$testfile = "/Users/stuartlewis/sss/example.zip";
 
 	// The content type of the test file
 	$testcontenttype = "application/zip";
@@ -32,7 +31,7 @@
 	require("../swordappclient.php");
 	$testsac = new SWORDAPPClient();
 
-	if (false) {
+	if (true) {
 		print "About to request servicedocument from " . $testurl . "\n";
 		if (empty($testuser)) { print "As: anonymous\n"; }
 		else { print "As: " . $testuser . "\n"; }

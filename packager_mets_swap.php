@@ -65,6 +65,9 @@ class PackagerMetsSwap {
     // Rights
     public $sac_rights;
 
+    // Publisher
+    public $sac_publisher;
+
     // Number of files added
     public $sac_filecount;
 
@@ -140,10 +143,40 @@ class PackagerMetsSwap {
         $this->sac_dateavailable = $sac_thedta;
     }
 
+    function setPublisher($sac_thepublisher) {
+        $this->sac_publisher = $sac_thepublisher;
+    }
+
     function addFile($sac_thefile, $sac_themimetype) {
         array_push($this->sac_files, $sac_thefile);
         array_push($this->sac_mimetypes, $sac_themimetype);
         $this->sac_filecount++;
+    }
+
+    function addMetadata($sac_theelement, $sac_thevalue) {
+        switch ($sac_theelement) {
+            case "abstract":
+                $this->setAbstract($sac_thevalue);
+                break;
+            case "available":
+                $this->setDateAvailable($sac_thevalue);
+                break;
+            case "bibliographicCitation":
+                $this->setCitation($sac_thevalue);
+                break;
+            case "creator":
+                $this->addCreator($sac_thevalue);
+                break;
+            case "identifier":
+                $this->setIdentifier($sac_thevalue);
+                break;
+            case "publisher":
+                $this->setPublisher($sac_thevalue);
+                break;
+            case "title":
+                $this->setTitle($sac_thevalue);
+                break;
+        }
     }
 
     function create() {
@@ -237,6 +270,12 @@ class PackagerMetsSwap {
             $this->statement($fh,
                              "http://purl.org/dc/elements/1.1/identifier", 
                              $this->valueString($this->sac_identifier));
+        }
+
+        if (isset($this->sac_publisher)) {
+            $this->statement($fh,
+                             "http://purl.org/dc/elements/1.1/publisher",
+                             $this->valueString($this->sac_publisher));
         }
 
         fwrite($fh, "<epdcx:statement epdcx:propertyURI=\"http://purl.org/eprint/terms/isExpressedAs\" " .

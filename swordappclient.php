@@ -173,9 +173,6 @@ class SWORDAPPClient {
 
         $xml .= "--===============SWORDPARTS==--\n";
 
-        //echo $xml;
-        file_put_contents("/Users/stuartlewis/Desktop/PACAKGE.xml", $xml);
-
         // To see debugging information, un-comment the following line
 		curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
 
