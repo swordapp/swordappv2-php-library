@@ -61,7 +61,7 @@ class PackagerAtomMultipart {
         $this->sac_entry_title = $this->clean($sac_thetitle);
     }
 
-    function setID($sac_theID) {
+    function setIdentifier($sac_theID) {
         $this->sac_entry_id = $this->clean($sac_theID);
     }
     
