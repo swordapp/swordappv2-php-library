@@ -38,6 +38,12 @@ class SWORDAPPEntry {
 	// The rights
 	public $sac_rights;
 
+    // The treatment
+    public $sac_treatment;
+
+    // The verbose description
+    public $sac_verbose_treatment;
+
 	// The update date
 	public $sac_updated;
 
@@ -138,6 +144,12 @@ class SWORDAPPEntry {
 
 		// Store the rights
 		$this->sac_rights = sac_clean($sac_dr->children($sac_ns['atom'])->rights);
+
+        // Store the treatment
+        $this->sac_treatment = sac_clean($sac_dr->children($sac_ns['sword'])->treatment);
+
+        // Store the verboseDescription
+        $this->sac_verbose_treatment = sac_clean($sac_dr->children($sac_ns['sword'])->verboseDescription);
 
 		// Store the format namespace
 		$this->sac_packaging = $sac_dr->children($sac_ns['sword'])->packaging;

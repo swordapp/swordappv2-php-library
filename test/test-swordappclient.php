@@ -111,7 +111,9 @@
 			}
 			print " - Summary: " . $testdr->sac_summary . "\n";
 			print " - Updated: " . $testdr->sac_updated . "\n";
-			print " - Rights: " . $testdr->sac_rights . "\n";
+            print " - Rights: " . $testdr->sac_rights . "\n";
+            print " - Treatment: " . $testdr->sac_treatment . "\n";
+            print " - Verbose description: " . $testdr->sac_verbose_treatment . "\n";
 			print " - Packaging: " . $testdr->sac_packaging . "\n";
 			print " - Generator: " . $testdr->sac_generator . 
 			      " (" . $testdr->sac_generator_uri . ")\n";
