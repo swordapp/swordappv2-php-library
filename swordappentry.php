@@ -1,5 +1,6 @@
 <?php
 
+require_once("swordapplink.php");
 require_once("utils.php");
 
 class SWORDAPPEntry {
@@ -135,8 +136,9 @@ class SWORDAPPEntry {
 		}
 		
 		// Store the links
-		foreach ($sac_dr->xpath("atom:link") as $sac_link) {
-			$this->sac_links[] = sac_clean($sac_link[0]['href']);
+        foreach ($sac_dr->xpath("atom:link") as $sac_link) {
+            $sac_linkobject = new SWORDAPPLink($sac_link->attributes()->rel, $sac_link->attributes()->href, $sac_link->attributes()->type);
+            array_push($this->sac_links, $sac_linkobject);
 		}
 
 		// Store the title and summary

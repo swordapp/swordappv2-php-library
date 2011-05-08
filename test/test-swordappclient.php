@@ -29,7 +29,7 @@
 	$testformat = "http://purl.org/net/sword/package/default";
 	
 	require("../swordappclient.php");
-	$testsac = new SWORDAPPClient();
+    $testsac = new SWORDAPPClient();
 
 	if (true) {
 		print "About to request servicedocument from " . $testurl . "\n";
@@ -60,15 +60,14 @@
 					$ctitle = $collection->sac_colltitle;
 					echo "     - Collection: " . $ctitle . " (" . $collection->sac_href . ")\n";
 					if (count($collection->sac_accept) > 0) {
-	        	        	        foreach ($collection->sac_accept as $accept) {
-		        	        	        echo "        - Accepts: " . $accept . "\n";
-		                	        }		
+                        foreach ($collection->sac_accept as $accept) {
+                            echo "        - Accepts: " . $accept . "\n";
+                        }
 					}
 					if (count($collection->sac_acceptpackaging) > 0) {
-	        	        	        foreach ($collection->sac_acceptpackaging as $acceptpackaging => $q) {
-		        	        	        echo "        - Accepted packaging format: " . 
-							     $acceptpackaging . " (q=" . $q . ")\n";
-		                	        }		
+                        foreach ($collection->sac_acceptpackaging as $acceptpackaging => $q) {
+                            echo "        - Accepted packaging format: " . $acceptpackaging . " (q=" . $q . ")\n";
+                        }
 					}
 					if (!empty($collection->sac_collpolicy)) {
 						echo "        - Collection Policy: " . $collection->sac_collpolicy . "\n";
@@ -106,8 +105,13 @@
 			foreach ($testdr->sac_contributors as $contributor) {
 				print "  - Contributor: " . $contributor . "\n";
 			}
-			foreach ($testdr->sac_links as $link) {
-				print "  - Link: " . $link . "\n";
+            foreach ($testdr->sac_links as $links) {
+                print '  - Link: rel=' . $links->sac_linkrel . ' ';
+                print 'href=' . $links->sac_linkhref . ' ';
+                if (isset($links->sac_linktype)) {
+                    print 'type=' . $links->sac_linktype;
+                }
+                print "\n";
 			}
 			print " - Summary: " . $testdr->sac_summary . "\n";
 			print " - Updated: " . $testdr->sac_updated . "\n";
