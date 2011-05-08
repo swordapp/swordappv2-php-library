@@ -54,7 +54,7 @@ class SWORDAPPServiceDocument {
 				$this->sac_statusmessage = "Service document not found";
 				break;
 			default:
-				$this->sac_statusmessage = "Unknown erorr (status code " . $this->sac_status . ")";
+				$this->sac_statusmessage = "Unknown error (status code " . $this->sac_status . ")";
 				break;
 		}
 		
