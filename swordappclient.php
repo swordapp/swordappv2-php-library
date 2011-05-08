@@ -31,8 +31,7 @@ class SWORDAPPClient {
 		$sac_resp = curl_exec($sac_curl);
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
 		curl_close($sac_curl);
-        echo $sac_resp;
-		
+
 		// Parse the result
 		if ($sac_status == 200) {
 			try {

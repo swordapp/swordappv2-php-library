@@ -114,6 +114,7 @@ class SWORDAPPEntry {
 	function buildhierarchy($sac_dr, $sac_ns) {
 		// Set the default namespace
 		$sac_dr->registerXPathNamespace('atom', 'http://www.w3.org/2005/Atom');
+        if (!isset($sac_ns['atom'])) $sac_ns['atom'] = 'http://www.w3.org/2005/Atom';
 		
 		// Parse the results
 		$this->sac_id = $sac_dr->children($sac_ns['atom'])->id;

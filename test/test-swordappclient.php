@@ -14,7 +14,7 @@
 	//$testobo = "user@swordapp.com";
 
 	// The URL of the example deposit collection
-	$testdepositurl = "http://localhost/sss/col-uri/e6b163cb-a2bd-4dd6-b783-e241a2e67068";
+	$testdepositurl = "http://localhost/sss/col-uri/fc3f8895-d866-4bb2-96fb-e19a8e27c7b2";
 
 	// The test atom entry to deposit
 	$testatom = "test-files/atom_multipart/atom";
