@@ -13,6 +13,9 @@ class Collection {
 	// The types of content accepted
 	public $sac_accept;
 
+	// The  alternative types of content accepted
+	public $sac_acceptalternative;
+
 	// The accepted packaging formats
 	public $sac_acceptpackaging;
 
@@ -35,7 +38,8 @@ class Collection {
 
 		// Create the accepts arrays
 		$sac_accept = array();
-		$sac_acceptpackaging = array();
+        $sac_acceptalternative = array();
+        $sac_acceptpackaging = array();
 	}
 
 	// Add a new supported packaging type

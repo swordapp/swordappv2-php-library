@@ -15,7 +15,7 @@ class SWORDAPPClient {
 		
 		curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
 		// To see debugging information, un-comment the following line
-		//curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);	
+		//curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
 		
 		curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
 		if(!empty($sac_u) && !empty($sac_p)) {
@@ -31,6 +31,7 @@ class SWORDAPPClient {
 		$sac_resp = curl_exec($sac_curl);
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
 		curl_close($sac_curl);
+        echo $sac_resp;
 		
 		// Parse the result
 		if ($sac_status == 200) {
@@ -174,7 +175,7 @@ class SWORDAPPClient {
         $xml .= "--===============SWORDPARTS==--\n";
 
         // To see debugging information, un-comment the following line
-		curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+		//curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
 
 		curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
 		curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
@@ -204,13 +205,10 @@ class SWORDAPPClient {
 		$sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
 		curl_close($sac_curl);
 
-        echo $sac_status;
-        echo "\n\n-!-" . $sac_resp . "-!-\n\n";
-
 		// Parse the result
 		$sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
 
-		// Was it a succesful result?
+		// Was it a successful result?
 		if (($sac_status >= 200) || ($sac_status < 300)) {
 			try {
 				// Get the deposit results

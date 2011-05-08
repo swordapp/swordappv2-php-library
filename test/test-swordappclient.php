@@ -33,8 +33,11 @@
 
 	if (true) {
 		print "About to request servicedocument from " . $testurl . "\n";
-		if (empty($testuser)) { print "As: anonymous\n"; }
-		else { print "As: " . $testuser . "\n"; }
+		if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
 		$testsdr = $testsac->servicedocument(
 			       $testurl, $testuser, $testpw, $testobo);
 		print "Received HTTP status code: " . $testsdr->sac_status . 
@@ -59,16 +62,21 @@
 				foreach ($collections as $collection) {
 					$ctitle = $collection->sac_colltitle;
 					echo "     - Collection: " . $ctitle . " (" . $collection->sac_href . ")\n";
-					if (count($collection->sac_accept) > 0) {
+                    if (count($collection->sac_accept) > 0) {
                         foreach ($collection->sac_accept as $accept) {
                             echo "        - Accepts: " . $accept . "\n";
                         }
-					}
-					if (count($collection->sac_acceptpackaging) > 0) {
+                    }
+                    if (count($collection->sac_acceptalternative) > 0) {
+                        foreach ($collection->sac_acceptalternative as $accept) {
+                            echo "        - Accepts: " . $accept . " alternative='multipart-related'\n";
+                        }
+                    }
+                    if (count($collection->sac_acceptpackaging) > 0) {
                         foreach ($collection->sac_acceptpackaging as $acceptpackaging => $q) {
                             echo "        - Accepted packaging format: " . $acceptpackaging . " (q=" . $q . ")\n";
                         }
-					}
+                    }
 					if (!empty($collection->sac_collpolicy)) {
 						echo "        - Collection Policy: " . $collection->sac_collpolicy . "\n";
 					}
@@ -88,8 +96,11 @@
 	
 	if (true) {
 		print "About to deposit file (" . $testfile . ") to " . $testdepositurl . "\n";
-		if (empty($testuser)) { print "As: anonymous\n"; }
-		else { print "As: " . $testuser . "\n"; }
+		if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
 		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testatom, $testfile, $testformat, $testcontenttype);
 		print "Received HTTP status code: " . $testdr->sac_status . 
 		      " (" . $testdr->sac_statusmessage . ")\n";
