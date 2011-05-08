@@ -119,8 +119,8 @@ class SWORDAPPEntry {
 		$this->sac_id = $sac_dr->children($sac_ns['atom'])->id;
 		$sac_contentbits = $sac_dr->xpath("atom:content"); 
 		if (!empty($sac_contentbits)) {
-			$this->sac_content_src = $sac_contentbits[0]['src'];
-			$this->sac_content_type = $sac_contentbits[0]['type'];
+            $this->sac_content_src = $sac_contentbits[0]->attributes()->src;
+			$this->sac_content_type = $sac_contentbits[0]->attributes()->type;
 		}
 
 		// Store the authors
@@ -163,7 +163,7 @@ class SWORDAPPEntry {
 		// Store the generator
 		$this->sac_generator = sac_clean($sac_dr->children($sac_ns['atom'])->generator);
 		$sac_gen = $sac_dr->xpath("atom:generator");
-		if (!empty($sac_gen)) { $this->sac_generator_uri = $sac_gen[0]['uri']; }
+		if (!empty($sac_gen)) { $this->sac_generator_uri = $sac_gen[0]->attributes()->uri; }
 
 		// Store the user agent
 		$this->sac_useragent = sac_clean($sac_dr->children($sac_ns['sword'])->userAgent);
