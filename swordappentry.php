@@ -60,6 +60,9 @@ class SWORDAPPEntry {
 	// The noOp status
 	public $sac_noOp;
 
+    // Any dcterms metadata
+    public $sac_dcterms;
+
 	// Construct a new deposit response by passing in the http status code
 	function __construct($sac_newstatus, $sac_thexml) {
 		// Store the status
@@ -100,6 +103,7 @@ class SWORDAPPEntry {
 		$this->sac_authors = array();
 		$this->sac_contributors = array();
 		$this->sac_links = array();
+        $this->sac_dcterms = array();
 
 		// Assume noOp is false unless we change it later
 		$this->sac_noOp = false;
@@ -161,6 +165,14 @@ class SWORDAPPEntry {
 
 		// Store the user agent
 		$this->sac_useragent = sac_clean($sac_dr->children($sac_ns['sword'])->userAgent);
+
+        // Store any embedded metadata
+        foreach ($sac_dr->children($sac_ns['dcterms']) as $sac_dcterm) {
+            if (!isset($this->sac_dcterms[$sac_dcterm->getName()])) {
+                $this->sac_dcterms[$sac_dcterm->getName()] = array();
+            }
+            array_push($this->sac_dcterms[$sac_dcterm->getName()], $sac_dcterm);
+        }
 
 		// Store the noOp status
 		if (strtolower((string)$sac_dr->children($sac_ns['sword'])->noOp) == 'true') {

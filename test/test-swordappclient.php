@@ -119,6 +119,13 @@
 			      " (" . $testdr->sac_generator_uri . ")\n";
 			print " - User agent: " . $testdr->sac_useragent . "\n";
 			if (!empty($testdr->sac_noOp)) { print " - noOp: " . $testdr->sac_noOp . "\n"; }
+
+            foreach ($testdr->sac_dcterms as $dcterm => $dcvalues) {
+                print ' - Dublin Core Metadata: ' . $dcterm . "\n";
+                foreach ($dcvalues as $dcvalue) {
+                    print '    - ' . $dcvalue . "\n";
+                }
+            }
 		}
 	}
 
