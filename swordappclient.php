@@ -187,7 +187,7 @@ class SWORDAPPClient {
 		$headers = array();
 		global $sal_useragent;
 		array_push($headers, $sal_useragent);
-		$sac_md5 = md5_file($sac_package);
+		$sac_md5 = md5($xml);
 		array_push($headers, "Content-MD5: " . $sac_md5);
 		if (!empty($sac_obo)) {
 			array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
