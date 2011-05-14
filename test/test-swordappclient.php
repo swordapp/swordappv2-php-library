@@ -101,7 +101,7 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testatom, $testfile, $testformat, $testcontenttype, true);
+		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testatom, $testfile, $testformat, $testcontenttype, false);
 		print "Received HTTP status code: " . $testdr->sac_status . 
 		      " (" . $testdr->sac_statusmessage . ")\n";
 		
@@ -207,12 +207,64 @@
                 print "As: " . $testuser . "\n";
             }
             try {
-                $deleteresponse = $testsac->deleteContainer($edit_iri . "l", $testuser, $testpw, $testobo);
+                $deleteresponse = $testsac->deleteContainer($edit_iri, $testuser, $testpw, $testobo);
                 print " - Container successfully deleted, HTTP code 204\n";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-    }        
+    }
+
+    if (true) {
+        print "About to deposit atom entry (" . $testatom . ") to " . $testdepositurl . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->depositAtomEntry($testdepositurl, $testuser, $testpw, $testobo, $testatom, true);
+        print "Received HTTP status code: " . $testdr->sac_status .
+              " (" . $testdr->sac_statusmessage . ")\n";
+
+        if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
+            print " - ID: " . $testdr->sac_id . "\n";
+            print " - Title: " . $testdr->sac_title . "\n";
+            print " - Content: " . $testdr->sac_content_src .
+                  " (" . $testdr->sac_content_type . ")\n";
+            foreach ($testdr->sac_authors as $author) {
+                print "  - Author: " . $author . "\n";
+            }
+            foreach ($testdr->sac_contributors as $contributor) {
+                print "  - Contributor: " . $contributor . "\n";
+            }
+            foreach ($testdr->sac_links as $links) {
+                print '  - Link: rel=' . $links->sac_linkrel . ' ';
+                print 'href=' . $links->sac_linkhref . ' ';
+                if (isset($links->sac_linktype)) {
+                    print 'type=' . $links->sac_linktype;
+                }
+                if (($links->sac_linkrel == 'edit') && (true)) $edit_iri = $links->sac_linkhref;
+                print "\n";
+            }
+            print " - Summary: " . $testdr->sac_summary . "\n";
+            print " - Updated: " . $testdr->sac_updated . "\n";
+            print " - Rights: " . $testdr->sac_rights . "\n";
+            print " - Treatment: " . $testdr->sac_treatment . "\n";
+            print " - Verbose description: " . $testdr->sac_verbose_treatment . "\n";
+            print " - Packaging: " . $testdr->sac_packaging . "\n";
+            print " - Generator: " . $testdr->sac_generator .
+                  " (" . $testdr->sac_generator_uri . ")\n";
+            print " - User agent: " . $testdr->sac_useragent . "\n";
+            if (!empty($testdr->sac_noOp)) { print " - noOp: " . $testdr->sac_noOp . "\n"; }
+
+            foreach ($testdr->sac_dcterms as $dcterm => $dcvalues) {
+                print ' - Dublin Core Metadata: ' . $dcterm . "\n";
+                foreach ($dcvalues as $dcvalue) {
+                    print '    - ' . $dcvalue . "\n";
+                }
+            }
+            print "\n";
+        }
+    }
 
 	print "\n\n";
 
