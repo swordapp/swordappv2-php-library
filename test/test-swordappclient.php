@@ -121,10 +121,8 @@
                 print 'href=' . $links->sac_linkhref . ' ';
                 if (isset($links->sac_linktype)) {
                     print 'type=' . $links->sac_linktype;
-                } else {
-                    // This is the edit iri, try to use this to complete the deposit
-
                 }
+                if (($links->sac_linkrel == 'edit') && (true)) $edit_iri = $links->sac_linkhref;
                 print "\n";
 			}
 			print " - Summary: " . $testdr->sac_summary . "\n";
@@ -200,6 +198,21 @@
             print "\n";
         }*/  
 	}
+
+    if (true) {
+        print "About to delete container at " . $edit_iri . "\n";
+        if (empty($testuser)) {
+                print "As: anonymous\n";
+            } else {
+                print "As: " . $testuser . "\n";
+            }
+            try {
+                $deleteresponse = $testsac->deleteContainer($edit_iri . "l", $testuser, $testpw, $testobo);
+                print " - Container successfully deleted, HTTP code 204\n";
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+    }        
 
 	print "\n\n";
 

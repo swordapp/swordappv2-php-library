@@ -306,6 +306,38 @@ class SWORDAPPClient {
 		// Return the deposit object
 		return $sac_dresponse;
     }
+
+    // Function to delete a container (object)
+    function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo) {
+        // Perform the deposit
+		$sac_curl = curl_init();
+
+		if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+
+		curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
+		curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($sac_curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+		if(!empty($sac_u) && !empty($sac_p)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+        }
+		$headers = array();
+		global $sal_useragent;
+		array_push($headers, $sal_useragent);
+		if (!empty($sac_obo)) {
+			array_push($headers, "On-Behalf-Of: " . $sac_obo);
+        }
+
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+
+		$sac_resp = curl_exec($sac_curl);
+		$sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+		curl_close($sac_curl);
+
+		// Was it a successful result?
+		if ($sac_status != 204) {
+            throw new Exception("Error deleting container (HTTP code: " . $sac_status . ")");
+        }
+    }
 }
 
 ?>
