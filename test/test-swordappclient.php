@@ -101,7 +101,7 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testatom, $testfile, $testformat, $testcontenttype);
+		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testatom, $testfile, $testformat, $testcontenttype, true);
 		print "Received HTTP status code: " . $testdr->sac_status . 
 		      " (" . $testdr->sac_statusmessage . ")\n";
 		

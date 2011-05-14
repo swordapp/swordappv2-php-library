@@ -51,8 +51,7 @@ class SWORDAPPClient {
 	// Perform a deposit to the specified url, with the specified credentials,
 	// on-behalf-of the specified user, and with the given file and formatnamespace and noop setting
 	function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-	                 $sac_packaging= '', $sac_contenttype = '',
-        			 $sac_noop = false, $sac_verbose = false) {
+	                 $sac_packaging= '', $sac_contenttype = '', $sac_inprogress = false) {
 		// Perform the deposit
 		$sac_curl = curl_init();
 
@@ -79,6 +78,11 @@ class SWORDAPPClient {
 			array_push($headers, "Content-Type: " . $sac_contenttype);
         }
 		array_push($headers, "Content-Length: " . filesize($sac_fname));
+        if ($sac_inprogress) {
+            array_push($headers, "In-Progress: true\n");
+        }
+
+        // Set the Content-Disposition header
 		$index = strpos(strrev($sac_fname), '/');
         if ($index === false) {
             $index = strlen($sac_fname) - $index;
@@ -133,7 +137,7 @@ class SWORDAPPClient {
 	// Perform an atom-multipart deposit to the specified url, with the specified credentials,
 	// on-behalf-of the specified user, and with the given atom file, package and package format
 	function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_atom, $sac_package,
-	                          $sac_packaging= '', $sac_contenttype = '') {
+	                          $sac_packaging= '', $sac_contenttype = '', $sac_inprogress = false) {
 		// Perform the deposit
 		$sac_curl = curl_init();
 
@@ -144,7 +148,6 @@ class SWORDAPPClient {
         $xml .= "Content-Type: application/atom+xml\n";
         $xml .= "MIME-Version: 1.0\n";
         $xml .= "Content-Disposition: attachment; name=\"atom\"\n";
-
         $xml .= "\n";
         $xml .= $atom;
 
@@ -188,6 +191,9 @@ class SWORDAPPClient {
         }
 		if (!empty($sac_packaging)) {
 			array_push($headers, "Packaging: " . $sac_packaging);
+        }
+        if ($sac_inprogress) {
+            array_push($headers, "In-Progress: true\n");
         }
         array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"");
 
