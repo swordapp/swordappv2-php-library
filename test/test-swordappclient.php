@@ -26,7 +26,7 @@
 	$testcontenttype = "application/zip";
 
 	// The packaging format of the test fifle
-	$testformat = "http://purl.org/net/sword/package/default";
+	$testformat = "http://purl.org/net/sword/package/SimpleZip";
 	
 	require("../swordappclient.php");
     $testsac = new SWORDAPPClient();
