@@ -117,14 +117,16 @@ class PackagerAtomMultipart {
         fwrite($fh, "</entry>\n");
         fclose($fh);
 
-        // Create the zipped package of the files
-        $zip = new ZipArchive();
-        $zip->open($this->sac_root_out . '/' . $this->sac_file_out, ZIPARCHIVE::CREATE);
-        for ($i = 0; $i < $this->sac_filecount; $i++) {
-            $zip->addFile($this->sac_root_in . '/' . $this->sac_dir_in . '/' . $this->sac_files[$i],
-                          $this->sac_files[$i]);
+        // Create the zipped package of the files if required
+        if ($this->sac_filecount > 0) {
+            $zip = new ZipArchive();
+            $zip->open($this->sac_root_out . '/' . $this->sac_file_out, ZIPARCHIVE::CREATE);
+            for ($i = 0; $i < $this->sac_filecount; $i++) {
+                $zip->addFile($this->sac_root_in . '/' . $this->sac_dir_in . '/' . $this->sac_files[$i],
+                              $this->sac_files[$i]);
+            }
+            $zip->close();
         }
-        $zip->close();
     }
 
     function clean($data) {
