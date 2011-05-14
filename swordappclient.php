@@ -338,6 +338,11 @@ class SWORDAPPClient {
             throw new Exception("Error deleting container (HTTP code: " . $sac_status . ")");
         }
     }
+
+    // Function to delete the content of a resource
+    function deleteResourceContent($sac_url, $sac_u, $sac_p, $sac_obo) {
+        $this->deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo);
+    }
 }
 
 ?>
