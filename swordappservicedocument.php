@@ -76,6 +76,53 @@ class SWORDAPPServiceDocument {
 			}
 		}
 	}
+
+    function toString() {
+        print " - Version: " . $testsdr->sac_version . "\n";
+        print " - Supports Verbose: " . $testsdr->sac_verbose . "\n";
+        print " - Supports NoOp: " . $testsdr->sac_noop . "\n";
+        print " - Maximum uplaod size: ";
+        if (!empty($this->sac_maxuploadsize)) {
+            print $this->sac_maxuploadsize . " kB\n";
+        } else {
+            print "undefined\n";
+        }
+
+        foreach ($this->sac_workspaces as $workspace) {
+            $wstitle = $workspace->sac_workspacetitle;
+            echo "   - Workspace: ".$wstitle."\n";
+            $collections = $workspace->sac_collections;
+            foreach ($collections as $collection) {
+                $ctitle = $collection->sac_colltitle;
+                echo "     - Collection: " . $ctitle . " (" . $collection->sac_href . ")\n";
+                if (count($collection->sac_accept) > 0) {
+                    foreach ($collection->sac_accept as $accept) {
+                        echo "        - Accepts: " . $accept . "\n";
+                    }
+                }
+                if (count($collection->sac_acceptalternative) > 0) {
+                    foreach ($collection->sac_acceptalternative as $accept) {
+                        echo "        - Accepts: " . $accept . " alternative='multipart-related'\n";
+                    }
+                }
+                if (count($collection->sac_acceptpackaging) > 0) {
+                    foreach ($collection->sac_acceptpackaging as $acceptpackaging => $q) {
+                        echo "        - Accepted packaging format: " . $acceptpackaging . " (q=" . $q . ")\n";
+                    }
+                }
+                if (!empty($collection->sac_collpolicy)) {
+                    echo "        - Collection Policy: " . $collection->sac_collpolicy . "\n";
+                }
+                echo "        - Collection abstract: " . $collection->sac_abstract . "\n";
+                $mediation = "false";
+                if ($collection->sac_mediation == true) { $mediation = "true"; }
+                echo "        - Mediation: " . $mediation . "\n";
+                if (!empty($collection->sac_service)) {
+                    echo "        - Service document: " . $collection->sac_service . "\n";
+                }
+            }
+        }
+    }
 }
 
 ?>
