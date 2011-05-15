@@ -183,6 +183,44 @@ class SWORDAPPEntry {
 			$this->sac_noOp = true;
 		}
 	}
+
+    function toString() {
+        print " - ID: " . $this->sac_id . "\n";
+        print " - Title: " . $this->sac_title . "\n";
+        print " - Content: " . $this->sac_content_src .
+              " (" . $this->sac_content_type . ")\n";
+        foreach ($this->sac_authors as $author) {
+            print "  - Author: " . $author . "\n";
+        }
+        foreach ($this->sac_contributors as $contributor) {
+            print "  - Contributor: " . $contributor . "\n";
+        }
+        foreach ($this->sac_links as $links) {
+            print '  - Link: rel=' . $links->sac_linkrel . ' ';
+            print 'href=' . $links->sac_linkhref . ' ';
+            if (isset($links->sac_linktype)) {
+                print 'type=' . $links->sac_linktype;
+            }
+            print "\n";
+        }
+        print " - Summary: " . $this->sac_summary . "\n";
+        print " - Updated: " . $this->sac_updated . "\n";
+        print " - Rights: " . $this->sac_rights . "\n";
+        print " - Treatment: " . $this->sac_treatment . "\n";
+        print " - Verbose description: " . $this->sac_verbose_treatment . "\n";
+        print " - Packaging: " . $this->sac_packaging . "\n";
+        print " - Generator: " . $this->sac_generator .
+              " (" . $this->sac_generator_uri . ")\n";
+        print " - User agent: " . $this->sac_useragent . "\n";
+        if (!empty($this->sac_noOp)) { print " - noOp: " . $this->sac_noOp . "\n"; }
+
+        foreach ($this->sac_dcterms as $dcterm => $dcvalues) {
+            print ' - Dublin Core Metadata: ' . $dcterm . "\n";
+            foreach ($dcvalues as $dcvalue) {
+                print '    - ' . $dcvalue . "\n";
+            }
+        }
+    }
 }
 
 ?>
