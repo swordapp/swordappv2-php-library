@@ -38,10 +38,8 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-		$testsdr = $testsac->servicedocument(
-			       $testurl, $testuser, $testpw, $testobo);
-		print "Received HTTP status code: " . $testsdr->sac_status . 
-		      " (" . $testsdr->sac_statusmessage . ")\n";
+		$testsdr = $testsac->servicedocument($testurl, $testuser, $testpw, $testobo);
+		print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
 
 		if ($testsdr->sac_status == 200) {
             $testsdr->toString();
@@ -58,8 +56,7 @@
             print "As: " . $testuser . "\n";
         }
 		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testatom, $testfile, $testformat, $testcontenttype, false);
-		print "Received HTTP status code: " . $testdr->sac_status . 
-		      " (" . $testdr->sac_statusmessage . ")\n";
+		print "Received HTTP status code: " . $testdr->sac_status . " (" . $testdr->sac_statusmessage . ")\n";
 		
 		if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
             $testdr->toString();
@@ -90,7 +87,7 @@
     print "\n\n";
     */
 
-    if (true) {
+    if (false) {
         print "About to delete container at " . $edit_iri . "\n";
         if (empty($testuser)) {
                 print "As: anonymous\n";
@@ -105,7 +102,7 @@
             }
     }
 
-    if (true) {
+    if (false) {
         print "About to deposit atom entry (" . $testatom . ") to " . $testdepositurl . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -122,5 +119,19 @@
     }
 
 	print "\n\n";
+
+    if (true) {
+        print "About to retrieve content from " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+		$testdr = $testsac->retrieveContent($edit_iri, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
+		print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
+		if ($testdr->sac_status == 200) {
+            $testdr->toString();
+        }
+    }
 
 ?>
