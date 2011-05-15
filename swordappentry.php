@@ -64,6 +64,9 @@ class SWORDAPPEntry {
     // Any dcterms metadata
     public $sac_dcterms;
 
+    // The Edit IRI
+    public $sac_edit_iri;
+
 	// Construct a new deposit response by passing in the http status code
 	function __construct($sac_newstatus, $sac_thexml) {
 		// Store the status
@@ -141,6 +144,9 @@ class SWORDAPPEntry {
         foreach ($sac_dr->xpath("atom:link") as $sac_link) {
             $sac_linkobject = new SWORDAPPLink($sac_link->attributes()->rel, $sac_link->attributes()->href, $sac_link->attributes()->type);
             array_push($this->sac_links, $sac_linkobject);
+
+            // Store the Edit IRI
+            if ($sac_linkobject->sac_linkrel == 'edit') $this->sac_edit_iri = $sac_linkobject->sac_linkhref;
 		}
 
 		// Store the title and summary
