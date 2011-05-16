@@ -7,11 +7,11 @@ require("swordapplibraryuseragent.php");
 
 class SWORDAPPClient {
 
-    private $debug = true;
+    private $debug = false;
 
-	// Request a Service Document from the specified url, with the specified credentials,
-	// and on-behalf-of the specified user.
-	function servicedocument($sac_url, $sac_u, $sac_p, $sac_obo) {
+    // Request a Service Document from the specified url, with the specified credentials,
+    // and on-behalf-of the specified user.
+    function servicedocument($sac_url, $sac_u, $sac_p, $sac_obo) {
 		// Get the service document
 		$sac_curl = curl_init();
 
@@ -163,7 +163,7 @@ class SWORDAPPClient {
         $xml .= "--===============SWORDPARTS==\n";
         $xml .= "Content-Type: " . $sac_contenttype . "\n";
         $xml .= "Content-MD5: " . md5_file($sac_package) . "\n";
-        $xml .= "Content-Length: " . strlen(filedata) . "\n";
+        $xml .= "Content-Length: " . strlen($filedata) . "\n";
         $xml .= "MIME-Version: 1.0\n";
         $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"package.zip\"\n";
         $xml .= "Content-Transfer-Encoding: base64\n\n";
