@@ -4,6 +4,8 @@ require("swordappservicedocument.php");
 require("swordappentry.php");
 require("swordapperrordocument.php");
 require("swordapplibraryuseragent.php");
+require("stream.php");
+require_once("utils.php");
 
 class SWORDAPPClient {
 
@@ -134,15 +136,12 @@ class SWORDAPPClient {
 		return $sac_dresponse;
 	}
 
-
-	// Perform an atom-multipart deposit to the specified url, with the specified credentials,
-	// on-behalf-of the specified user, and with the given atom file, package and package format
-	function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_atom, $sac_package,
+    function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_atom, $sac_package,
 	                          $sac_packaging= '', $sac_contenttype = '', $sac_inprogress = false) {
-		// Perform the deposit
-		$sac_curl = curl_init();
 
-        // Load the atom entry into a string
+
+        // Create the package
+        $temp = "/Users/stuartlewis/Desktop/MMMM.txt";
         $atom = file_get_contents($sac_atom);
         $xml = "\n";
         $xml .= "--===============SWORDPARTS==\n";
@@ -151,63 +150,47 @@ class SWORDAPPClient {
         $xml .= "Content-Disposition: attachment; name=\"atom\"\n";
         $xml .= "\n";
         $xml .= $atom;
-
-        unset($sac_atom);
-
-        $handle = fopen($sac_package, 'rb');
-        $file_content = fread($handle, filesize($sac_package));
-        fclose($handle);
-        $filedata = chunk_split(base64_encode($file_content), 76, "\n");
-
-
+        unset($atom);
         $xml .= "--===============SWORDPARTS==\n";
         $xml .= "Content-Type: " . $sac_contenttype . "\n";
         $xml .= "Content-MD5: " . md5_file($sac_package) . "\n";
-        $xml .= "Content-Length: " . strlen($filedata) . "\n";
         $xml .= "MIME-Version: 1.0\n";
         $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"package.zip\"\n";
         $xml .= "Content-Transfer-Encoding: base64\n\n";
-
-        $xml .= $filedata;
-
-        unset($filedata);
-
+        $temp = "/Users/stuartlewis/Desktop/MMMM.txt";
+        file_put_contents($temp, $xml);
+        $xml = "";
+        base64chunk($sac_package, $temp, FILE_APPEND);
         $xml .= "--===============SWORDPARTS==--\n";
+        file_put_contents($temp, $xml, FILE_APPEND);
 
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+        $my_class_inst = new StreamingClass();
+        $my_class_inst->data = fopen($temp, "r");
 
-		curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-		curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($sac_curl, CURLOPT_POST, true);
-        //curl_setopt($sac_curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        $curl_inst = curl_init();
 
-        if(!empty($sac_u) && !empty($sac_p)) {
-           curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-	    }
-		$headers = array();
-		global $sal_useragent;
-		array_push($headers, $sal_useragent);
-		if (!empty($sac_obo)) {
-			array_push($headers, "On-Behalf-Of: " . $sac_obo);
-        }
-		if (!empty($sac_packaging)) {
-			array_push($headers, "Packaging: " . $sac_packaging);
-        }
-        if ($sac_inprogress) {
-            array_push($headers, "In-Progress: true");
-        } else {
-            array_push($headers, "In-Progress: false");
-        }
-        array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"");
+        curl_setopt ($curl_inst, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt ($curl_inst, CURLOPT_LOW_SPEED_LIMIT, 1);
+        curl_setopt ($curl_inst, CURLOPT_LOW_SPEED_TIME, 180);
+        curl_setopt ($curl_inst, CURLOPT_NOSIGNAL, 1);
+        curl_setopt ($curl_inst, CURLOPT_READFUNCTION, array($my_class_inst, "stream_function"));
+        curl_setopt ($curl_inst, CURLOPT_URL, $sac_url);
+        curl_setopt($curl_inst, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+        curl_setopt ($curl_inst, CURLOPT_POST, true);
 
-        curl_setopt($sac_curl, CURLOPT_POSTFIELDS, $xml);
-		curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+        $header[] = "Packaging: " . $sac_packaging;
+        $header[] = "Content-Length: " . filesize("/Users/stuartlewis/Desktop/MMMM.txt");
+        $header[] = "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"";
 
-		$sac_resp = curl_exec($sac_curl);
-		$sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
-		curl_close($sac_curl);
+        curl_setopt($curl_inst, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl_inst, CURLOPT_RETURNTRANSFER, 1);
 
-		// Parse the result
+        $sac_resp = curl_exec ($curl_inst);
+ 	    $sac_status = curl_getinfo($curl_inst, CURLINFO_HTTP_CODE);
+
+        curl_close($curl_inst);
+
+        // Parse the result
 		$sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
 
 		// Was it a successful result?
