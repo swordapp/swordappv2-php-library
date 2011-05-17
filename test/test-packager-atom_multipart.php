@@ -11,7 +11,7 @@
     $test_rootout = 'test-files';
 
     // The filename to save the package as
-    $test_fileout = 'atom_multipart_package.zip';
+    $test_fileout = 'atom_multipart_package';
 
     // Create the test package
 	$test_packager = new PackagerAtomMultipart($test_rootin, $test_dirin, $test_rootout, $test_fileout);

@@ -1,5 +1,7 @@
 <?php
 
+require_once('utils.php');
+
 class PackagerAtomMultipart {
 
     // The location of the files (without final directory)
@@ -89,7 +91,8 @@ class PackagerAtomMultipart {
 
     function create() {
         // Write the atom entry manifest
-        $fh = @fopen($this->sac_root_in . '/' . $this->sac_dir_in . '/atom', 'w');
+        $sac_atom = $this->sac_root_in . '/' . $this->sac_dir_in . '/atom';
+        $fh = @fopen($sac_atom, 'w');
         if (!$fh) {
             throw new Exception("Error writing atom entry manifest (" .
                                 $this->sac_root_in . '/' . $this->sac_dir_in . '/atom)');
@@ -120,12 +123,37 @@ class PackagerAtomMultipart {
         // Create the zipped package of the files if required
         if ($this->sac_filecount > 0) {
             $zip = new ZipArchive();
-            $zip->open($this->sac_root_out . '/' . $this->sac_file_out, ZIPARCHIVE::CREATE);
+            $sac_package = $this->sac_root_out . '/' . $this->sac_file_out . '.zip';
+            $zip->open($sac_package, ZIPARCHIVE::CREATE);
             for ($i = 0; $i < $this->sac_filecount; $i++) {
                 $zip->addFile($this->sac_root_in . '/' . $this->sac_dir_in . '/' . $this->sac_files[$i],
                               $this->sac_files[$i]);
             }
             $zip->close();
+
+            // Create the multipart package
+            $temp = "/Users/stuartlewis/Desktop/MMMM.txt";
+            $atom = file_get_contents($sac_atom);
+            $xml = "\n";
+            $xml .= "--===============SWORDPARTS==\n";
+            $xml .= "Content-Type: application/atom+xml\n";
+            $xml .= "MIME-Version: 1.0\n";
+            $xml .= "Content-Disposition: attachment; name=\"atom\"\n";
+            $xml .= "\n";
+            $xml .= $atom;
+            unset($atom);
+            $xml .= "--===============SWORDPARTS==\n";
+            $xml .= "Content-Type: application/zip\n";
+            $xml .= "Content-MD5: " . md5_file($sac_package) . "\n";
+            $xml .= "MIME-Version: 1.0\n";
+            $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"package.zip\"\n";
+            $xml .= "Content-Transfer-Encoding: base64\n\n";
+            $temp = $this->sac_root_out . '/' . $this->sac_file_out;
+            file_put_contents($temp, $xml);
+            $xml = "";
+            base64chunk($sac_package, $temp, FILE_APPEND);
+            $xml .= "--===============SWORDPARTS==--\n";
+            file_put_contents($temp, $xml, FILE_APPEND);
         }
     }
 

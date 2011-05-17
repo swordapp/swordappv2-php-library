@@ -14,13 +14,13 @@
 	//$testobo = "user@swordapp.com";
 
 	// The URL of the example deposit collection
-	$testdepositurl = "http://localhost/sss/col-uri/fc3f8895-d866-4bb2-96fb-e19a8e27c7b2";
+	$testdepositurl = "http://localhost/sss/col-uri/da9b9feb-4266-446a-8847-46f6c30b2ff0";
 
 	// The test atom entry to deposit
 	$testatom = "test-files/atom_multipart/atom";
 
 	// The test file to deposit
-	$testfile = "test-files/atom_multipart_package.zip";
+	$testfile = "test-files/atom_multipart_package";
 
 	// The content type of the test file
 	$testcontenttype = "application/zip";
@@ -55,7 +55,7 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testatom, $testfile, $testformat, $testcontenttype, false);
+		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testfile, $testformat, false);
 		print "Received HTTP status code: " . $testdr->sac_status . " (" . $testdr->sac_statusmessage . ")\n";
 		
 		if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
@@ -120,7 +120,7 @@
 
 	print "\n\n";
 
-    if (true) {
+    if (false) {
         print "About to retrieve content from " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
