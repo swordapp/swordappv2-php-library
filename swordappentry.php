@@ -155,11 +155,11 @@ class SWORDAPPEntry {
             if ($sac_linkobject->sac_linkrel == 'edit') $this->sac_edit_iri = $sac_linkobject->sac_linkhref;
 
             // Store the Statement IRIs
-            if ($sac_linkobject->rel == 'http://purl.org/net/sword/terms/statement') {
-                if ($sac_linkobject->type == 'application/atom+xml;type=feed') {
+            if ($sac_linkobject->sac_linkrel == 'http://purl.org/net/sword/terms/statement') {
+                if ($sac_linkobject->sac_linktype == 'application/atom+xml;type=feed') {
                     $this->sac_state_iri_atom = $sac_linkobject->sac_linkhref;
-                } else if ($sac_linkobject->type == 'application/rdf+xml') {
-                    $this->sac_state_iri_atom = $sac_linkobject->sac_linkhref;
+                } else if ($sac_linkobject->sac_linktype == 'application/rdf+xml') {
+                    $this->sac_state_iri_ore = $sac_linkobject->sac_linkhref;
                 }
             }
         }
