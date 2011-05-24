@@ -78,9 +78,9 @@ class SWORDAPPServiceDocument {
 	}
 
     function toString() {
-        print " - Version: " . $testsdr->sac_version . "\n";
-        print " - Supports Verbose: " . $testsdr->sac_verbose . "\n";
-        print " - Supports NoOp: " . $testsdr->sac_noop . "\n";
+        print " - Version: " . $this->sac_version . "\n";
+        if (!empty($this->sac_verbose)) print " - Supports Verbose: " . $this->sac_verbose . "\n";
+        if (!empty($this->sac_noop)) print " - Supports NoOp: " . $this->sac_noop . "\n";
         print " - Maximum uplaod size: ";
         if (!empty($this->sac_maxuploadsize)) {
             print $this->sac_maxuploadsize . " kB\n";
