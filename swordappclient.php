@@ -2,6 +2,7 @@
 
 require("swordappservicedocument.php");
 require("swordappentry.php");
+require("swordappstatement.php");
 require("swordapperrordocument.php");
 require("swordapplibraryuseragent.php");
 require("stream.php");
@@ -144,6 +145,8 @@ class SWORDAPPClient {
 
         $sac_curl = curl_init();
 
+        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+
         curl_setopt($sac_curl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($sac_curl, CURLOPT_LOW_SPEED_LIMIT, 1);
         curl_setopt($sac_curl, CURLOPT_LOW_SPEED_TIME, 180);
@@ -160,7 +163,7 @@ class SWORDAPPClient {
         }
 
         $header[] = "Packaging: " . $sac_packaging;
-        $header[] = "Content-Length: " . filesize("/Users/stuartlewis/Desktop/MMMM.txt");
+        $header[] = "Content-Length: " . filesize($sac_package);
         $header[] = "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"";
 
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $header);
@@ -434,6 +437,84 @@ class SWORDAPPClient {
     // Function to delete the content of a resource
     function deleteResourceContent($sac_url, $sac_u, $sac_p, $sac_obo) {
         $this->deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo);
+    }
+
+    // Function to retrieve an Atom statement
+    function retrieveAtomStatement($sac_url, $sac_u, $sac_p, $sac_obo) {
+        // Get the service document
+        $sac_curl = curl_init();
+
+        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
+        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+
+        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
+        if(!empty($sac_u) && !empty($sac_p)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+        }
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        if (!empty($sac_obo)) {
+            array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
+        }
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        curl_close($sac_curl);
+
+        // Parse the result
+        if ($sac_status == 200) {
+            try {
+                $sac_atomstatement = new SWORDAPPStatement($sac_status, $sac_resp);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing statement (" . $e->getMessage() . ")");
+            }
+        } else {
+            $sac_atomstatement = new SWORDAPPServiceDocument($sac_url, $sac_status);
+        }
+
+        // Return the Service Document object
+        return $sac_atomstatement;
+    }
+
+    // Function to retrieve an OAI-ORE statement
+    function retrieveOAIOREStatement($sac_url, $sac_u, $sac_p, $sac_obo) {
+        // Get the service document
+        $sac_curl = curl_init();
+
+        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
+        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+
+        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
+        if(!empty($sac_u) && !empty($sac_p)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+        }
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        if (!empty($sac_obo)) {
+            array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
+        }
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        curl_close($sac_curl);
+
+        echo $sac_resp;
+
+        // Parse the result
+        if ($sac_status == 200) {
+            try {
+                //$sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status, $sac_resp);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing service document (" . $e->getMessage() . ")");
+            }
+        } else {
+            //$sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status);
+        }
+
+        // Return the Service Document object
+        //return $sac_sdresponse;
     }
 }
 
