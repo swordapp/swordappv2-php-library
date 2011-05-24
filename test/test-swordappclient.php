@@ -63,9 +63,37 @@
         }
 
         $edit_iri = $testdr->sac_edit_iri;
+        $statement_atom = $testdr->sac_state_iri_atom;
+        $statement_ore = $testdr->sac_state_iri_ore;
     }
 
     print "\n\n";
+
+    if (true) {
+        print "About to request Atom serialisation of the deposit statement from " . $statement_atom . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testatom = $testsac->retrieveAtomStatement($statement_atom, $testuser, $testpw, $testobo);
+
+        if (($testatom->sac_status >= 200) || ($testatom->sac_status < 300)) {
+            $testatom->toString();
+        }
+    }
+
+    print "\n\n";
+
+    if (false) {
+        print "About to request OAI-ORE serialisation of the deposit statement from " . $statement_ore . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testatom = $testsac->retrieveOAIOREStatement($statement_ore, $testuser, $testpw, $testobo);
+    }
 
     /**
     if (false) {
