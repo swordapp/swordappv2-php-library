@@ -132,7 +132,6 @@ class PackagerAtomMultipart {
             $zip->close();
 
             // Create the multipart package
-            $temp = "/Users/stuartlewis/Desktop/MMMM.txt";
             $atom = file_get_contents($sac_atom);
             $xml = "\n";
             $xml .= "--===============SWORDPARTS==\n";
