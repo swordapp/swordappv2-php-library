@@ -162,6 +162,10 @@ class SWORDAPPClient {
             $header[] = "In-Progress: false";
         }
 
+        if (!empty($sac_obo)) {
+            $headers[] =  "On-Behalf-Of: " . $sac_obo;
+        }
+
         $header[] = "Packaging: " . $sac_packaging;
         $header[] = "Content-Length: " . filesize($sac_package);
         $header[] = "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"";
