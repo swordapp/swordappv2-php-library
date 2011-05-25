@@ -10,7 +10,7 @@ require_once("utils.php");
 
 class SWORDAPPClient {
 
-    private $debug = false;
+    private $debug = true;
 
     // Request a Service Document from the specified url, with the specified credentials,
     // and on-behalf-of the specified user.
@@ -462,6 +462,76 @@ class SWORDAPPClient {
             throw new Exception("Error replacing file (HTTP code: " . $sac_status . ")");
         }
     }
+
+    // Function to replace the metadata of a resource
+    function replaceMetadata($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
+        // Perform the deposit
+        $sac_curl = curl_init();
+
+        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+
+        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
+        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($sac_curl, CURLOPT_PUT, true);
+        if(!empty($sac_u) && !empty($sac_p)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+        }
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        if (!empty($sac_obo)) {
+            array_push($headers, "On-Behalf-Of: " . $sac_obo);
+        }
+        array_push($headers, "Content-Type: application/atom+xml;type=entry");
+        if ($sac_inprogress) {
+            array_push($headers, "In-Progress: true");
+        } else {
+            array_push($headers, "In-Progress: false");
+        }
+
+        curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
+        curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        curl_close($sac_curl);
+
+        // Parse the result
+        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
+
+        // Was it a successful result?
+        if (($sac_status >= 200) || ($sac_status < 300)) {
+            try {
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            }
+        } else {
+            try {
+                // Parse the result
+                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
+
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            }
+        }
+
+        // Return the deposit object
+        return $sac_dresponse;
+    }
+
 
     // Function to delete a container (object)
     function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo) {

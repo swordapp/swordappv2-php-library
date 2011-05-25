@@ -19,6 +19,9 @@
 	// The test atom entry to deposit
 	$testatom = "test-files/atom_multipart/atom";
 
+	// The second test atom entry to deposit
+	$testatom2 = "test-files/atom_multipart/atom2";
+
 	// The test file to deposit
 	$testfile = "test-files/atom_multipart_package";
 
@@ -81,10 +84,10 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testatom = $testsac->retrieveAtomStatement($statement_atom, $testuser, $testpw, $testobo);
+        $testatomstatement = $testsac->retrieveAtomStatement($statement_atom, $testuser, $testpw, $testobo);
 
-        if (($testatom->sac_status >= 200) || ($testatom->sac_status < 300)) {
-            $testatom->toString();
+        if (($testatomstatement->sac_status >= 200) || ($testatomstatement->sac_status < 300)) {
+            $testatomstatement->toString();
         }
     }
 
@@ -119,7 +122,7 @@
 
     print "\n\n";
 
-    if (true) {
+    if (false) {
         print "About to replace content at " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -133,6 +136,23 @@
         }
     }
 
+    print "\n\n";
+
+    if (true) {
+        print "About to replace atom entry (" . $testatom2 . ") to " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->replaceMetadata($edit_iri, $testuser, $testpw, $testobo, $testatom2, false);
+        print "Received HTTP status code: " . $testdr->sac_status .
+              " (" . $testdr->sac_statusmessage . ")\n";
+
+        if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
+            $testdr->toString();
+        }
+    }
 
 
     /**
@@ -170,6 +190,8 @@
             }
     }
 
+    print "\n\n";
+
     if (false) {
         print "About to deposit atom entry (" . $testatom . ") to " . $testdepositurl . "\n";
         if (empty($testuser)) {
@@ -177,13 +199,37 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->depositAtomEntry($testdepositurl, $testuser, $testpw, $testobo, $testatom, true);
+        $testdr = $testsac->depositAtomEntry($testdepositurl, $testuser, $testpw, $testobo, $testatom, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 
         if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
             $testdr->toString();
         }
+
+        $edit_iri = $testdr->sac_edit_iri;
+        $cont_iri = $testdr->sac_content_src;
+        $edit_media = $testdr->sac_edit_media_iri;
+        $statement_atom = $testdr->sac_state_iri_atom;
+        $statement_ore = $testdr->sac_state_iri_ore;
     }
+
+    print "\n\n";
+
+    if (false) {
+        print "About to retrieve content from " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->retrieveContentEntry($edit_iri, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
+        print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
+        if ($testdr->sac_status == 200) {
+            $testdr->toString();
+        }
+    }
+
+
 
 ?>
