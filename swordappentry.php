@@ -86,6 +86,9 @@ class SWORDAPPEntry {
 
         // Store the status message
         switch($this->sac_status) {
+            case 200:
+                $this->sac_statusmessage = "OK";
+                break;
             case 201:
                 $this->sac_statusmessage = "Created";
                 break;
