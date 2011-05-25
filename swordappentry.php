@@ -73,6 +73,9 @@ class SWORDAPPEntry {
     // The Atom Statement IRI
     public $sac_state_iri_ore;
 
+    // The Edit Media IRI
+    public $sac_edit_media_iri;
+
     // Construct a new deposit response by passing in the http status code
     function __construct($sac_newstatus, $sac_thexml) {
         // Store the status
@@ -160,6 +163,12 @@ class SWORDAPPEntry {
                     $this->sac_state_iri_atom = $sac_linkobject->sac_linkhref;
                 } else if ($sac_linkobject->sac_linktype == 'application/rdf+xml') {
                     $this->sac_state_iri_ore = $sac_linkobject->sac_linkhref;
+                }
+            }
+            // Store the Edit Media IRIs
+            if ($sac_linkobject->sac_linkrel == 'edit-media') {
+                if (empty($sac_linkobject->sac_linktype)) {
+                    $this->sac_edit_media_iri = $sac_linkobject->sac_linkhref;
                 }
             }
         }

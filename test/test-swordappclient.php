@@ -22,6 +22,9 @@
 	// The test file to deposit
 	$testfile = "test-files/atom_multipart_package";
 
+	// The second test file to deposit
+	$testfile2 = "test-files/atom_multipart_package2.zip";
+
 	// The content type of the test file
 	$testcontenttype = "application/zip";
 
@@ -63,6 +66,8 @@
         }
 
         $edit_iri = $testdr->sac_edit_iri;
+        $cont_iri = $testdr->sac_content_src;
+        $edit_media = $testdr->sac_edit_media_iri;
         $statement_atom = $testdr->sac_state_iri_atom;
         $statement_ore = $testdr->sac_state_iri_ore;
     }
@@ -85,15 +90,50 @@
 
     print "\n\n";
 
-    if (false) {
+    if (true) {
         print "About to request OAI-ORE serialisation of the deposit statement from " . $statement_ore . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testatom = $testsac->retrieveOAIOREStatement($statement_ore, $testuser, $testpw, $testobo);
+        $testoaiore = $testsac->retrieveOAIOREStatement($statement_ore, $testuser, $testpw, $testobo);
+        echo $testoaiore;
     }
+
+    print "\n\n";
+
+    if (true) {
+        print "About to retrieve content from " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->retrieveContentEntry($edit_iri, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
+        print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
+        if ($testdr->sac_status == 200) {
+            $testdr->toString();
+        }
+    }
+
+    print "\n\n";
+
+    if (true) {
+        print "About to replace content at " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->replaceFileContent($edit_media, $testuser, $testpw, $testobo, $testfile2, $testformat, $testcontenttype, false);
+        print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
+        if ($testdr->sac_status == 200) {
+            $testdr->toString();
+        }
+    }
+
+
 
     /**
     if (false) {
@@ -142,22 +182,6 @@
               " (" . $testdr->sac_statusmessage . ")\n";
 
         if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
-            $testdr->toString();
-        }
-    }
-
-	print "\n\n";
-
-    if (false) {
-        print "About to retrieve content from " . $edit_iri . "\n";
-        if (empty($testuser)) {
-            print "As: anonymous\n";
-        } else {
-            print "As: " . $testuser . "\n";
-        }
-		$testdr = $testsac->retrieveContent($edit_iri, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
-		print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
-		if ($testdr->sac_status == 200) {
             $testdr->toString();
         }
     }

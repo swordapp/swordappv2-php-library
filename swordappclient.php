@@ -88,7 +88,7 @@ class SWORDAPPClient {
 
         // Set the Content-Disposition header
         $index = strpos(strrev($sac_fname), '/');
-        if ($index === false) {
+        if ($index !== false) {
             $index = strlen($sac_fname) - $index;
             $sac_fname_trimmed = substr($sac_fname, $index);
         } else {
@@ -137,6 +137,7 @@ class SWORDAPPClient {
         return $sac_dresponse;
     }
 
+    // Deposit a multipart package
     function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                               $sac_packaging = '', $sac_inprogress = false) {
         // Instantiate the streaming class
@@ -346,7 +347,7 @@ class SWORDAPPClient {
     }
 
     // Function to retrieve the content of a container
-    function retrieveContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
+    function retrieveContentEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
         // Retrieve the content
         $sac_curl = curl_init();
 
@@ -404,6 +405,62 @@ class SWORDAPPClient {
 
         // Return the deposit object
         return $sac_dresponse;
+    }
+
+    // Replace the file content of a resource
+    function replaceFileContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
+                                $sac_packaging= '', $sac_contenttype = '', $sac_metadata_relevant = false) {
+        // Perform the deposit
+        $sac_curl = curl_init();
+
+        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
+
+        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
+        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($sac_curl, CURLOPT_PUT, true);
+        if(!empty($sac_u) && !empty($sac_p)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
+        }
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        array_push($headers, "Content-MD5: " . md5_file($sac_fname));
+        if (!empty($sac_obo)) {
+            array_push($headers, "On-Behalf-Of: " . $sac_obo);
+        }
+        if (!empty($sac_packaging)) {
+            array_push($headers, "Packaging: " . $sac_packaging);
+        }
+        if (!empty($sac_contenttype)) {
+            array_push($headers, "Content-Type: " . $sac_contenttype);
+        }
+        if ($sac_metadata_relevant) {
+            array_push($headers, "Metadata-Relevant: true");
+        } else {
+            array_push($headers, "Metadata-Relevant: false");
+        }
+
+        // Set the Content-Disposition header
+        $index = strpos(strrev($sac_fname), '/');
+        if ($index !== false) {
+            $index = strlen($sac_fname) - $index;
+            $sac_fname_trimmed = substr($sac_fname, $index);
+        } else {
+            $sac_fname_trimmed = $sac_fname;
+        }
+        array_push($headers, "Content-Disposition: filename=" . $sac_fname_trimmed);
+        curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
+        curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        curl_close($sac_curl);
+
+        // Was it a successful result?
+        if ($sac_status != 204) {
+            throw new Exception("Error replacing file (HTTP code: " . $sac_status . ")");
+        }
     }
 
     // Function to delete a container (object)
