@@ -477,7 +477,8 @@ class SWORDAPPClient {
         return $sac_atomstatement;
     }
 
-    // Function to retrieve an OAI-ORE statement
+    // Function to retrieve an OAI-ORE statement - this just returns the xml,
+    // it does not marshall it into an object.
     function retrieveOAIOREStatement($sac_url, $sac_u, $sac_p, $sac_obo) {
         // Get the service document
         $sac_curl = curl_init();
@@ -500,21 +501,8 @@ class SWORDAPPClient {
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
         curl_close($sac_curl);
 
-        echo $sac_resp;
-
-        // Parse the result
-        if ($sac_status == 200) {
-            try {
-                //$sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status, $sac_resp);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing service document (" . $e->getMessage() . ")");
-            }
-        } else {
-            //$sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status);
-        }
-
-        // Return the Service Document object
-        //return $sac_sdresponse;
+        // Return the result
+        return $sac_resp;
     }
 }
 
