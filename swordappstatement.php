@@ -37,6 +37,7 @@ class SWORDAPPStatement {
             foreach ($sac_statement->children($sac_ns['atom'])->entry as $sac_entry) {
                 $sac_category = $sac_entry->children($sac_ns['atom'])->category;
                 $sac_category_attributes = $sac_category->attributes();
+                // TODO: Fix this - it currently owrks against the ss.py, but not against the spec
                 $sac_theentry = new SWORDAPPStatementEntry($sac_category_attributes['scheme'],
                                                            $sac_category_attributes['term'],
                                                            $sac_category_attributes['label']);
