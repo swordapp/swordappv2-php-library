@@ -35,4 +35,23 @@
     $test_packager->addMetadata("title", "If SWORD is the answer, what is the question? Use of the Simple Web service Offering Repository Deposit protocol");
     $test_packager->addFile('if-sword-is-the-answer.pdf');
 	$test_packager->create();
+
+    // The filename to save the second package as
+    $test_fileout = 'atom_multipart_package2';
+
+    // Create the test package
+	$test_packager = new PackagerAtomMultipart($test_rootin, $test_dirin, $test_rootout, $test_fileout);
+	$test_packager->setTitle("A photo of Stuart Lewis");
+    $test_packager->setIdentifier("facebook.com/stuartlewis");
+    $test_packager->addEntryAuthor("Stuart Lewis");
+    $abstract = "Stuart's profile photo from Facebook";
+    $test_packager->setSummary($abstract);
+    $test_packager->addMetadata("abstract", $abstract);
+    $test_packager->addMetadata("available", "2009");
+    $test_packager->addMetadata("creator", "Lewis, Stuart");
+    $test_packager->addMetadata("identifier", "facebook.com/stuartlewis");
+    $test_packager->addMetadata("title", "Stuart Lewis");
+    $test_packager->addFile('stuartlewis.jpg');
+	$test_packager->create();
+
 ?>
