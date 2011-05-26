@@ -22,11 +22,14 @@
 	// The second test atom entry to deposit
 	$testatom2 = "test-files/atom_multipart/atom2";
 
-	// The test file to deposit
+	// The test atom multipart file to deposit
 	$testfile = "test-files/atom_multipart_package";
 
 	// The second test file to deposit
-	$testfile2 = "test-files/atom_multipart_package2.zip";
+	$testfile2 = "test-files/atom_multipart_package2";
+
+	// The test content zip file to deposit
+	$testcontentfile = "test-files/atom_multipart_package2.zip";
 
 	// The content type of the test file
 	$testcontenttype = "application/zip";
@@ -37,7 +40,7 @@
 	require("../swordappclient.php");
     $testsac = new SWORDAPPClient();
 
-	if (true) {
+	if (false) {
 		print "About to request servicedocument from " . $testurl . "\n";
 		if (empty($testuser)) {
             print "As: anonymous\n";
@@ -55,7 +58,7 @@
 	print "\n\n";
 	
 	if (true) {
-		print "About to deposit file (" . $testfile . ") to " . $testdepositurl . "\n";
+		print "About to deposit multipart file (" . $testfile . ") to " . $testdepositurl . "\n";
 		if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
@@ -77,7 +80,7 @@
 
     print "\n\n";
 
-    if (true) {
+    if (false) {
         print "About to request Atom serialisation of the deposit statement from " . $statement_atom . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -93,7 +96,7 @@
 
     print "\n\n";
 
-    if (true) {
+    if (false) {
         print "About to request OAI-ORE serialisation of the deposit statement from " . $statement_ore . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -106,7 +109,7 @@
 
     print "\n\n";
 
-    if (true) {
+    if (false) {
         print "About to retrieve content from " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -122,14 +125,14 @@
 
     print "\n\n";
 
-    if (false) {
-        print "About to replace content at " . $edit_iri . "\n";
+    if (true) {
+        print "About to replace content at " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->replaceFileContent($edit_media, $testuser, $testpw, $testobo, $testfile2, $testformat, $testcontenttype, false);
+        $testdr = $testsac->replaceFileContent($edit_media, $testuser, $testpw, $testobo, $testcontentfile, $testformat, $testcontenttype, false);
         print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
         if ($testdr->sac_status == 200) {
             $testdr->toString();
@@ -138,7 +141,7 @@
 
     print "\n\n";
 
-    if (true) {
+    if (false) {
         print "About to replace atom entry (" . $testatom2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -146,6 +149,25 @@
             print "As: " . $testuser . "\n";
         }
         $testdr = $testsac->replaceMetadata($edit_iri, $testuser, $testpw, $testobo, $testatom2, false);
+        print "Received HTTP status code: " . $testdr->sac_status .
+              " (" . $testdr->sac_statusmessage . ")\n";
+
+        if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
+            $testdr->toString();
+        }
+    }
+
+
+    print "\n\n";
+
+    if (false) {
+        print "About to replace atom entry and file (" . $testfile2 . ") to " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->replaceMetadataAndFile($edit_iri, $testuser, $testpw, $testobo, $testfile2, $testformat, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 

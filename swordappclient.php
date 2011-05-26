@@ -127,18 +127,14 @@ class SWORDAPPClient {
     // Deposit a multipart package
     function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                               $sac_packaging = '', $sac_inprogress = false) {
+        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
+                                               "POST", $sac_packaging, $sac_inprogress);
+    }
+
+    // A method for multipart deposit - method can be set - POST or PUT
+    private function depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_method,
+                                              $sac_packaging = '', $sac_inprogress = false) {
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
-
-        // Instantiate the streaming class
-        $my_class_inst = new StreamingClass();
-        $my_class_inst->data = fopen($sac_package, "r");
-
-        curl_setopt($sac_curl, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($sac_curl, CURLOPT_LOW_SPEED_LIMIT, 1);
-        curl_setopt($sac_curl, CURLOPT_LOW_SPEED_TIME, 180);
-        curl_setopt($sac_curl, CURLOPT_NOSIGNAL, 1);
-        curl_setopt($sac_curl, CURLOPT_READFUNCTION, array($my_class_inst, "stream_function"));
-        curl_setopt($sac_curl, CURLOPT_POST, true);
 
         if ($sac_inprogress) {
             $header[] = "In-Progress: true";
@@ -151,12 +147,31 @@ class SWORDAPPClient {
         }
 
         $header[] = "Packaging: " . $sac_packaging;
-        $header[] = "Content-Length: " . filesize($sac_package);
         $header[] = "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"";
+
+        // Set the appropriate method
+        if ($sac_method == "PUT") {
+            curl_setopt($sac_curl, CURLOPT_PUT, true);
+            curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_package, 'rb'));
+            curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_package));
+        } else {
+            curl_setopt($sac_curl, CURLOPT_POST, true);
+            curl_setopt($sac_curl, CURLOPT_CONNECTTIMEOUT, 30);
+            curl_setopt($sac_curl, CURLOPT_LOW_SPEED_LIMIT, 1);
+            curl_setopt($sac_curl, CURLOPT_LOW_SPEED_TIME, 180);
+            curl_setopt($sac_curl, CURLOPT_NOSIGNAL, 1);
+            
+            $header[] = "Content-Length: " . filesize($sac_package);
+
+            // Instantiate the streaming class
+            $my_class_inst = new StreamingClass();
+            $my_class_inst->data = fopen($sac_package, "r");
+            curl_setopt($sac_curl, CURLOPT_READFUNCTION, array($my_class_inst, "stream_function"));
+        }
 
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $header);
 
-        $sac_resp = curl_exec ($sac_curl);
+        $sac_resp = curl_exec($sac_curl);
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
 
         curl_close($sac_curl);
@@ -484,6 +499,15 @@ class SWORDAPPClient {
         return $sac_dresponse;
     }
 
+    // Replace a multipart package
+    function replaceMetadataAndFile($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
+                              $sac_packaging = '', $sac_inprogress = false) {
+
+        echo 'HELLO ' . $sac_package . "\n";
+        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
+                                              "PUT", $sac_packaging, $sac_inprogress);
+
+    }
 
     // Function to delete a container (object)
     function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo) {
