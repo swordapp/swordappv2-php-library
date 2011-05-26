@@ -134,20 +134,22 @@ class SWORDAPPClient {
     // A method for multipart deposit - method can be set - POST or PUT
     private function depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_method,
                                               $sac_packaging = '', $sac_inprogress = false) {
-        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p, $sac_obo);
+
+        $headers = array();
 
         if ($sac_inprogress) {
-            $header[] = "In-Progress: true";
+            array_push($headers, "In-Progress: true");
         } else {
-            $header[] = "In-Progress: false";
+            array_push($headers, "In-Progress: false");
         }
 
         if (!empty($sac_obo)) {
-            $headers[] =  "On-Behalf-Of: " . $sac_obo;
+            array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }
 
-        $header[] = "Packaging: " . $sac_packaging;
-        $header[] = "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"";
+        array_push($headers, "Packaging: " . $sac_packaging);
+        array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"");
 
         // Set the appropriate method
         if ($sac_method == "PUT") {
@@ -161,7 +163,7 @@ class SWORDAPPClient {
             curl_setopt($sac_curl, CURLOPT_LOW_SPEED_TIME, 180);
             curl_setopt($sac_curl, CURLOPT_NOSIGNAL, 1);
             
-            $header[] = "Content-Length: " . filesize($sac_package);
+            array_push($headers, "Content-Length: " . filesize($sac_package));
 
             // Instantiate the streaming class
             $my_class_inst = new StreamingClass();
@@ -169,7 +171,7 @@ class SWORDAPPClient {
             curl_setopt($sac_curl, CURLOPT_READFUNCTION, array($my_class_inst, "stream_function"));
         }
 
-        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
         $sac_resp = curl_exec($sac_curl);
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
