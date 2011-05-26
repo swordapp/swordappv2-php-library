@@ -10,21 +10,14 @@ require_once("utils.php");
 
 class SWORDAPPClient {
 
-    private $debug = true;
+    private $debug = false;
 
     // Request a Service Document from the specified url, with the specified credentials,
     // and on-behalf-of the specified user.
     function servicedocument($sac_url, $sac_u, $sac_p, $sac_obo) {
         // Get the service document
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -56,16 +49,10 @@ class SWORDAPPClient {
     function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                      $sac_packaging= '', $sac_contenttype = '', $sac_inprogress = false) {
         // Perform the deposit
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($sac_curl, CURLOPT_POST, true);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
+
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -140,21 +127,17 @@ class SWORDAPPClient {
     // Deposit a multipart package
     function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                               $sac_packaging = '', $sac_inprogress = false) {
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
+
         // Instantiate the streaming class
         $my_class_inst = new StreamingClass();
         $my_class_inst->data = fopen($sac_package, "r");
-
-        $sac_curl = curl_init();
-
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
 
         curl_setopt($sac_curl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($sac_curl, CURLOPT_LOW_SPEED_LIMIT, 1);
         curl_setopt($sac_curl, CURLOPT_LOW_SPEED_TIME, 180);
         curl_setopt($sac_curl, CURLOPT_NOSIGNAL, 1);
         curl_setopt($sac_curl, CURLOPT_READFUNCTION, array($my_class_inst, "stream_function"));
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
         curl_setopt($sac_curl, CURLOPT_POST, true);
 
         if ($sac_inprogress) {
@@ -172,7 +155,6 @@ class SWORDAPPClient {
         $header[] = "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"";
 
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, 1);
 
         $sac_resp = curl_exec ($sac_curl);
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
@@ -217,16 +199,10 @@ class SWORDAPPClient {
     // Function to create a resource by depositing an Atom entry
     function depositAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
         // Perform the deposit
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($sac_curl, CURLOPT_POST, true);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
+
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -286,16 +262,10 @@ class SWORDAPPClient {
     // Complete an incomplete deposit by posting the In-Progress header of false to an SE-IRI
     function completeIncompleteDeposit($sac_url, $sac_u, $sac_p, $sac_obo) {
         // Perform the deposit
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($sac_curl, CURLOPT_POST, true);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
+
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -349,15 +319,8 @@ class SWORDAPPClient {
     // Function to retrieve the content of a container
     function retrieveContentEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
         // Retrieve the content
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -411,16 +374,10 @@ class SWORDAPPClient {
     function replaceFileContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                                 $sac_packaging= '', $sac_contenttype = '', $sac_metadata_relevant = false) {
         // Perform the deposit
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($sac_curl, CURLOPT_PUT, true);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
+
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -466,16 +423,11 @@ class SWORDAPPClient {
     // Function to replace the metadata of a resource
     function replaceMetadata($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
         // Perform the deposit
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
         curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($sac_curl, CURLOPT_PUT, true);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
+
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -536,16 +488,10 @@ class SWORDAPPClient {
     // Function to delete a container (object)
     function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo) {
         // Perform the deposit
-        $sac_curl = curl_init();
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($sac_curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
+
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -572,16 +518,9 @@ class SWORDAPPClient {
 
     // Function to retrieve an Atom statement
     function retrieveAtomStatement($sac_url, $sac_u, $sac_p, $sac_obo) {
-        // Get the service document
-        $sac_curl = curl_init();
+        // Get the Atom statement
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -611,16 +550,9 @@ class SWORDAPPClient {
     // Function to retrieve an OAI-ORE statement - this just returns the xml,
     // it does not marshall it into an object.
     function retrieveOAIOREStatement($sac_url, $sac_u, $sac_p, $sac_obo) {
-        // Get the service document
-        $sac_curl = curl_init();
+        // Get the OAI-ORE statement
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-        if ($this->debug) curl_setopt($sac_curl, CURLOPT_VERBOSE, 1);
-
-        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
-        if(!empty($sac_u) && !empty($sac_p)) {
-            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_u . ":" . $sac_p);
-        }
         $headers = array();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -634,6 +566,29 @@ class SWORDAPPClient {
 
         // Return the result
         return $sac_resp;
+    }
+
+    // Generic private method to initalise a curl transaction
+    private function curl_init($sac_url, $sac_user, $sac_password) {
+        // Initialise the curl object
+        $sac_curl = curl_init();
+
+        // Return the content from curl, rather than outputting it
+        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
+
+        // Set the debug option
+        curl_setopt($sac_curl, CURLOPT_VERBOSE, $this->debug);
+
+        // Set the URL to connect to
+        curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
+
+        // If required, set authentication
+        if(!empty($sac_user) && !empty($sac_password)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_user . ":" . $sac_password);
+        }
+
+        // Return the initalised curl object
+        return $sac_curl;
     }
 }
 
