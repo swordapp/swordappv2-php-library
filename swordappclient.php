@@ -131,149 +131,10 @@ class SWORDAPPClient {
                                                "POST", $sac_packaging, $sac_inprogress);
     }
 
-    // A method for multipart deposit - method can be set - POST or PUT
-    private function depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_method,
-                                              $sac_packaging = '', $sac_inprogress = false) {
-        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p, $sac_obo);
-
-        $headers = array();
-
-        if ($sac_inprogress) {
-            array_push($headers, "In-Progress: true");
-        } else {
-            array_push($headers, "In-Progress: false");
-        }
-
-        if (!empty($sac_obo)) {
-            array_push($headers, "On-Behalf-Of: " . $sac_obo);
-        }
-
-        array_push($headers, "Packaging: " . $sac_packaging);
-        array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"");
-
-        // Set the appropriate method
-        if ($sac_method == "PUT") {
-            curl_setopt($sac_curl, CURLOPT_PUT, true);
-            curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_package, 'rb'));
-            curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_package));
-        } else {
-            curl_setopt($sac_curl, CURLOPT_POST, true);
-            curl_setopt($sac_curl, CURLOPT_CONNECTTIMEOUT, 30);
-            curl_setopt($sac_curl, CURLOPT_LOW_SPEED_LIMIT, 1);
-            curl_setopt($sac_curl, CURLOPT_LOW_SPEED_TIME, 180);
-            curl_setopt($sac_curl, CURLOPT_NOSIGNAL, 1);
-            
-            array_push($headers, "Content-Length: " . filesize($sac_package));
-
-            // Instantiate the streaming class
-            $my_class_inst = new StreamingClass();
-            $my_class_inst->data = fopen($sac_package, "r");
-            curl_setopt($sac_curl, CURLOPT_READFUNCTION, array($my_class_inst, "stream_function"));
-        }
-
-        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
-
-        $sac_resp = curl_exec($sac_curl);
-        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
-
-        curl_close($sac_curl);
-
-        // Parse the result
-        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
-
-        // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
-            try {
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
-            }
-        } else {
-            try {
-                // Parse the result
-                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
-
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
-            }
-        }
-
-        // Return the deposit object
-        return $sac_dresponse;
-    }
-
     // Function to create a resource by depositing an Atom entry
     function depositAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
-        // Perform the deposit
-        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
-
-        curl_setopt($sac_curl, CURLOPT_POST, true);
-
-        $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
-        if (!empty($sac_obo)) {
-            array_push($headers, "On-Behalf-Of: " . $sac_obo);
-        }
-        array_push($headers, "Content-Type: application/atom+xml;type=entry");
-        array_push($headers, "Content-Length: " . filesize($sac_fname));
-        if ($sac_inprogress) {
-            array_push($headers, "In-Progress: true");
-        } else {
-            array_push($headers, "In-Progress: false");
-        }
-
-        curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
-        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
-
-        $sac_resp = curl_exec($sac_curl);
-        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
-        curl_close($sac_curl);
-
-        // Parse the result
-        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
-
-        // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
-            try {
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
-            }
-        } else {
-            try {
-                // Parse the result
-                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
-
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
-            }
-        }
-
-        // Return the deposit object
-        return $sac_dresponse;
+        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
+                                               "POST", $sac_fname, $sac_inprogress);
     }
 
     // Complete an incomplete deposit by posting the In-Progress header of false to an SE-IRI
@@ -442,66 +303,8 @@ class SWORDAPPClient {
 
     // Function to replace the metadata of a resource
     function replaceMetadata($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
-        // Perform the deposit
-        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
-
-        curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($sac_curl, CURLOPT_PUT, true);
-
-        $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
-        if (!empty($sac_obo)) {
-            array_push($headers, "On-Behalf-Of: " . $sac_obo);
-        }
-        array_push($headers, "Content-Type: application/atom+xml;type=entry");
-        if ($sac_inprogress) {
-            array_push($headers, "In-Progress: true");
-        } else {
-            array_push($headers, "In-Progress: false");
-        }
-
-        curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
-        curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
-        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
-
-        $sac_resp = curl_exec($sac_curl);
-        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
-        curl_close($sac_curl);
-
-        // Parse the result
-        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
-
-        // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
-            try {
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
-            }
-        } else {
-            try {
-                // Parse the result
-                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
-
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
-            }
-        }
-
-        // Return the deposit object
-        return $sac_dresponse;
+        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
+                                               $sac_fname, "PUT", $sac_inprogress);
     }
 
     // Replace a multipart package
@@ -512,7 +315,7 @@ class SWORDAPPClient {
     }
 
     // Add a an extra file to the media resource
-    function addFileToMediaResource($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
+    function addExtraFileToMediaResource($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                                     $sac_contenttype = '', $sac_metadata_relevant = false) {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
@@ -588,11 +391,19 @@ class SWORDAPPClient {
     }
 
     // Add a multipart package
-    function addNewPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
+    function addExtraPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                            $sac_packaging = '', $sac_contenttype, $sac_inprogress = false) {
         return $this->deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                               $sac_packaging, $sac_contenttype, $sac_inprogress);
     }
+
+    // Add a new Atom entry
+    function addExtraAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
+        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
+                                               $sac_fname, "POST", $sac_inprogress);
+    }
+
+
 
     // Function to delete a container (object)
     function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo) {
@@ -698,6 +509,159 @@ class SWORDAPPClient {
 
         // Return the initalised curl object
         return $sac_curl;
+    }
+
+    // A method for multipart deposit - method can be set - POST or PUT
+    private function depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_method,
+                                              $sac_packaging = '', $sac_inprogress = false) {
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p, $sac_obo);
+
+        $headers = array();
+
+        if ($sac_inprogress) {
+            array_push($headers, "In-Progress: true");
+        } else {
+            array_push($headers, "In-Progress: false");
+        }
+
+        if (!empty($sac_obo)) {
+            array_push($headers, "On-Behalf-Of: " . $sac_obo);
+        }
+
+        array_push($headers, "Packaging: " . $sac_packaging);
+        array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"");
+
+        // Set the appropriate method
+        if ($sac_method == "PUT") {
+            curl_setopt($sac_curl, CURLOPT_PUT, true);
+            curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_package, 'rb'));
+            curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_package));
+        } else {
+            curl_setopt($sac_curl, CURLOPT_POST, true);
+            curl_setopt($sac_curl, CURLOPT_CONNECTTIMEOUT, 30);
+            curl_setopt($sac_curl, CURLOPT_LOW_SPEED_LIMIT, 1);
+            curl_setopt($sac_curl, CURLOPT_LOW_SPEED_TIME, 180);
+            curl_setopt($sac_curl, CURLOPT_NOSIGNAL, 1);
+
+            array_push($headers, "Content-Length: " . filesize($sac_package));
+
+            // Instantiate the streaming class
+            $my_class_inst = new StreamingClass();
+            $my_class_inst->data = fopen($sac_package, "r");
+            curl_setopt($sac_curl, CURLOPT_READFUNCTION, array($my_class_inst, "stream_function"));
+        }
+
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+
+        curl_close($sac_curl);
+
+        // Parse the result
+        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
+
+        // Was it a successful result?
+        if (($sac_status >= 200) || ($sac_status < 300)) {
+            try {
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            }
+        } else {
+            try {
+                // Parse the result
+                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
+
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            }
+        }
+
+        // Return the deposit object
+        return $sac_dresponse;
+    }
+
+    // Function to deposit an Atom entry
+    private function depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
+                                              $sac_fname, $sac_method, $sac_inprogress = false) {
+        // Perform the deposit
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
+
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        if (!empty($sac_obo)) {
+            array_push($headers, "On-Behalf-Of: " . $sac_obo);
+        }
+        array_push($headers, "Content-Type: application/atom+xml;type=entry");
+        if ($sac_inprogress) {
+            array_push($headers, "In-Progress: true");
+        } else {
+            array_push($headers, "In-Progress: false");
+        }
+
+        // Set the appropriate method
+        if ($sac_method == "PUT") {
+            curl_setopt($sac_curl, CURLOPT_PUT, true);
+            curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
+            curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
+        } else {
+            curl_setopt($sac_curl, CURLOPT_POST, true);
+            curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
+            array_push($headers, "Content-Length: " . filesize($sac_fname));
+        }
+
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        curl_close($sac_curl);
+
+        // Parse the result
+        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
+
+        // Was it a successful result?
+        if (($sac_status >= 200) || ($sac_status < 300)) {
+            try {
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            }
+        } else {
+            try {
+                // Parse the result
+                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
+
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            }
+        }
+
+        // Return the deposit object
+        return $sac_dresponse;
     }
 }
 

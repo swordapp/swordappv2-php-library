@@ -59,9 +59,9 @@
 		if ($testsdr->sac_status == 200) {
             $testsdr->toString();
         }
-	}
 
-	print "\n\n";
+        print "\n\n";
+	}
 	
 	if (true) {
 		print "About to deposit multipart file (" . $testmultipart . ") to " . $testdepositurl . "\n";
@@ -77,14 +77,14 @@
             $testdr->toString();
         }
 
+        print "\n\n";
+
         $edit_iri = $testdr->sac_edit_iri;
         $cont_iri = $testdr->sac_content_src;
         $edit_media = $testdr->sac_edit_media_iri;
         $statement_atom = $testdr->sac_state_iri_atom;
         $statement_ore = $testdr->sac_state_iri_ore;
     }
-
-    print "\n\n";
 
     if (false) {
         print "About to request Atom serialisation of the deposit statement from " . $statement_atom . "\n";
@@ -98,9 +98,9 @@
         if (($testatomstatement->sac_status >= 200) || ($testatomstatement->sac_status < 300)) {
             $testatomstatement->toString();
         }
-    }
 
-    print "\n\n";
+        print "\n\n";
+    }
 
     if (false) {
         print "About to request OAI-ORE serialisation of the deposit statement from " . $statement_ore . "\n";
@@ -111,9 +111,9 @@
         }
         $testoaiore = $testsac->retrieveOAIOREStatement($statement_ore, $testuser, $testpw, $testobo);
         echo $testoaiore;
-    }
 
-    print "\n\n";
+        print "\n\n";
+    }
 
     if (false) {
         print "About to retrieve content from " . $edit_iri . "\n";
@@ -127,11 +127,11 @@
         if ($testdr->sac_status == 200) {
             $testdr->toString();
         }
+
+        print "\n\n";
     }
 
-    print "\n\n";
-
-    if (false) {
+    if (true) {
         print "About to replace content at " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -143,11 +143,11 @@
         if ($status == 204) {
             echo "Content replaced\n";
         }
+
+        print "\n\n";
     }
 
-    print "\n\n";
-
-    if (false) {
+    if (true) {
         print "About to replace atom entry (" . $testatomentry2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -161,11 +161,11 @@
         if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
             $testdr->toString();
         }
+
+        print "\n\n";
     }
 
-    print "\n\n";
-
-    if (false) {
+    if (true) {
         print "About to replace atom entry and file (" . $testmultipart2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -179,27 +179,27 @@
         if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
             $testdr->toString();
         }
+
+        print "\n\n";
     }
 
-    print "\n\n";
-
-    if (false) {
+    if (true) {
         print "About to add file (" . $testextrafile . ") to " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->addFileToMediaResource($edit_media, $testuser, $testpw, $testobo, $testextrafile, $testextrafiletype, false);
+        $testdr = $testsac->addExtraFileToMediaResource($edit_media, $testuser, $testpw, $testobo, $testextrafile, $testextrafiletype, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 
         if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
             $testdr->toString();
         }
-    }
 
-    print "\n\n";
+        print "\n\n";
+    }
 
     if (true) {
         print "About to add package (" . $testzipcontentfile . ") to " . $edit_iri . "\n";
@@ -208,13 +208,33 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->deposit($edit_iri, $testuser, $testpw, $testobo, $testzipcontentfile, $testpackaging, $testcontenttype, false);
+        $testdr = $testsac->addExtraPackage($edit_iri, $testuser, $testpw, $testobo, $testzipcontentfile, $testpackaging, $testcontenttype, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 
         if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
             $testdr->toString();
         }
+
+        print "\n\n";
+    }
+
+    if (true) {
+        print "About to add atom entry (" . $testatomentry2 . ") to " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->addExtraAtomEntry($edit_iri, $testuser, $testpw, $testobo, $testatomentry2, false);
+        print "Received HTTP status code: " . $testdr->sac_status .
+              " (" . $testdr->sac_statusmessage . ")\n";
+
+        if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
+            $testdr->toString();
+        }
+
+        print "\n\n";
     }
 
     /**
@@ -232,27 +252,27 @@
         if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
             $testdr->toString();
         }
-    }
 
-    print "\n\n";
+       print "\n\n";
+    }
     */
 
     if (false) {
         print "About to delete container at " . $edit_iri . "\n";
         if (empty($testuser)) {
-                print "As: anonymous\n";
-            } else {
-                print "As: " . $testuser . "\n";
-            }
-            try {
-                $deleteresponse = $testsac->deleteContainer($edit_iri, $testuser, $testpw, $testobo);
-                print " - Container successfully deleted, HTTP code 204\n";
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-    }
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        try {
+            $deleteresponse = $testsac->deleteContainer($edit_iri, $testuser, $testpw, $testobo);
+            print " - Container successfully deleted, HTTP code 204\n";
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
 
-    print "\n\n";
+        print "\n\n";
+    }
 
     if (false) {
         print "About to deposit atom entry (" . $testatomentry . ") to " . $testdepositurl . "\n";
@@ -269,14 +289,14 @@
             $testdr->toString();
         }
 
+        print "\n\n";
+
         $edit_iri = $testdr->sac_edit_iri;
         $cont_iri = $testdr->sac_content_src;
         $edit_media = $testdr->sac_edit_media_iri;
         $statement_atom = $testdr->sac_state_iri_atom;
         $statement_ore = $testdr->sac_state_iri_ore;
     }
-
-    print "\n\n";
 
     if (false) {
         print "About to retrieve content from " . $edit_iri . "\n";
@@ -290,8 +310,8 @@
         if ($testdr->sac_status == 200) {
             $testdr->toString();
         }
+
+        print "\n\n";
     }
-
-
 
 ?>
