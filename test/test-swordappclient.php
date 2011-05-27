@@ -131,7 +131,7 @@
         print "\n\n";
     }
 
-    if (true) {
+    if (false) {
         print "About to replace content at " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -147,7 +147,7 @@
         print "\n\n";
     }
 
-    if (true) {
+    if (false) {
         print "About to replace atom entry (" . $testatomentry2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -165,8 +165,8 @@
         print "\n\n";
     }
 
-    if (true) {
-        print "About to replace atom entry and file (" . $testmultipart2 . ") to " . $edit_iri . "\n";
+    if (false) {
+        print "About to replace multipart atom entry and file (" . $testmultipart2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
@@ -183,7 +183,7 @@
         print "\n\n";
     }
 
-    if (true) {
+    if (false) {
         print "About to add file (" . $testextrafile . ") to " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -201,7 +201,7 @@
         print "\n\n";
     }
 
-    if (true) {
+    if (false) {
         print "About to add package (" . $testzipcontentfile . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -219,7 +219,7 @@
         print "\n\n";
     }
 
-    if (true) {
+    if (false) {
         print "About to add atom entry (" . $testatomentry2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -236,6 +236,25 @@
 
         print "\n\n";
     }
+
+    if (true) {
+        print "About to add multipart atom entry and file (" . $testmultipart2 . ") to " . $edit_iri . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->addExtraMultipartPackage($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, $testpackaging, false);
+        print "Received HTTP status code: " . $testdr->sac_status .
+              " (" . $testdr->sac_statusmessage . ")\n";
+
+        if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
+            $testdr->toString();
+        }
+
+        print "\n\n";
+    }
+
 
     /**
     if (false) {

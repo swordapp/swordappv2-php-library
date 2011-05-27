@@ -390,7 +390,7 @@ class SWORDAPPClient {
         return $sac_dresponse;
     }
 
-    // Add a multipart package
+    // Add a new package
     function addExtraPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                            $sac_packaging = '', $sac_contenttype, $sac_inprogress = false) {
         return $this->deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
@@ -403,7 +403,12 @@ class SWORDAPPClient {
                                                $sac_fname, "POST", $sac_inprogress);
     }
 
-
+    // Add a new multipart package
+    function addExtraMultipartPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
+                                      $sac_packaging = '', $sac_inprogress = false) {
+        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
+                                               "POST", $sac_packaging, $sac_inprogress);
+    }
 
     // Function to delete a container (object)
     function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo) {
