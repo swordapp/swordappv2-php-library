@@ -217,6 +217,60 @@ class SWORDAPPClient {
         return $sac_resp;
     }
 
+    // Function to retrieve the entry content of a container
+    function retrieveContentEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
+        // Retrieve the content
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
+
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        if (!empty($sac_obo)) {
+            array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
+        }
+        if (!empty($sac_accept_packaging)) {
+            array_push($headers, "Accept-Packaging: " . $sac_accept_packaging);
+        }
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        curl_close($sac_curl);
+
+        // Parse the result
+        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
+
+        // Parse the result
+        if (($sac_status >= 200) || ($sac_status < 300)) {
+            try {
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            }
+        } else {
+            try {
+                // Parse the result
+                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
+
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            }
+        }
+
+        // Return the deposit object
+        return $sac_dresponse;
+    }
+
     // Replace the file content of a resource
     function replaceFileContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                                 $sac_packaging= '', $sac_contenttype = '', $sac_metadata_relevant = false) {

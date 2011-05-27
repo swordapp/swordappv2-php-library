@@ -86,7 +86,7 @@
         $statement_ore = $testdr->sac_state_iri_ore;
     }
 
-    if (true) {
+    if (false) {
         print "About to request Atom serialisation of the deposit statement from " . $statement_atom . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -115,7 +115,7 @@
         print "\n\n";
     }
 
-    if (true) {
+    if (false) {
         print "About to retrieve content from " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
