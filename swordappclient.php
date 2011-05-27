@@ -195,7 +195,7 @@ class SWORDAPPClient {
     }
 
     // Function to retrieve the content of a container
-    function retrieveContentEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
+    function retrieveContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
         // Retrieve the content
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
@@ -213,39 +213,8 @@ class SWORDAPPClient {
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
         curl_close($sac_curl);
 
-        // Parse the result
-        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
-
-        // Parse the result
-        if (($sac_status >= 200) || ($sac_status < 300)) {
-            try {
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
-            }
-        } else {
-            try {
-                // Parse the result
-                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
-
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
-            }
-        }
-
-        // Return the deposit object
-        return $sac_dresponse;
+        // Return the response
+        return $sac_resp;
     }
 
     // Replace the file content of a resource

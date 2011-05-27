@@ -86,7 +86,7 @@
         $statement_ore = $testdr->sac_state_iri_ore;
     }
 
-    if (false) {
+    if (true) {
         print "About to request Atom serialisation of the deposit statement from " . $statement_atom . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
@@ -115,18 +115,15 @@
         print "\n\n";
     }
 
-    if (false) {
-        print "About to retrieve content from " . $edit_iri . "\n";
+    if (true) {
+        print "About to retrieve content from " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->retrieveContentEntry($edit_iri, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
-        print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
-        if ($testdr->sac_status == 200) {
-            $testdr->toString();
-        }
+        $testresp = $testsac->retrieveContent($edit_media, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
+        // file_put_contents("temp-save.zip", $testresp);
 
         print "\n\n";
     }
@@ -237,7 +234,7 @@
         print "\n\n";
     }
 
-    if (true) {
+    if (false) {
         print "About to add multipart atom entry and file (" . $testmultipart2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
