@@ -17,24 +17,30 @@
 	$testdepositurl = "http://localhost/sss/col-uri/da9b9feb-4266-446a-8847-46f6c30b2ff0";
 
 	// The test atom entry to deposit
-	$testatom = "test-files/atom_multipart/atom";
+	$testatomentry = "test-files/atom_multipart/atom";
 
 	// The second test atom entry to deposit
-	$testatom2 = "test-files/atom_multipart/atom2";
+	$testatomentry2 = "test-files/atom_multipart/atom2";
 
 	// The test atom multipart file to deposit
-	$testfile = "test-files/atom_multipart_package";
+	$testmultipart = "test-files/atom_multipart_package";
 
 	// The second test file to deposit
-	$testfile2 = "test-files/atom_multipart_package2";
+	$testmultipart2 = "test-files/atom_multipart_package2";
 
 	// The test content zip file to deposit
-	$testcontentfile = "test-files/atom_multipart_package2.zip";
+	$testzipcontentfile = "test-files/atom_multipart_package2.zip";
+
+    // A plain content file
+    $testextrafile = "test-files/swordlogo.jpg";
+
+    // The file type of the extra file
+    $testextrafiletype = "image/jpg";
 
 	// The content type of the test file
 	$testcontenttype = "application/zip";
 
-	// The packaging format of the test fifle
+	// The packaging format of the test file
 	$testformat = "http://purl.org/net/sword/package/SimpleZip";
 	
 	require("../swordappclient.php");
@@ -58,13 +64,13 @@
 	print "\n\n";
 	
 	if (true) {
-		print "About to deposit multipart file (" . $testfile . ") to " . $testdepositurl . "\n";
+		print "About to deposit multipart file (" . $testmultipart . ") to " . $testdepositurl . "\n";
 		if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testfile, $testformat, false);
+		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testmultipart, $testformat, false);
 		print "Received HTTP status code: " . $testdr->sac_status . " (" . $testdr->sac_statusmessage . ")\n";
 		
 		if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
@@ -125,30 +131,30 @@
 
     print "\n\n";
 
-    if (true) {
+    if (false) {
         print "About to replace content at " . $edit_media . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->replaceFileContent($edit_media, $testuser, $testpw, $testobo, $testcontentfile, $testformat, $testcontenttype, false);
-        print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
-        if ($testdr->sac_status == 200) {
-            $testdr->toString();
+        $status = $testsac->replaceFileContent($edit_media, $testuser, $testpw, $testobo, $testzipcontentfile, $testformat, $testcontenttype, false);
+        print "Received HTTP status code: " . $status . "\n";
+        if ($status == 204) {
+            echo "Content replaced\n";
         }
     }
 
     print "\n\n";
 
     if (false) {
-        print "About to replace atom entry (" . $testatom2 . ") to " . $edit_iri . "\n";
+        print "About to replace atom entry (" . $testatomentry2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->replaceMetadata($edit_iri, $testuser, $testpw, $testobo, $testatom2, false);
+        $testdr = $testsac->replaceMetadata($edit_iri, $testuser, $testpw, $testobo, $testatomentry2, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 
@@ -157,17 +163,16 @@
         }
     }
 
-
     print "\n\n";
 
     if (false) {
-        print "About to replace atom entry and file (" . $testfile2 . ") to " . $edit_iri . "\n";
+        print "About to replace atom entry and file (" . $testmultipart2 . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->replaceMetadataAndFile($edit_iri, $testuser, $testpw, $testobo, $testfile2, $testformat, false);
+        $testdr = $testsac->replaceMetadataAndFile($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, $testformat, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 
@@ -176,6 +181,23 @@
         }
     }
 
+    print "\n\n";
+
+    if (true) {
+        print "About to add file (" . $testextrafile . ") to " . $edit_media . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->addFileToMediaResource($edit_media, $testuser, $testpw, $testobo, $testextrafile, $testextrafiletype, false);
+        print "Received HTTP status code: " . $testdr->sac_status .
+              " (" . $testdr->sac_statusmessage . ")\n";
+
+        if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
+            $testdr->toString();
+        }
+    }
 
     /**
     if (false) {
@@ -215,13 +237,13 @@
     print "\n\n";
 
     if (false) {
-        print "About to deposit atom entry (" . $testatom . ") to " . $testdepositurl . "\n";
+        print "About to deposit atom entry (" . $testatomentry . ") to " . $testdepositurl . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->depositAtomEntry($testdepositurl, $testuser, $testpw, $testobo, $testatom, false);
+        $testdr = $testsac->depositAtomEntry($testdepositurl, $testuser, $testpw, $testobo, $testatomentry, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 

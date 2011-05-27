@@ -434,6 +434,9 @@ class SWORDAPPClient {
         // Was it a successful result?
         if ($sac_status != 204) {
             throw new Exception("Error replacing file (HTTP code: " . $sac_status . ")");
+        } else {
+            echo "returning " . $sac_status . "\n";
+            return $sac_status;
         }
     }
 
@@ -503,12 +506,87 @@ class SWORDAPPClient {
 
     // Replace a multipart package
     function replaceMetadataAndFile($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                              $sac_packaging = '', $sac_inprogress = false) {
+                                    $sac_packaging = '', $sac_inprogress = false) {
 
-        echo 'HELLO ' . $sac_package . "\n";
         return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                                               "PUT", $sac_packaging, $sac_inprogress);
 
+    }
+
+    // Add a an extra file to the media resource
+    function addFileToMediaResource($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
+                                    $sac_contenttype = '', $sac_metadata_relevant = false) {
+        // Perform the deposit
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
+
+        curl_setopt($sac_curl, CURLOPT_POST, true);
+
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        array_push($headers, "Content-MD5: " . md5_file($sac_fname));
+        if (!empty($sac_obo)) {
+            array_push($headers, "On-Behalf-Of: " . $sac_obo);
+        }
+        if (!empty($sac_contenttype)) {
+            array_push($headers, "Content-Type: " . $sac_contenttype);
+        }
+        if ($sac_metadata_relevant) {
+            array_push($headers, "Metadata-Relevant: true");
+        } else {
+            array_push($headers, "Metadata-Relevant: false");
+        }
+        array_push($headers, "Content-Length: " . filesize($sac_fname));
+
+        // Set the Content-Disposition header
+        $index = strpos(strrev($sac_fname), '/');
+        if ($index !== false) {
+            $index = strlen($sac_fname) - $index;
+            $sac_fname_trimmed = substr($sac_fname, $index);
+        } else {
+            $sac_fname_trimmed = $sac_fname;
+        }
+        array_push($headers, "Content-Disposition: filename=" . $sac_fname_trimmed);
+        
+        curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+
+        $sac_resp = curl_exec($sac_curl);
+        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
+        curl_close($sac_curl);
+
+        // Parse the result
+        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
+        
+        // Was it a successful result?
+        if (($sac_status >= 200) || ($sac_status < 300)) {
+            try {
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            }
+        } else {
+            try {
+                // Parse the result
+                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
+
+                // Get the deposit results
+                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_ns = $sac_xml->getNamespaces(true);
+
+                // Build the deposit response object
+                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
+            } catch (Exception $e) {
+                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            }
+        }
+
+        return $sac_dresponse;
     }
 
     // Function to delete a container (object)
