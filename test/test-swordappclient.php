@@ -314,14 +314,14 @@
         $statement_ore = $testdr->sac_state_iri_ore;
     }
 
-    if (false) {
-        print "About to retrieve content from " . $edit_iri . "\n";
+    if (true) {
+        print "About to retrieve deposit receipt from " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->retrieveContentEntry($edit_iri, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
+        $testdr = $testsac->retrieveDepositReceipt($edit_iri, $testuser, $testpw, $testobo, "http://purl.org/net/sword/package/SimpleZip");
         print "Received HTTP status code: " . $testsdr->sac_status . " (" . $testsdr->sac_statusmessage . ")\n";
         if ($testdr->sac_status == 200) {
             $testdr->toString();

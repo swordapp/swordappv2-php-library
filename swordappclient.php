@@ -218,7 +218,7 @@ class SWORDAPPClient {
     }
 
     // Function to retrieve the entry content of a container
-    function retrieveContentEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
+    function retrieveDepositReceipt($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
         // Retrieve the content
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
