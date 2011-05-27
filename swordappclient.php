@@ -507,10 +507,8 @@ class SWORDAPPClient {
     // Replace a multipart package
     function replaceMetadataAndFile($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                                     $sac_packaging = '', $sac_inprogress = false) {
-
         return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                                               "PUT", $sac_packaging, $sac_inprogress);
-
     }
 
     // Add a an extra file to the media resource
@@ -587,6 +585,13 @@ class SWORDAPPClient {
         }
 
         return $sac_dresponse;
+    }
+
+    // Add a multipart package
+    function addNewPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
+                           $sac_packaging = '', $sac_contenttype, $sac_inprogress = false) {
+        return $this->deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
+                              $sac_packaging, $sac_contenttype, $sac_inprogress);
     }
 
     // Function to delete a container (object)

@@ -41,7 +41,7 @@
 	$testcontenttype = "application/zip";
 
 	// The packaging format of the test file
-	$testformat = "http://purl.org/net/sword/package/SimpleZip";
+	$testpackaging = "http://purl.org/net/sword/package/SimpleZip";
 	
 	require("../swordappclient.php");
     $testsac = new SWORDAPPClient();
@@ -70,7 +70,7 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testmultipart, $testformat, false);
+		$testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testmultipart, $testpackaging, false);
 		print "Received HTTP status code: " . $testdr->sac_status . " (" . $testdr->sac_statusmessage . ")\n";
 		
 		if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
@@ -138,7 +138,7 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-        $status = $testsac->replaceFileContent($edit_media, $testuser, $testpw, $testobo, $testzipcontentfile, $testformat, $testcontenttype, false);
+        $status = $testsac->replaceFileContent($edit_media, $testuser, $testpw, $testobo, $testzipcontentfile, $testpackaging, $testcontenttype, false);
         print "Received HTTP status code: " . $status . "\n";
         if ($status == 204) {
             echo "Content replaced\n";
@@ -172,7 +172,25 @@
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->replaceMetadataAndFile($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, $testformat, false);
+        $testdr = $testsac->replaceMetadataAndFile($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, $testpackaging, false);
+        print "Received HTTP status code: " . $testdr->sac_status .
+              " (" . $testdr->sac_statusmessage . ")\n";
+
+        if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
+            $testdr->toString();
+        }
+    }
+
+    print "\n\n";
+
+    if (false) {
+        print "About to add file (" . $testextrafile . ") to " . $edit_media . "\n";
+        if (empty($testuser)) {
+            print "As: anonymous\n";
+        } else {
+            print "As: " . $testuser . "\n";
+        }
+        $testdr = $testsac->addFileToMediaResource($edit_media, $testuser, $testpw, $testobo, $testextrafile, $testextrafiletype, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 
@@ -184,13 +202,13 @@
     print "\n\n";
 
     if (true) {
-        print "About to add file (" . $testextrafile . ") to " . $edit_media . "\n";
+        print "About to add package (" . $testzipcontentfile . ") to " . $edit_iri . "\n";
         if (empty($testuser)) {
             print "As: anonymous\n";
         } else {
             print "As: " . $testuser . "\n";
         }
-        $testdr = $testsac->addFileToMediaResource($edit_media, $testuser, $testpw, $testobo, $testextrafile, $testextrafiletype, false);
+        $testdr = $testsac->deposit($edit_iri, $testuser, $testpw, $testobo, $testzipcontentfile, $testpackaging, $testcontenttype, false);
         print "Received HTTP status code: " . $testdr->sac_status .
               " (" . $testdr->sac_statusmessage . ")\n";
 
