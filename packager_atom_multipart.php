@@ -133,25 +133,25 @@ class PackagerAtomMultipart {
 
             // Create the multipart package
             $atom = file_get_contents($sac_atom);
-            $xml = "\n";
-            $xml .= "--===============SWORDPARTS==\n";
-            $xml .= "Content-Type: application/atom+xml\n";
-            $xml .= "MIME-Version: 1.0\n";
-            $xml .= "Content-Disposition: attachment; name=\"atom\"\n";
-            $xml .= "\n";
+            $xml = "\r\nMedia Post\r\n";
+            $xml .= "--===============SWORDPARTS==\r\n";
+            $xml .= "Content-Type: application/atom+xml\r\n";
+            $xml .= "MIME-Version: 1.0\r\n";
+            $xml .= "Content-Disposition: attachment; name=\"atom\"\r\n";
+            $xml .= "\r\n";
             $xml .= $atom;
             unset($atom);
-            $xml .= "--===============SWORDPARTS==\n";
-            $xml .= "Content-Type: application/zip\n";
-            $xml .= "Content-MD5: " . md5_file($sac_package) . "\n";
-            $xml .= "MIME-Version: 1.0\n";
-            $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"package.zip\"\n";
-            $xml .= "Content-Transfer-Encoding: base64\n\n";
+            $xml .= "--===============SWORDPARTS==\r\n";
+            $xml .= "Content-Type: application/zip\r\n";
+            $xml .= "Content-MD5: " . md5_file($sac_package) . "\r\n";
+            $xml .= "MIME-Version: 1.0\r\n";
+            $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"package.zip\"\r\n";
+            $xml .= "Content-Transfer-Encoding: base64\r\n\r\n";
             $temp = $this->sac_root_out . '/' . $this->sac_file_out;
             file_put_contents($temp, $xml);
             $xml = "";
             base64chunk($sac_package, $temp, FILE_APPEND);
-            $xml .= "--===============SWORDPARTS==--\n";
+            $xml .= "--===============SWORDPARTS==--\r\n";
             file_put_contents($temp, $xml, FILE_APPEND);
         }
     }
