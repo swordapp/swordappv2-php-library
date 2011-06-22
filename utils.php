@@ -44,14 +44,14 @@
 
             if (strlen($b64) < 76) {
                 if ($eof) {
-                    $put = $b64 . "\n";
+                    $put = $b64 . "\r\n";
                     $cache = '';
                 } else {
                     $cache = $row;
                 }
             } elseif (strlen($b64) > 76) {
                 do {
-                    $put .= substr($b64, 0, 76) . "\n";
+                    $put .= substr($b64, 0, 76) . "\r\n";
                     $b64 = substr($b64, 76);
                 } while (strlen($b64) > 76);
 
@@ -60,7 +60,7 @@
                 if (!$eof && $b64{75} == '=') {
                    $cache = $row;
                 } else {
-                    $put = $b64."\n";
+                    $put = $b64."\r\n";
                     $cache = '';
                 }
             }
