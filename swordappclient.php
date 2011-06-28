@@ -557,7 +557,7 @@ class SWORDAPPClient {
         }
 
         array_push($headers, "Packaging: " . $sac_packaging);
-        array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"");
+        array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"; type=\"application/atom+xml\"");
 
         // Set the appropriate method
         if ($sac_method == "PUT") {
