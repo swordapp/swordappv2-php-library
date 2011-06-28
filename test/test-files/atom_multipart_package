@@ -1,5 +1,5 @@
 
-
+Media Post
 --===============SWORDPARTS==
 Content-Type: application/atom+xml
 MIME-Version: 1.0
@@ -30,6 +30,7 @@ Content-Type: application/zip
 Content-MD5: cb52ce40b1ffa8057fb07346000ef139
 MIME-Version: 1.0
 Content-Disposition: attachment; name="payload"; filename="package.zip"
+Packaging: http://purl.org/net/sword/package/SimpleZip
 Content-Transfer-Encoding: base64
 
 UEsDBBQAAAAIAMiglT7MRA/WYMQDAK0uBAAaAAAAaWYtc3dvcmQtaXMtdGhlLWFuc3dlci5wZGbM

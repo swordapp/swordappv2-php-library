@@ -146,6 +146,7 @@ class PackagerAtomMultipart {
             $xml .= "Content-MD5: " . md5_file($sac_package) . "\r\n";
             $xml .= "MIME-Version: 1.0\r\n";
             $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"package.zip\"\r\n";
+            $xml .= "Packaging: http://purl.org/net/sword/package/SimpleZip\r\n";
             $xml .= "Content-Transfer-Encoding: base64\r\n\r\n";
             $temp = $this->sac_root_out . '/' . $this->sac_file_out;
             file_put_contents($temp, $xml);
