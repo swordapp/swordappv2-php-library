@@ -38,7 +38,8 @@ class Workspace {
             }
             
 			// An array of the accepted packages
-			foreach ($sac_collection->xpath("sword:acceptPackaging") as $sac_acceptpackaging) {
+			$sac_collection->registerXPathNamespace('sword', 'http://purl.org/net/sword/terms/');
+            foreach ($sac_collection->xpath("sword:acceptPackaging") as $sac_acceptpackaging) {
 				$sac_newcollection->addAcceptPackaging($sac_acceptpackaging[0]);
 			}
 
