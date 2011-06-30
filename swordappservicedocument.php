@@ -62,6 +62,7 @@ class SWORDAPPServiceDocument {
 		if ($sac_thexml != '') {
 			$sac_xml = @new SimpleXMLElement($sac_thexml);
         	$sac_ns = $sac_xml->getNamespaces(true);
+            if (!isset($sac_ns['sword'])) $sac_ns['sword'] = 'http://purl.org/net/sword/terms/';
 			$this->sac_version = $sac_xml->children($sac_ns['sword'])->version;
             $this->sac_verbose = $sac_xml->children($sac_ns['sword'])->verbose;
             $this->sac_noop = $sac_xml->children($sac_ns['sword'])->noOp;
