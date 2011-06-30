@@ -126,9 +126,9 @@ class SWORDAPPClient {
 
     // Deposit a multipart package
     function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                              $sac_packaging = '', $sac_inprogress = false) {
+                              $sac_inprogress = false) {
         return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                               "POST", $sac_packaging, $sac_inprogress);
+                                               "POST", $sac_inprogress);
     }
 
     // Function to create a resource by depositing an Atom entry
@@ -332,9 +332,9 @@ class SWORDAPPClient {
 
     // Replace a multipart package
     function replaceMetadataAndFile($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                    $sac_packaging = '', $sac_inprogress = false) {
+                                    $sac_inprogress = false) {
         return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                              "PUT", $sac_packaging, $sac_inprogress);
+                                              "PUT", $sac_inprogress);
     }
 
     // Add a an extra file to the media resource
@@ -428,9 +428,9 @@ class SWORDAPPClient {
 
     // Add a new multipart package
     function addExtraMultipartPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                      $sac_packaging = '', $sac_inprogress = false) {
+                                      $sac_inprogress = false) {
         return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                               "POST", $sac_packaging, $sac_inprogress);
+                                               "POST", $sac_inprogress);
     }
 
     // Function to delete a container (object)
@@ -541,7 +541,7 @@ class SWORDAPPClient {
 
     // A method for multipart deposit - method can be set - POST or PUT
     private function depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_method,
-                                              $sac_packaging = '', $sac_inprogress = false) {
+                                              $sac_inprogress = false) {
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p, $sac_obo);
 
         $headers = array();
@@ -556,7 +556,6 @@ class SWORDAPPClient {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }
 
-        array_push($headers, "Packaging: " . $sac_packaging);
         array_push($headers, "Content-Type: multipart/related; boundary=\"===============SWORDPARTS==\"; type=\"application/atom+xml\"");
 
         // Set the appropriate method
