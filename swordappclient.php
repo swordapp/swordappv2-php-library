@@ -327,7 +327,7 @@ class SWORDAPPClient {
     // Function to replace the metadata of a resource
     function replaceMetadata($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
         return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
-                                               $sac_fname, "PUT", $sac_inprogress);
+                                               "PUT", $sac_fname, $sac_inprogress);
     }
 
     // Replace a multipart package
@@ -423,7 +423,7 @@ class SWORDAPPClient {
     // Add a new Atom entry
     function addExtraAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
         return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
-                                               $sac_fname, "POST", $sac_inprogress);
+                                               "POST", $sac_fname, $sac_inprogress);
     }
 
     // Add a new multipart package
@@ -622,7 +622,7 @@ class SWORDAPPClient {
 
     // Function to deposit an Atom entry
     private function depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
-                                              $sac_fname, $sac_method, $sac_inprogress = false) {
+                                              $sac_method, $sac_fname, $sac_inprogress = false) {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
