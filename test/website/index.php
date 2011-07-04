@@ -28,13 +28,14 @@
 
         <?php if (!empty($errormsg)) { ?><div class="error"><?php echo $errormsg; ?></div><?php } ?>
 
-        <p>Complete the following form to use the
+        <p>
+            Complete the following form to use the
             <a href="http://swordapp.org/sword-v2/sword-v2-specifications/">SWORD v2</a> exerciser:
         </p>
 
         <div class="section">
 
-            <form action="get-sd/" method="post">
+            <form action="get/sd/" method="post">
 
                 <div class="formtextnext">
 

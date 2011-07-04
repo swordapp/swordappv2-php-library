@@ -1,8 +1,8 @@
 <?php
 
     // Load the PHP library
-    include_once('../../../swordappclient.php');
-    include_once('../utils.php');
+    include_once('../../../../swordappclient.php');
+    include_once('../../utils.php');
 
     // Store the values
     session_start();
@@ -19,7 +19,7 @@
         $error = 'Unable to load service document. HTTP response code: ' .
                  $response->sac_status . ' - ' . $response->sac_statusmessage;
         $_SESSION['error'] = $error;
-        header('Location: ../');
+        header('Location: ../../');
         die();
     } else {
         $_SESSION['error'] = '';
@@ -29,8 +29,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>SWORD v2 exerciser</title>
-        <link rel='stylesheet' type='text/css' media='all' href='../css/style.css' />
+        <title>SWORD v2 exerciser - GET the Service Document</title>
+        <link rel='stylesheet' type='text/css' media='all' href='../../css/style.css' />
     </head>
     <body>
 
@@ -50,7 +50,6 @@
                     echo '<h3>Workspace: '. $wstitle .'</h3>';
                     $collections = $workspace->sac_collections;
                     foreach ($collections as $collection) {
-                        ?><form action="get-sd/" method="post"><?php
                         $ctitle = $collection->sac_colltitle;
                         echo '<ul>';
                         echo '<li><b>Collection: </b>' . $ctitle . ' (' . $collection->sac_href . ')<ul>';
@@ -80,7 +79,19 @@
                             echo "<li>Service document: " . $collection->sac_service . "</li>";
                         }
                         echo '</ul></li></ul>';
-                        ?></form><?php
+                        ?>
+                            <form action="./../../build/multipart/" method="post">
+                                <input type="hidden" name="durl" value="<?php echo $collection->sac_href; ?>" />
+                                <input type="hidden" name="nextform" value="../../post/multipart" />
+                                <input type="submit" value="Deposit an atom multipart package" />
+                            </form>
+
+                            <form action="./../../build/atomentry/" method="post">
+                                <input type="hidden" name="durl" value="<?php echo $collection->sac_href; ?>" />
+                                <input type="hidden" name="nextform" value="../../post/atomentry" />
+                                <input type="submit" value="Deposit an atom entry" />
+                            </form>
+                        <?php
                     }
                 }
             ?>
@@ -94,7 +105,7 @@
         </div>
 
         <div id="footer">
-                Based on the <a href="http://github.com/stuartlewis/swordappv2-php-library/">swordappv2-php-library</a>
+                <a href='../../'>Home</a> | Based on the <a href="http://github.com/stuartlewis/swordappv2-php-library/">swordappv2-php-library</a>
         </div>
     </body>
 </html>
