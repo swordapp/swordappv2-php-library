@@ -34,9 +34,9 @@
 
     // Is it in progress?
     if(isset($_POST['formWheelchair']) && $_POST['formWheelchair'] == 'Yes') {
-        $_SESSION['inprogress'] = TRUE;
+        $_SESSION['inprogress'] = "true";
     } else {
-        $_SESSION['inprogress'] = FALSE;
+        $_SESSION['inprogress'] = "false";
     }
 
     header('Location: ../../post/atomentry/');
