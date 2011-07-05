@@ -14,7 +14,7 @@
 	$test_rootin = $_SESSION['location'];
     $test_dirin = 'files';
     $test_rootout = $_SESSION['location'] . '/files';
-    $test_fileout = mt_rand() . '.multipart';
+    $test_fileout = 'atom';
 
     // Create the test package
 	$test_packager = new PackagerAtomMultipart($test_rootin, $test_dirin, $test_rootout, $test_fileout);
@@ -28,14 +28,9 @@
     $test_packager->addMetadata("identifier", $_POST['identifier']);
     $test_packager->addMetadata("title", $_POST['title']);
 
-    $filename = $test_rootin . $test_dirin . '/' . basename($_FILES['file']['name']);
-    move_uploaded_file($_FILES['file']['tmp_name'], $filename);
-    $test_packager->addFile(basename($_FILES['file']['name']));
-
     $test_packager->create();
 
     $_SESSION['filename'] = $test_rootout . '/' . $test_fileout;
-
 
     // Is it in progress?
     if(isset($_POST['formWheelchair']) && $_POST['formWheelchair'] == 'Yes') {
@@ -44,6 +39,6 @@
         $_SESSION['inprogress'] = FALSE;
     }
 
-    header('Location: ../../post/multipart/');
+    header('Location: ../../post/atomentry/');
 
 ?>

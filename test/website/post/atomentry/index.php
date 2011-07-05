@@ -9,10 +9,8 @@
 
     // Try and deposit the multipart package
     $client = new SWORDAPPClient();
-    $response = $client->depositMultipart($_SESSION['durl'], $_SESSION['u'], $_SESSION['p'],
-                                          $_SESSION['obo'], $_SESSION['filename'],
-                                          'http://purl.org/net/sword/package/SimpleZip',
-                                          'application/zip', $_SESSION['inprogress']);
+    $response = $client->depositAtomEntry($_SESSION['durl'], $_SESSION['u'], $_SESSION['p'],
+                                          $_SESSION['obo'], $_SESSION['filename'], $_SESSION['inprogress']);
     if ($response->sac_status != 201) {
         $error = 'Unable to deposit package. HTTP response code: ' .
                  $response->sac_status . ' - ' . $response->sac_statusmessage;
@@ -25,7 +23,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>SWORD v2 exerciser - POST an atom multipart package</title>
+        <title>SWORD v2 exerciser - POST an atom entry</title>
         <link rel='stylesheet' type='text/css' media='all' href='../../css/style.css' />
     </head>
     <body>

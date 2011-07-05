@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>SWORD v2 exerciser - build an atom multipart deposit</title>
+        <title>SWORD v2 exerciser - build an atom entry deposit</title>
         <link rel='stylesheet' type='text/css' media='all' href='../../css/style.css' />
     </head>
     <body>
@@ -16,7 +16,7 @@
 
         <div class="section">
 
-            <form action="./make.php" method="post" enctype="multipart/form-data">
+            <form action="./make.php" method="post">
 
                 <div class="formtextnext">
 
@@ -37,9 +37,6 @@
 
                     <label for="inprogress" class="fixedwidthlabel">In progress:</label>
                     <input type="checkbox" id="inprogress" name="inprogress" /><br />
-
-                    <label for="file" class="fixedwidthlabel">File:</label>
-                    <input type="file" id="file" name="file" size="30" /><br />
 
                     <input type="Submit" name="submit" id="submit" value="Next &gt;" />
 
