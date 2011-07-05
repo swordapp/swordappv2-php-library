@@ -33,7 +33,7 @@
     $_SESSION['filename'] = $test_rootout . '/' . $test_fileout;
 
     // Is it in progress?
-    if(isset($_POST['formWheelchair']) && $_POST['formWheelchair'] == 'Yes') {
+    if(isset($_POST['inprogress'])) {
         $_SESSION['inprogress'] = "true";
     } else {
         $_SESSION['inprogress'] = "false";
