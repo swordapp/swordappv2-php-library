@@ -101,6 +101,9 @@ class SWORDAPPEntry {
             case 401:
                 $this->sac_statusmessage = "Unauthorized";
                 break;
+            case 403:
+                $this->sac_statusmessage = "Forbidden";
+                break;
             case 412:
                 $this->sac_statusmessage = "Precondition failed";
                 break;
