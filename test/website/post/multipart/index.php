@@ -40,6 +40,26 @@
 
         <div class="section">
 
+            Deposited ID: <?php echo $response->sac_idl ?>;
+
+            <ul>
+                <li>
+                    EDIT-IRI: <?php echo $response->sac_edit_iri; ?>
+                    <form action="../../delete/container/" method="post">
+                        <input type="hidden" name="editiri" value="<?php echo $response->sac_edit_iri; ?>" />
+                        <input type="submit" value="DELETE CONTAINER" />
+                    </form>
+                </li>
+                <li>
+                    EDIT-MEDIA: <?php echo $response->sac_edit_media_iri; ?>
+                    <form action="../../delete/media/" method="post">
+                        <input type="hidden" name="editmediairi" value="<?php echo $response->sac_edit_media_iri; ?>" />
+                        <input type="submit" value="DELETE MEDIA" />
+                    </form>
+                </li>
+                <li>Statement (Atom):<?php echo $response->sac_state_iri_atom; ?></li>
+                <li>Statement (OAI-ORE):<?php echo $response->sac_state_iri_ore; ?></li>
+            </ul>
 
         </div>
 

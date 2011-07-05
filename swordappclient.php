@@ -2,6 +2,7 @@
 
 require("swordappservicedocument.php");
 require("swordappentry.php");
+require("swordappresponse.php");
 require("swordappstatement.php");
 require("swordapperrordocument.php");
 require("swordapplibraryuseragent.php");
@@ -10,7 +11,7 @@ require_once("utils.php");
 
 class SWORDAPPClient {
 
-    private $debug = false;
+    private $debug = true;
 
     // Request a Service Document from the specified url, with the specified credentials,
     // and on-behalf-of the specified user.
@@ -453,15 +454,12 @@ class SWORDAPPClient {
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
         curl_close($sac_curl);
 
-        // Was it a successful result?
-        if ($sac_status != 204) {
-            throw new Exception("Error deleting container (HTTP code: " . $sac_status . ")");
-        }
+        return new SWORDAPPResponse($sac_status, $sac_resp);
     }
 
     // Function to delete the content of a resource
     function deleteResourceContent($sac_url, $sac_u, $sac_p, $sac_obo) {
-        $this->deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo);
+        return $this->deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo);
     }
 
     // Function to retrieve an Atom statement
