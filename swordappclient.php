@@ -11,7 +11,7 @@ require_once("utils.php");
 
 class SWORDAPPClient {
 
-    private $debug = true;
+    private $debug = false;
 
     // Request a Service Document from the specified url, with the specified credentials,
     // and on-behalf-of the specified user.
@@ -320,7 +320,6 @@ class SWORDAPPClient {
         if ($sac_status != 204) {
             throw new Exception("Error replacing file (HTTP code: " . $sac_status . ")");
         } else {
-            echo "returning " . $sac_status . "\n";
             return $sac_status;
         }
     }
