@@ -120,11 +120,11 @@ class PackagerAtomMultipart {
         fwrite($fh, "</entry>\n");
         fclose($fh);
 
-        // Create the zipped package of the files if required
+        // Create the zipped package of the files if required  (force an overwrite if it already exists)
         if ($this->sac_filecount > 0) {
             $zip = new ZipArchive();
             $sac_package = $this->sac_root_out . '/' . $this->sac_file_out . '.zip';
-            $zip->open($sac_package, ZIPARCHIVE::CREATE);
+            $zip->open($sac_package, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
             for ($i = 0; $i < $this->sac_filecount; $i++) {
                 $zip->addFile($this->sac_root_in . '/' . $this->sac_dir_in . '/' . $this->sac_files[$i],
                               $this->sac_files[$i]);

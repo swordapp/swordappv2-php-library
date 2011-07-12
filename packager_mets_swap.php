@@ -193,9 +193,9 @@ class PackagerMetsSwap {
         $this->writeFooter($fh);    
         fclose($fh);
         
-        // Create the zipped package
+        // Create the zipped package (force an overwrite if it already exists)
         $zip = new ZipArchive();
-        $zip->open($this->sac_root_out . '/' . $this->sac_file_out, ZIPARCHIVE::CREATE);
+        $zip->open($this->sac_root_out . '/' . $this->sac_file_out, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
         $zip->addFile($this->sac_root_in . '/' . $this->sac_dir_in . '/mets.xml', 
                      'mets.xml');
         for ($i = 0; $i < $this->sac_filecount; $i++) {
