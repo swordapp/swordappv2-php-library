@@ -4,16 +4,22 @@
     include_once('../../../../swordappclient.php');
     include_once('../../utils.php');
 
-    // Store the values
+    // Is there are an error?
     session_start();
-    $_SESSION['sdurl'] = $_POST['sdurl'];
-    $_SESSION['u'] = $_POST['u'];
-    $_SESSION['p'] = $_POST['p'];
-    $_SESSION['obo'] = $_POST['obo'];
+    if (!empty($_SESSION['error'])) {
+        $errormsg = $_SESSION['error'];
+        $_SESSION['error'] = '';
+    }
+
+    // Store the values
+    if (isset($_POST['sdurl'])) $_SESSION['sdurl'] = $_POST['sdurl'];
+    if (isset($_POST['u'])) $_SESSION['u'] = $_POST['u'];
+    if (isset($_POST['p'])) $_SESSION['p'] = $_POST['p'];
+    if (isset($_POST['obo'])) $_SESSION['obo'] = $_POST['obo'];
 
     // Try and load the service document
     $client = new SWORDAPPClient();
-    $response = $client->servicedocument($_POST['sdurl'], $_POST['u'], $_POST['p'], $_POST['obo']);
+    $response = $client->servicedocument($_SESSION['sdurl'], $_SESSION['u'], $_SESSION['p'], $_SESSION['obo']);
 
     if ($response->sac_status != 200) {
         $error = 'Unable to load service document. HTTP response code: ' .
@@ -37,6 +43,8 @@
         <div id="header">
             <h1>SWORD v2 exerciser</h1>
         </div>
+
+        <?php if (!empty($errormsg)) { ?><div class="error"><?php echo $errormsg; ?></div><?php } ?>
 
         <p>
             Select a collection and an action:

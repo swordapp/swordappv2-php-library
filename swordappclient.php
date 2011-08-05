@@ -128,8 +128,12 @@ class SWORDAPPClient {
     // Deposit a multipart package
     function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                               $sac_inprogress = false) {
-        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                               "POST", $sac_inprogress);
+        try {
+            return$this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
+                                                  "POST", $sac_inprogress);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     // Function to create a resource by depositing an Atom entry
