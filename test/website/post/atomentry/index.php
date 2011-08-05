@@ -56,8 +56,18 @@
                         <input type="submit" value="DELETE MEDIA" />
                     </form>
                 </li>
-                <li>Statement (Atom):<?php echo $response->sac_state_iri_atom; ?></li>
-                <li>Statement (OAI-ORE):<?php echo $response->sac_state_iri_ore; ?></li>
+                <li>Statement (Atom): <?php echo $response->sac_state_iri_atom; ?>
+                    <form action="../../get/uri/" method="post" target="_new">
+                        <input type="hidden" name="uri" value="<?php echo $response->sac_state_iri_atom; ?>" />
+                        <input type="submit" value="SHOW STATEMENT" />
+                    </form>
+                </li>
+                <li>Statement (OAI-ORE): <?php echo $response->sac_state_iri_ore; ?>
+                <form action="../../get/uri/" method="post" target="_new">
+                        <input type="hidden" name="uri" value="<?php echo $response->sac_state_iri_ore; ?>" />
+                        <input type="submit" value="SHOW STATEMENT" />
+                    </form>
+                </li>
             </ul>
 
         </div>
