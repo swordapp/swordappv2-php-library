@@ -1,43 +1,51 @@
 <?php
 
     /**
-     * From: http://gdatatips.blogspot.com/2008/11/xml-php-pretty-printer.html
-     *
-     * Prettifies an XML string into a human-readable and indented work of art
-     *  @param string $xml The XML as a string
-     *  @param boolean $html_output True if the output should be escaped (for use in HTML)
+     * http://ehsmeng.blogspot.com/2010/05/simple-php-xml-pretty-print-function.html
+     * with the addition of URL hyperlink by Stuart Lewis
      */
-    function xmlpp($xml, $html_output=false) {
-        $xml_obj = new SimpleXMLElement($xml);
-        $level = 4;
-        $indent = 0; // current indentation level
-        $pretty = array();
-
-        // get an array containing each XML element
-        $xml = explode("\n", preg_replace('/>\s*</', ">\n<", $xml_obj->asXML()));
-
-        // shift off opening XML tag if present
-        if (count($xml) && preg_match('/^<\?\s*xml/', $xml[0])) {
-          $pretty[] = array_shift($xml);
-        }
-
-        foreach ($xml as $el) {
-          if (preg_match('/^<([\w])+[^>\/]*>$/U', $el)) {
-              // opening tag, increase indent
-              $pretty[] = str_repeat(' ', $indent) . $el;
-              $indent += $level;
-          } else {
-            if (preg_match('/^<\/.+>$/', $el)) {
-              $indent -= $level;  // closing tag, decrease indent
-            }
-            if ($indent < 0) {
-              $indent += $level;
-            }
-            $pretty[] = str_repeat(' ', $indent) . $el;
-          }
-        }
-        $xml = implode("\n", $pretty);
-        return ($html_output) ? htmlentities($xml) : $xml;
+    function xml_pretty_printer($xml, $indent=0)
+{
+    if (is_string($xml))
+    {
+        $xml = new SimpleXMLElement($xml);
+        echo '<pre>', htmlspecialchars('<?xml version="1.0" encoding="utf-8"?>');
+        xml_pretty_printer($xml);
+        echo '</pre>';
+        return;
     }
+
+    echo "\n", str_pad('', $indent, ' '), '&lt;<b>', $xml->getName(), '</b>';
+    foreach ($xml->attributes() as $k => $v)
+    {
+        if (substr($v, 0, 4) === 'http') {
+            $v = '<a href="' . $v . '">' . htmlspecialchars($v) . '</a>';
+        } else {
+            $v = htmlspecialchars($v);
+        }
+        echo ' ', $k, '="<i>' . $v . '</i>"';
+    }
+    echo '&gt;';
+    $any = false;
+    foreach ($xml->children() as $k => $v)
+    {
+        xml_pretty_printer($v, $indent + 4);
+        $any = true;
+    }
+    $val = (string)$xml;
+    if ('' != $xml)
+    {
+        if (substr($val, 0, 4) === 'http') {
+            $val = '<a href="' . $val . '">' . htmlspecialchars($val) . '</a>';
+        } else {
+            $val - htmlspecialchars($val);
+        }
+        echo ($any ? ("\n" . str_pad('', $indent + 4, ' ')) : ''),
+             '<i>', $val, '</i>';
+    }
+
+    echo ($any ? ("\n" . str_pad('', $indent, ' ')) : ''),
+         '&lt;/<b>', $xml->getName(), '</b>&gt;';
+}
 
 ?>

@@ -26,7 +26,7 @@
 
         <div class="section">
             <h2>Response:</h2>
-            <pre><?php echo xmlpp($response, true); ?></pre>
+            <pre><?php echo xml_pretty_printer($response); ?></pre>
         </div>
 
         <div id="footer">

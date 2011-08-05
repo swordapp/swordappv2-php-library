@@ -109,7 +109,7 @@
         <div class="section">
             <h2>Response:</h2>
             <pre>Status code: <?php echo $response->sac_status; ?></pre>
-            <pre><?php echo xmlpp($response->sac_xml, true); ?></pre>
+            <pre><?php echo xml_pretty_printer($response->sac_xml); ?></pre>
         </div>
 
         <div id="footer">
