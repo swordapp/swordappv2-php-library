@@ -40,7 +40,7 @@ class SWORDAPPClient {
         } else {
             $sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status);
         }
-        
+
         // Return the Service Document object
         return $sac_sdresponse;
     }
@@ -690,6 +690,26 @@ class SWORDAPPClient {
 
         // Return the deposit object
         return $sac_dresponse;
+    }
+
+    // Request a URI with the specified credentials, and on-behalf-of the specified user.
+    // This is not specifically for SWORD, but for retrieving other associated URIs
+    function get($sac_url, $sac_u, $sac_p, $sac_obo) {
+        // Get the service document
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
+
+        $headers = array();
+        global $sal_useragent;
+        array_push($headers, $sal_useragent);
+        if (!empty($sac_obo)) {
+            array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
+        }
+        curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
+        $sac_resp = curl_exec($sac_curl);
+        curl_close($sac_curl);
+
+        // Return the response
+        return $sac_resp;
     }
 }
 
