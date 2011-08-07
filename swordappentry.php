@@ -67,6 +67,9 @@ class SWORDAPPEntry {
     // The Edit IRI
     public $sac_edit_iri;
 
+    // The SE-IRI
+    public $sac_se_iri;
+
     // The Atom Statement IRI
     public $sac_state_iri_atom;
 
@@ -163,6 +166,9 @@ class SWORDAPPEntry {
             // Store the Edit IRI
             if ($sac_linkobject->sac_linkrel == 'edit') $this->sac_edit_iri = $sac_linkobject->sac_linkhref;
 
+            // Store the SE-IRI
+            if ($sac_linkobject->sac_linkrel == 'http://purl.org/net/sword/terms/add') $this->sac_se_iri = $sac_linkobject->sac_linkhref;
+
             // Store the Statement IRIs
             if ($sac_linkobject->sac_linkrel == 'http://purl.org/net/sword/terms/statement') {
                 if (($sac_linkobject->sac_linktype == 'application/atom+xml;type=feed') ||
@@ -174,9 +180,7 @@ class SWORDAPPEntry {
             }
             // Store the Edit Media IRIs
             if ($sac_linkobject->sac_linkrel == 'edit-media') {
-                if (empty($sac_linkobject->sac_linktype)) {
                     $this->sac_edit_media_iri = $sac_linkobject->sac_linkhref;
-                }
             }
         }
 
