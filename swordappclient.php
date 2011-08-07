@@ -165,38 +165,10 @@ class SWORDAPPClient {
         curl_close($sac_curl);
 
         // Parse the result
-        $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
+        $sac_response = new SWORDAPPResponse($sac_status, $sac_resp);
 
-        // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
-            try {
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
-            }
-        } else {
-            try {
-                // Parse the result
-                $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
-
-                // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
-                $sac_ns = $sac_xml->getNamespaces(true);
-
-                // Build the deposit response object
-                $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
-            }
-        }
-
-        // Return the deposit object
-        return $sac_dresponse;
+        // Return the response
+        return $sac_response;
     }
 
     // Function to retrieve the content of a container
