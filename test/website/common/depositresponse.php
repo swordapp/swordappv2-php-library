@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>SWORD v2 exerciser - POST an atom entry</title>
+        <title>SWORD v2 exerciser - POST</title>
         <link rel='stylesheet' type='text/css' media='all' href='../../css/style.css' />
     </head>
     <body>
@@ -24,6 +24,13 @@
                     <form action="../../delete/container/" method="post">
                         <input type="hidden" name="editiri" value="<?php echo $response->sac_edit_iri; ?>" />
                         <input type="submit" value="DELETE CONTAINER" />
+                    </form>
+                </li>
+                <li>
+                    SE-IRI: <?php echo $response->sac_se_iri; ?>
+                    <form action="../../post/complete/" method="post" target="_new">
+                        <input type="hidden" name="seiri" value="<?php echo $response->sac_se_iri; ?>" />
+                        <input type="submit" value="COMPLETE INCOMPLETE DEPOSIT" />
                     </form>
                 </li>
                 <li>
