@@ -666,7 +666,7 @@ class SWORDAPPClient {
 
     // Request a URI with the specified credentials, and on-behalf-of the specified user.
     // This is not specifically for SWORD, but for retrieving other associated URIs
-    function get($sac_url, $sac_u, $sac_p, $sac_obo) {
+    private function get($sac_url, $sac_u, $sac_p, $sac_obo) {
         // Get the service document
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
