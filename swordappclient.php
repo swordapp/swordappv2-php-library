@@ -187,7 +187,6 @@ class SWORDAPPClient {
         }
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
         $sac_resp = curl_exec($sac_curl);
-        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
         curl_close($sac_curl);
 
         // Return the response
@@ -288,7 +287,6 @@ class SWORDAPPClient {
         curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
-        $sac_resp = curl_exec($sac_curl);
         $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
         curl_close($sac_curl);
 
@@ -310,12 +308,12 @@ class SWORDAPPClient {
     function replaceMetadataAndFile($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
                                     $sac_inprogress = false) {
         return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                              "PUT", $sac_inprogress);
+                                               "PUT", $sac_inprogress);
     }
 
     // Add a an extra file to the media resource
     function addExtraFileToMediaResource($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                                    $sac_contenttype = '', $sac_metadata_relevant = false) {
+                                         $sac_contenttype = '', $sac_metadata_relevant = false) {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
@@ -391,7 +389,7 @@ class SWORDAPPClient {
 
     // Add a new package
     function addExtraPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                           $sac_packaging = '', $sac_contenttype, $sac_inprogress = false) {
+                             $sac_packaging = '', $sac_contenttype, $sac_inprogress = false) {
         return $this->deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
                               $sac_packaging, $sac_contenttype, $sac_inprogress);
     }
@@ -482,7 +480,6 @@ class SWORDAPPClient {
         }
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
         $sac_resp = curl_exec($sac_curl);
-        $sac_status = curl_getinfo($sac_curl, CURLINFO_HTTP_CODE);
         curl_close($sac_curl);
 
         // Return the result
