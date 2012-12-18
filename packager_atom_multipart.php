@@ -7,8 +7,8 @@ class PackagerAtomMultipart {
     // The location of the files (without final directory)
     private $sac_root_in;
 
-    // The directroy to zip up in the $sac_root_in directory
-    private $sac_dir_in;
+    // The directory to zip up in the $sac_root_in directory
+    private $sac_ir_in;
 
     // The location to write the package out to
     private $sac_root_out;

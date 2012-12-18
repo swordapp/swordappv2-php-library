@@ -5,7 +5,7 @@ class PackagerMetsSwap {
     // The location of the files (without final directory)
     public $sac_root_in;
 
-    // The directroy to zip up in the $sac_root_in directory
+    // The directory to zip up in the $sac_root_in directory
     public $sac_dir_in;
 
     // The location to write the package out to
