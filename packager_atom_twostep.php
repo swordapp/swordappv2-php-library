@@ -2,13 +2,10 @@
 
 require_once('utils.php');
 
-class PackagerAtomMultipart {
+class PackagerAtomTwoStep {
 
     // The location of the files (without final directory)
     private $sac_root_in;
-
-    // The directory to zip up in the $sac_root_in directory
-    private $sac_dir_in;
 
     // The location to write the package out to
     private $sac_root_out;
@@ -66,7 +63,7 @@ class PackagerAtomMultipart {
     function setIdentifier($sac_theID) {
         $this->sac_entry_id = $this->clean($sac_theID);
     }
-
+    
     function setUpdated($sac_theUpdated) {
         $this->sac_entry_updated = $this->clean($sac_theUpdated);
     }
@@ -95,7 +92,7 @@ class PackagerAtomMultipart {
         $fh = @fopen($sac_atom, 'w');
         if (!$fh) {
             throw new Exception("Error writing atom entry manifest (" .
-                $this->sac_root_in . '/' . $this->sac_dir_in . '/atom)');
+                                $this->sac_root_in . '/' . $this->sac_dir_in . '/atom)');
         }
 
         // Write the atom entry header
@@ -112,46 +109,13 @@ class PackagerAtomMultipart {
         // Write the dcterms metadata
         for ($i = 0; $i < count($this->sac_entry_dctermsFields); $i++) {
             fwrite($fh, "\t<dcterms:" . $this->sac_entry_dctermsFields[$i] . ">" .
-                $this->sac_entry_dctermsValues[$i] .
-                "</dcterms:" . $this->sac_entry_dctermsFields[$i] . ">\n");
+                        $this->sac_entry_dctermsValues[$i] .
+                        "</dcterms:" . $this->sac_entry_dctermsFields[$i] . ">\n");
         }
 
         // Close the file
         fwrite($fh, "</entry>\n");
         fclose($fh);
-
-        // Create the multipart package
-        $temp = $this->sac_root_out . '/' . $this->sac_file_out;
-        $atom = file_get_contents($sac_atom);
-        $xml = "\r\nMedia Post\r\n";
-        $xml .= "--===============SWORDPARTS==\r\n";
-        $xml .= "Content-Type: application/atom+xml\r\n";
-        $xml .= "MIME-Version: 1.0\r\n";
-        $xml .= "Content-Disposition: attachment; name=\"atom\"\r\n";
-        $xml .= "\r\n";
-        $xml .= $atom;
-        unset($atom);
-        file_put_contents($temp, $xml);
-
-        // Add the files
-        for ($i = 0; $i < $this->sac_filecount; $i++) {
-            $xml = "";
-            $sac_filename = $this->sac_files[$i];
-            $sac_fullfilename = $this->sac_root_in . '/' . $this->sac_dir_in . '/' . $sac_filename;
-
-            $xml .= "--===============SWORDPARTS==\r\n";
-            $xml .= "Content-Type: " . mime_content_type($sac_fullfilename) . "\r\n";
-            $xml .= "Content-MD5: " . md5_file($sac_fullfilename) . "\r\n";
-            $xml .= "MIME-Version: 1.0\r\n";
-            $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"" . $sac_filename . "\"\r\n";
-            $xml .= "Packaging: http://purl.org/net/sword/package/Binary\r\n";
-            $xml .= "Content-Transfer-Encoding: base64\r\n\r\n";
-            file_put_contents($temp, $xml, FILE_APPEND);
-            base64chunk($sac_fullfilename, $temp);
-        }
-
-        $xml = "--===============SWORDPARTS==--\r\n";
-        file_put_contents($temp, $xml, FILE_APPEND);
     }
 
     function clean($data) {
