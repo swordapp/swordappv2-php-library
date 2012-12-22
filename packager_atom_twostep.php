@@ -86,6 +86,10 @@ class PackagerAtomTwoStep {
         $this->sac_filecount++;
     }
 
+    function getFiles() {
+        return $this->sac_files;
+    }
+
     function create() {
         // Write the atom entry manifest
         $sac_atom = $this->sac_root_in . '/' . $this->sac_dir_in . '/atom';
