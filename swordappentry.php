@@ -137,6 +137,7 @@ class SWORDAPPEntry {
         $sac_dr->registerXPathNamespace('atom', 'http://www.w3.org/2005/Atom');
         if (!isset($sac_ns['atom'])) $sac_ns['atom'] = 'http://www.w3.org/2005/Atom';
         if (!isset($sac_ns['dcterms'])) $sac_ns['dcterms'] = 'http://purl.org/dc/terms/';
+        if (!isset($sac_ns['sword'])) $sac_ns['sword'] = 'http://purl.org/net/sword/';
 
         // Parse the results
         $this->sac_id = $sac_dr->children($sac_ns['atom'])->id;
