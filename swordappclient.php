@@ -82,7 +82,7 @@ class SWORDAPPClient {
         } else {
             $sac_fname_trimmed = $sac_fname;
         }
-        array_push($headers, "Content-Disposition: filename=" . $sac_fname_trimmed);
+        array_push($headers, "Content-Disposition: attachment; filename=" . $sac_fname_trimmed);
         curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
@@ -282,7 +282,7 @@ class SWORDAPPClient {
         } else {
             $sac_fname_trimmed = $sac_fname;
         }
-        array_push($headers, "Content-Disposition: filename=" . $sac_fname_trimmed);
+        array_push($headers, "Content-Disposition: attachment; filename=" . $sac_fname_trimmed);
         curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
         curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
@@ -344,7 +344,7 @@ class SWORDAPPClient {
         } else {
             $sac_fname_trimmed = $sac_fname;
         }
-        array_push($headers, "Content-Disposition: filename=" . $sac_fname_trimmed);
+        array_push($headers, "Content-Disposition: attachment; filename=" . $sac_fname_trimmed);
         
         curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
