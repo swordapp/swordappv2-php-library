@@ -48,7 +48,7 @@ class SWORDAPPClient {
     // Perform a deposit to the specified url, with the specified credentials,
     // on-behalf-of the specified user, and with the given file and formatnamespace and noop setting
     function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                     $sac_packaging= '', $sac_contenttype = '', $sac_inprogress = false) {
+                     $sac_packaging, $sac_contenttype, $sac_inprogress) {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
@@ -94,7 +94,7 @@ class SWORDAPPClient {
         $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
 
         // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
+        if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
                 $sac_xml = @new SimpleXMLElement($sac_resp);
@@ -216,7 +216,7 @@ class SWORDAPPClient {
         $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
 
         // Parse the result
-        if (($sac_status >= 200) || ($sac_status < 300)) {
+        if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
                 $sac_xml = @new SimpleXMLElement($sac_resp);
@@ -357,7 +357,7 @@ class SWORDAPPClient {
         $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
         
         // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
+        if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
                 $sac_xml = @new SimpleXMLElement($sac_resp);
@@ -559,7 +559,7 @@ class SWORDAPPClient {
         $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
 
         // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
+        if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
                 $sac_xml = @new SimpleXMLElement($sac_resp);
@@ -630,7 +630,7 @@ class SWORDAPPClient {
         $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
 
         // Was it a successful result?
-        if (($sac_status >= 200) || ($sac_status < 300)) {
+        if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
                 $sac_xml = @new SimpleXMLElement($sac_resp);
