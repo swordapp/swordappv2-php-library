@@ -31,7 +31,7 @@ class SWORDAPPServiceDocument {
 	// Workspaces in the servicedocument
 	public $sac_workspaces;
 
-	// Construct a new servicedocument by passing in the http status code
+	// Construct a new servicedocument
 	function __construct($sac_theurl, $sac_newstatus, $sac_thexml = '') {
 		// Store the URL
 		$this->sac_url = $sac_theurl;
