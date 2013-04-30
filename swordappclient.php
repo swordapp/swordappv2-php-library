@@ -33,7 +33,6 @@ class SWORDAPPClient {
         // Parse the result
         if ($sac_status == 200) {
             try {
-                echo $sac_resp;
                 $sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status, $sac_resp);
             } catch (Exception $e) {
                 throw new Exception("Error parsing service document (" . $e->getMessage() . ")");
