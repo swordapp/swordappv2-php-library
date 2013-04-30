@@ -48,7 +48,7 @@ class SWORDAPPClient {
     // Perform a deposit to the specified url, with the specified credentials,
     // on-behalf-of the specified user, and with the given file and formatnamespace and noop setting
     function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                     $sac_packaging, $sac_contenttype, $sac_inprogress) {
+                     $sac_packaging= '', $sac_contenttype = '', $sac_inprogress = false) {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
