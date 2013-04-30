@@ -33,6 +33,7 @@ class SWORDAPPClient {
         // Parse the result
         if ($sac_status == 200) {
             try {
+                echo $sac_resp;
                 $sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status, $sac_resp);
             } catch (Exception $e) {
                 throw new Exception("Error parsing service document (" . $e->getMessage() . ")");
@@ -459,10 +460,10 @@ class SWORDAPPClient {
                 throw new Exception("Error parsing statement (" . $e->getMessage() . ")");
             }
         } else {
-            $sac_atomstatement = new SWORDAPPServiceDocument($sac_url, $sac_status);
+            $sac_atomstatement = new SWORDAPPStatement($sac_url, $sac_status);
         }
 
-        // Return the Service Document object
+        // Return the atom statement object
         return $sac_atomstatement;
     }
 
