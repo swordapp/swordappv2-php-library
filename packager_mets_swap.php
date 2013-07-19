@@ -124,7 +124,7 @@ class PackagerMetsSwap {
     }
 
     function setCopyrightHolder($sac_thecopyrightholder) {
-        $this->sac_copyrightholder = $sac_thecopyrightholder;
+        $this->sac_copyrightholder = $this->clean($sac_thecopyrightholder);
     }
     
     function setCustodian($sac_thecustodian) {
