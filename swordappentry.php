@@ -78,6 +78,9 @@ class SWORDAPPEntry {
 
     // The Edit Media IRI
     public $sac_edit_media_iri;
+    
+    // The Atom feed representation of media resources
+    public $sac_edit_media_iri_atom;
 
     // Construct a new deposit response by passing in the http status code
     function __construct($sac_newstatus, $sac_thexml) {
@@ -181,10 +184,18 @@ class SWORDAPPEntry {
             }
             // Store the Edit Media IRIs
             if ($sac_linkobject->sac_linkrel == 'edit-media') {
-                    $this->sac_edit_media_iri = $sac_linkobject->sac_linkhref;
+              // Edit media IRI as Atom feed
+              if (($sac_linkobject->sac_linktype == 'application/atom+xml;type=feed') ||
+                  ($sac_linkobject->sac_linktype == 'application/atom+xml; type=feed')) {
+                $this->sac_edit_media_iri_atom = $sac_linkobject->sac_linkhref;
+              }
+              else {
+                // Edit media IRI
+                $this->sac_edit_media_iri = $sac_linkobject->sac_linkhref;
+              }
             }
         }
-
+        
         // Store the title and summary
         $this->sac_title = sac_clean($sac_dr->children($sac_ns['atom'])->title);
         $this->sac_summary = sac_clean($sac_dr->children($sac_ns['atom'])->summary);
