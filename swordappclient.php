@@ -12,7 +12,12 @@ require_once("utils.php");
 class SWORDAPPClient {
 
     private $debug = false;
-
+    private $curl_opts = array();
+    
+    function SWORDAPPClient($curl_opts = array()) {
+      $this->curl_opts = $curl_opts;
+    }
+    
     // Request a Service Document from the specified url, with the specified credentials,
     // and on-behalf-of the specified user.
     function servicedocument($sac_url, $sac_u, $sac_p, $sac_obo) {
@@ -493,7 +498,7 @@ class SWORDAPPClient {
 
         // Return the content from curl, rather than outputting it
         curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-
+        
         // Set the debug option
         curl_setopt($sac_curl, CURLOPT_VERBOSE, $this->debug);
 
@@ -503,6 +508,11 @@ class SWORDAPPClient {
         // If required, set authentication
         if(!empty($sac_user) && !empty($sac_password)) {
             curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_user . ":" . $sac_password);
+        }
+        
+        // Set user-specified curl opts
+        foreach ($this->curl_opts as $opt => $val) {
+          curl_setopt($sac_curl, $opt, $val);
         }
 
         // Return the initalised curl object
