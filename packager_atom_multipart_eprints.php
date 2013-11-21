@@ -25,6 +25,7 @@ class PackagerAtomMultipart {
     // The dcterms metadata
     private $sac_entry_dctermsFields;
     private $sac_entry_dctermsValues;
+    private $sac_entry_dctermsAttributes;
 
     // The entry title
     private $sac_entry_title;
@@ -55,6 +56,7 @@ class PackagerAtomMultipart {
 
         $this->sac_entry_dctermsFields = array();
         $this->sac_entry_dctermsValues = array();
+        $this->sac_entry_dctermsAttributes = array();
 
         $this->sac_entry_authors = array();
     }
@@ -79,9 +81,14 @@ class PackagerAtomMultipart {
         $this->sac_entry_summary = $this->clean($sac_theSummary);
     }
 
-    function addMetadata($sac_theElement, $sac_theValue) {
+    function addMetadata($sac_theElement, $sac_theValue, $sac_theAttributes = array()) {
         array_push($this->sac_entry_dctermsFields, $this->clean($sac_theElement));
         array_push($this->sac_entry_dctermsValues, $this->clean($sac_theValue));
+        $sac_cleanAttributes = array();
+        foreach ($sac_theAttributes as $attrName => $attrValue) {
+          $sac_cleanAttributes[$this->clean($attrName)] = $this->clean($attrValue);
+        }
+        array_push($this->sac_entry_dctermsAttributes, $sac_cleanAttributes);        
     }
 
     function addFile($sac_thefile) {
@@ -111,9 +118,14 @@ class PackagerAtomMultipart {
 
         // Write the dcterms metadata
         for ($i = 0; $i < count($this->sac_entry_dctermsFields); $i++) {
-            fwrite($fh, "\t<dcterms:" . $this->sac_entry_dctermsFields[$i] . ">" .
-                $this->sac_entry_dctermsValues[$i] .
-                "</dcterms:" . $this->sac_entry_dctermsFields[$i] . ">\n");
+            $dcElement = "\t<dcterms:" . $this->sac_entry_dctermsFields[$i];
+            if (!empty($this->sac_entry_dctermsAttributes[$i])) {
+              foreach ($this->sac_entry_dctermsAttributes[$i] as $attrName => $attrValue) {
+                $dcElement .= " $attrName=\"$attrValue\"";
+              }
+            }
+            $dcElement .= ">" . $this->sac_entry_dctermsValues[$i] . "</dcterms:" . $this->sac_entry_dctermsFields[$i] . ">\n";
+            fwrite($fh, $dcElement);
         }
 
         // Close the file
