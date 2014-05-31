@@ -26,13 +26,17 @@ class SWORDAPPStatement {
         $this->sac_entries = array();
        
         // Parse the xml if there is some
-		if ($sac_thexml != '') {
+        if ($sac_thexml != '') {
             $sac_statement = @new SimpleXMLElement($sac_thexml);
             $sac_ns = $sac_statement->getNamespaces(true);
+            if (!isset($sac_ns['atom'])) $sac_ns['atom'] = 'http://www.w3.org/2005/Atom';
+            if (!isset($sac_ns['sword'])) $sac_ns['sword'] = 'http://purl.org/net/sword/';            
             $sac_state = $sac_statement->children($sac_ns['sword'])->state;
-            $sac_state_attributes = $sac_state->attributes();
-            $this->sac_state_href = $sac_state_attributes['href'];
-            $this->sac_state_description = $sac_state->children($sac_ns['sword'])->stateDescription;
+            if (!empty($sac_state)) {
+              $sac_state_attributes = $sac_state->attributes();
+              $this->sac_state_href = $sac_state_attributes['href'];
+              $this->sac_state_description = $sac_state->children($sac_ns['sword'])->stateDescription;
+            }
 
             foreach ($sac_statement->children($sac_ns['atom'])->entry as $sac_entry) {
                 $sac_category = $sac_entry->children($sac_ns['atom'])->category;
@@ -55,7 +59,7 @@ class SWORDAPPStatement {
 
                 array_push($this->sac_entries, $sac_theentry);
             }
-		}
+          }
     }
 
     function toString() {
