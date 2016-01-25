@@ -8,7 +8,7 @@ $contentzip = 'content.zip';
 $metadatazip = 'metadata.zip';
 $servicedocument = 'http://demo.dspace.org/swordv2/servicedocument';
 $depositlocation = 'http://demo.dspace.org/swordv2/collection/10673/11';
-$dspacerest = 'http://demo.dspace.org:8080/rest';
+$dspacerest = 'https://demo.dspace.org/rest';
 $user = 'dspacedemo+admin@gmail.com';
 $password = 'dspace';
 
@@ -90,7 +90,7 @@ array_push($headers, "rest-dspace-token: " . $token);
 array_push($headers, "Content-Type: application/json");
 array_push($headers, "Accept: application/json");
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($curl, CURLOPT_VERBOSE, true);
+//curl_setopt($curl, CURLOPT_VERBOSE, true);
 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
