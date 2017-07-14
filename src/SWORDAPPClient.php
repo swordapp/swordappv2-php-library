@@ -1,32 +1,51 @@
 <?php
 
-require("swordappservicedocument.php");
-require("swordappentry.php");
-require("swordappresponse.php");
-require("swordappstatement.php");
-require("swordapperrordocument.php");
-require("swordapplibraryuseragent.php");
-require("stream.php");
-require_once("utils.php");
+namespace Swordapp\Client;
 
-class SWORDAPPClient {
+class SWORDAPPClient
+{
+    const SAL_USER_AGENT = "User-Agent: SWORDAPP PHP v2 library (version 0.1) http://php.swordapp.org/";
 
+    /**
+     * Curl debug mode
+     *
+     * @var bool
+     */
     private $debug = false;
+
+    /**
+     * Curl options
+     *
+     * @var array
+     */
     private $curl_opts = array();
-    
-    function SWORDAPPClient($curl_opts = array()) {
-      $this->curl_opts = $curl_opts;
+
+    /**
+     * @param array $curl_opts
+     */
+    function __construct($curl_opts = array())
+    {
+        $this->curl_opts = $curl_opts;
     }
-    
-    // Request a Service Document from the specified url, with the specified credentials,
-    // and on-behalf-of the specified user.
-    function servicedocument($sac_url, $sac_u, $sac_p, $sac_obo) {
+
+    /**
+     * Request a Service Document from the specified url, with the specified credentials,
+     * and on-behalf-of the specified user.
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @return SWORDAPPServiceDocument
+     * @throws \Exception
+     */
+    function servicedocument($sac_url, $sac_u, $sac_p, $sac_obo)
+    {
         // Get the service document
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
         }
@@ -39,8 +58,8 @@ class SWORDAPPClient {
         if ($sac_status == 200) {
             try {
                 $sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status, $sac_resp);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing service document (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing service document (" . $e->getMessage() . ")");
             }
         } else {
             $sac_sdresponse = new SWORDAPPServiceDocument($sac_url, $sac_status);
@@ -50,18 +69,30 @@ class SWORDAPPClient {
         return $sac_sdresponse;
     }
 
-    // Perform a deposit to the specified url, with the specified credentials,
-    // on-behalf-of the specified user, and with the given file and formatnamespace and noop setting
-    function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                     $sac_packaging= '', $sac_contenttype = '', $sac_inprogress = false) {
+    /**
+     * Perform a deposit to the specified url, with the specified credentials,
+     * on-behalf-of the specified user, and with the given file and formatnamespace and noop setting
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_fname
+     * @param  string $sac_packaging (optional)
+     * @param  string $sac_contenttype (optional)
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     * @throws \Exception
+     */
+    function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_packaging = '', $sac_contenttype = '', $sac_inprogress = false)
+    {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         curl_setopt($sac_curl, CURLOPT_POST, true);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         array_push($headers, "Content-MD5: " . md5_file($sac_fname));
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
@@ -102,13 +133,13 @@ class SWORDAPPClient {
         if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing response entry (" . $e->getMessage() . ")");
             }
         } else {
             try {
@@ -116,13 +147,13 @@ class SWORDAPPClient {
                 $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
 
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing error document (" . $e->getMessage() . ")");
             }
         }
 
@@ -130,33 +161,64 @@ class SWORDAPPClient {
         return $sac_dresponse;
     }
 
-    // Deposit a multipart package
-    function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                              $sac_inprogress = false) {
+    /**
+     * Deposit a multipart package
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_package
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     * @throws \Exception
+     */
+    function depositMultipart($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_inprogress = false)
+    {
         try {
-            return$this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                                  "POST", $sac_inprogress);
-        } catch (Exception $e) {
+            return $this->depositMultipartByMethod(
+                $sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
+                "POST", $sac_inprogress
+            );
+        } catch (\Exception $e) {
             throw $e;
         }
     }
 
-    // Function to create a resource by depositing an Atom entry
-    function depositAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
-        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
-                                               "POST", $sac_fname, $sac_inprogress);
+    /**
+     * Function to create a resource by depositing an Atom entry
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_fname
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     */
+    function depositAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false)
+    {
+        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo, 'POST', $sac_fname, $sac_inprogress);
     }
 
-    // Complete an incomplete deposit by posting the In-Progress header of false to an SE-IRI
-    function completeIncompleteDeposit($sac_url, $sac_u, $sac_p, $sac_obo) {
+    /**
+     * Complete an incomplete deposit by posting the In-Progress header of false to an SE-IRI
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @return SWORDAPPResponse
+     */
+    function completeIncompleteDeposit($sac_url, $sac_u, $sac_p, $sac_obo)
+    {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         curl_setopt($sac_curl, CURLOPT_POST, true);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }
@@ -176,14 +238,23 @@ class SWORDAPPClient {
         return $sac_response;
     }
 
-    // Function to retrieve the content of a container
-    function retrieveContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
+    /**
+     * Function to retrieve the content of a container
+     *
+     * @param  $sac_url
+     * @param  $sac_u
+     * @param  $sac_p
+     * @param  $sac_obo
+     * @param  string $sac_accept_packaging
+     * @return mixed
+     */
+    function retrieveContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "")
+    {
         // Retrieve the content
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
         }
@@ -198,14 +269,24 @@ class SWORDAPPClient {
         return $sac_resp;
     }
 
-    // Function to retrieve the entry content of a container
-    function retrieveDepositReceipt($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = "") {
+    /**
+     * Function to retrieve the entry content of a container
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_accept_packaging (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     * @throws \Exception
+     */
+    function retrieveDepositReceipt($sac_url, $sac_u, $sac_p, $sac_obo, $sac_accept_packaging = '')
+    {
         // Retrieve the content
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
         }
@@ -224,13 +305,13 @@ class SWORDAPPClient {
         if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing response entry (" . $e->getMessage() . ")");
             }
         } else {
             try {
@@ -238,13 +319,13 @@ class SWORDAPPClient {
                 $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
 
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing error document (" . $e->getMessage() . ")");
             }
         }
 
@@ -252,17 +333,29 @@ class SWORDAPPClient {
         return $sac_dresponse;
     }
 
-    // Replace the file content of a resource
-    function replaceFileContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                                $sac_packaging= '', $sac_contenttype = '', $sac_metadata_relevant = false) {
+    /**
+     * Replace the file content of a resource
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_fname
+     * @param  string $sac_packaging (optional)
+     * @param  string $sac_contenttype (optional)
+     * @param  bool $sac_metadata_relevant (optional)
+     * @return int
+     * @throws \Exception
+     */
+    function replaceFileContent($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_packaging = '', $sac_contenttype = '', $sac_metadata_relevant = false)
+    {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         curl_setopt($sac_curl, CURLOPT_PUT, true);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         array_push($headers, "Content-MD5: " . md5_file($sac_fname));
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
@@ -297,36 +390,66 @@ class SWORDAPPClient {
 
         // Was it a successful result?
         if ($sac_status != 204) {
-            throw new Exception("Error replacing file (HTTP code: " . $sac_status . ")");
+            throw new \Exception("Error replacing file (HTTP code: " . $sac_status . ")");
         } else {
             return $sac_status;
         }
     }
 
-    // Function to replace the metadata of a resource
-    function replaceMetadata($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
-        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
-                                               "PUT", $sac_fname, $sac_inprogress);
+    /**
+     * Function to replace the metadata of a resource
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_fname
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     */
+    function replaceMetadata($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false)
+    {
+        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo, 'PUT', $sac_fname, $sac_inprogress);
     }
 
-    // Replace a multipart package
-    function replaceMetadataAndFile($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                    $sac_inprogress = false) {
-        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                               "PUT", $sac_inprogress);
+    /**
+     * Replace a multipart package
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_package
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     */
+    function replaceMetadataAndFile($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_inprogress = false)
+    {
+        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, 'PUT', $sac_inprogress);
     }
 
-    // Add a an extra file to the media resource
-    function addExtraFileToMediaResource($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                                         $sac_contenttype = '', $sac_metadata_relevant = false) {
+    /**
+     *  Add a an extra file to the media resource
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_fname
+     * @param  string $sac_contenttype (optional)
+     * @param  bool $sac_metadata_relevant (optional)
+     * @return SWORDAPPEntry
+     * @throws \Exception
+     */
+    function addExtraFileToMediaResource($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_contenttype = '', $sac_metadata_relevant = false)
+    {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         curl_setopt($sac_curl, CURLOPT_POST, true);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         array_push($headers, "Content-MD5: " . md5_file($sac_fname));
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
@@ -350,7 +473,7 @@ class SWORDAPPClient {
             $sac_fname_trimmed = $sac_fname;
         }
         array_push($headers, "Content-Disposition: attachment; filename=" . $sac_fname_trimmed);
-        
+
         curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
@@ -360,18 +483,18 @@ class SWORDAPPClient {
 
         // Parse the result
         $sac_dresponse = new SWORDAPPEntry($sac_status, $sac_resp);
-        
+
         // Was it a successful result?
         if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
-                //$sac_xml = @new SimpleXMLElement($sac_resp);
+                //$sac_xml = @new \SimpleXMLElement($sac_resp);
                 //$sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 //$sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing response entry (" . $e->getMessage() . ")");
             }
         } else {
             try {
@@ -379,49 +502,87 @@ class SWORDAPPClient {
                 //$sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
 
                 // Get the deposit results
-                //$sac_xml = @new SimpleXMLElement($sac_resp);
+                //$sac_xml = @new \SimpleXMLElement($sac_resp);
                 //$sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 //$sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing error document (" . $e->getMessage() . ")");
             }
         }
 
         return $sac_dresponse;
     }
 
-    // Add a new package
-    function addExtraPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                             $sac_packaging = '', $sac_contenttype, $sac_inprogress = false) {
-        return $this->deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname,
-                              $sac_packaging, $sac_contenttype, $sac_inprogress);
+    /**
+     * Add a new package
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_fname
+     * @param  string $sac_packaging (optional)
+     * @param  $sac_contenttype (optional)
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     */
+    function addExtraPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_packaging = '', $sac_contenttype = '', $sac_inprogress = false)
+    {
+        return $this->deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_packaging, $sac_contenttype, $sac_inprogress);
     }
 
-    // Add a new Atom entry
-    function addExtraAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false) {
-        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
-                                               "POST", $sac_fname, $sac_inprogress);
+    /**
+     * Add a new Atom entry
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_fname
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     */
+    function addExtraAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false)
+    {
+        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo, "POST", $sac_fname, $sac_inprogress);
     }
 
-    // Add a new multipart package
-    function addExtraMultipartPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                      $sac_inprogress = false) {
-        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package,
-                                               "POST", $sac_inprogress);
+    /**
+     * Add a new multipart package
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_package
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     */
+    function addExtraMultipartPackage($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_inprogress = false)
+    {
+        return $this->depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, "POST", $sac_inprogress);
     }
 
-    // Function to delete a container (object)
-    function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo) {
+    /**
+     * Function to delete a container (object)
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @return SWORDAPPResponse
+     */
+    function deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo)
+    {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         curl_setopt($sac_curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }
@@ -435,19 +596,37 @@ class SWORDAPPClient {
         return new SWORDAPPResponse($sac_status, $sac_resp);
     }
 
-    // Function to delete the content of a resource
-    function deleteResourceContent($sac_url, $sac_u, $sac_p, $sac_obo) {
+    /**
+     * Function to delete the content of a resource
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @return SWORDAPPResponse
+     */
+    function deleteResourceContent($sac_url, $sac_u, $sac_p, $sac_obo)
+    {
         return $this->deleteContainer($sac_url, $sac_u, $sac_p, $sac_obo);
     }
 
-    // Function to retrieve an Atom statement
-    function retrieveAtomStatement($sac_url, $sac_u, $sac_p, $sac_obo) {
+    /**
+     * Function to retrieve an Atom statement
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @return SWORDAPPStatement
+     * @throws \Exception
+     */
+    function retrieveAtomStatement($sac_url, $sac_u, $sac_p, $sac_obo)
+    {
         // Get the Atom statement
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
         }
@@ -460,8 +639,8 @@ class SWORDAPPClient {
         if ($sac_status == 200) {
             try {
                 $sac_atomstatement = new SWORDAPPStatement($sac_status, $sac_resp);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing statement (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing statement (" . $e->getMessage() . ")");
             }
         } else {
             $sac_atomstatement = new SWORDAPPStatement($sac_url, $sac_status);
@@ -471,15 +650,22 @@ class SWORDAPPClient {
         return $sac_atomstatement;
     }
 
-    // Function to retrieve an OAI-ORE statement - this just returns the xml,
-    // it does not marshall it into an object.
-    function retrieveOAIOREStatement($sac_url, $sac_u, $sac_p, $sac_obo) {
+    /**
+     * Function to retrieve an OAI-ORE statement - this just returns the xml, it does not marshall it into an object.
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @return mixed
+     */
+    function retrieveOAIOREStatement($sac_url, $sac_u, $sac_p, $sac_obo)
+    {
         // Get the OAI-ORE statement
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
         }
@@ -491,14 +677,22 @@ class SWORDAPPClient {
         return $sac_resp;
     }
 
-    // Generic private method to initalise a curl transaction
-    private function curl_init($sac_url, $sac_user, $sac_password) {
+    /**
+     * Generic private method to initalise a curl transaction
+     *
+     * @param  string $sac_url
+     * @param  string $sac_user
+     * @param  string $sac_password
+     * @return resource
+     */
+    private function curl_init($sac_url, $sac_user, $sac_password)
+    {
         // Initialise the curl object
         $sac_curl = curl_init();
 
         // Return the content from curl, rather than outputting it
         curl_setopt($sac_curl, CURLOPT_RETURNTRANSFER, true);
-        
+
         // Set the debug option
         curl_setopt($sac_curl, CURLOPT_VERBOSE, $this->debug);
 
@@ -506,23 +700,35 @@ class SWORDAPPClient {
         curl_setopt($sac_curl, CURLOPT_URL, $sac_url);
 
         // If required, set authentication
-        if(!empty($sac_user) && !empty($sac_password)) {
+        if (!empty($sac_user) && !empty($sac_password)) {
             curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_user . ":" . $sac_password);
         }
-        
+
         // Set user-specified curl opts
         foreach ($this->curl_opts as $opt => $val) {
-          curl_setopt($sac_curl, $opt, $val);
+            curl_setopt($sac_curl, $opt, $val);
         }
 
         // Return the initalised curl object
         return $sac_curl;
     }
 
-    // A method for multipart deposit - method can be set - POST or PUT
-    private function depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_method,
-                                              $sac_inprogress = false) {
-        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p, $sac_obo);
+    /**
+     * A method for multipart deposit - method can be set - POST or PUT
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_package
+     * @param  string $sac_method
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     * @throws \Exception
+     */
+    private function depositMultipartByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_package, $sac_method, $sac_inprogress = false)
+    {
+        $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
 
@@ -572,13 +778,13 @@ class SWORDAPPClient {
         if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing response entry (" . $e->getMessage() . ")");
             }
         } else {
             try {
@@ -586,13 +792,13 @@ class SWORDAPPClient {
                 $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
 
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing error document (" . $e->getMessage() . ")");
             }
         }
 
@@ -600,15 +806,26 @@ class SWORDAPPClient {
         return $sac_dresponse;
     }
 
-    // Function to deposit an Atom entry
-    private function depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo,
-                                              $sac_method, $sac_fname, $sac_inprogress = false) {
+    /**
+     * Function to deposit an Atom entry
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @param  string $sac_method
+     * @param  string $sac_fname
+     * @param  bool $sac_inprogress (optional)
+     * @return SWORDAPPEntry|SWORDAPPErrorDocument
+     * @throws \Exception
+     */
+    private function depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo, $sac_method, $sac_fname, $sac_inprogress = false)
+    {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }
@@ -643,13 +860,13 @@ class SWORDAPPClient {
         if (($sac_status >= 200) && ($sac_status < 300)) {
             try {
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing response entry (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing response entry (" . $e->getMessage() . ")");
             }
         } else {
             try {
@@ -657,13 +874,13 @@ class SWORDAPPClient {
                 $sac_dresponse = new SWORDAPPErrorDocument($sac_status, $sac_resp);
 
                 // Get the deposit results
-                $sac_xml = @new SimpleXMLElement($sac_resp);
+                $sac_xml = @new \SimpleXMLElement($sac_resp);
                 $sac_ns = $sac_xml->getNamespaces(true);
 
                 // Build the deposit response object
                 $sac_dresponse->buildhierarchy($sac_xml, $sac_ns);
-            } catch (Exception $e) {
-                throw new Exception("Error parsing error document (" . $e->getMessage() . ")");
+            } catch (\Exception $e) {
+                throw new \Exception("Error parsing error document (" . $e->getMessage() . ")");
             }
         }
 
@@ -671,15 +888,24 @@ class SWORDAPPClient {
         return $sac_dresponse;
     }
 
-    // Request a URI with the specified credentials, and on-behalf-of the specified user.
-    // This is not specifically for SWORD, but for retrieving other associated URIs
-    private function get($sac_url, $sac_u, $sac_p, $sac_obo) {
+
+    /**
+     * Request a URI with the specified credentials, and on-behalf-of the specified user.
+     * This is not specifically for SWORD, but for retrieving other associated URIs
+     *
+     * @param  string $sac_url
+     * @param  string $sac_u
+     * @param  string $sac_p
+     * @param  string $sac_obo
+     * @return mixed
+     */
+    private function get($sac_url, $sac_u, $sac_p, $sac_obo)
+    {
         // Get the service document
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
         $headers = array();
-        global $sal_useragent;
-        array_push($headers, $sal_useragent);
+        array_push($headers, self::SAL_USER_AGENT);
         if (!empty($sac_obo)) {
             array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
         }
@@ -691,5 +917,3 @@ class SWORDAPPClient {
         return $sac_resp;
     }
 }
-
-?>

@@ -14,7 +14,7 @@
     $test_fileout = 'atom_multipart_package';
 
     // Create the test package
-	$test_packager = new PackagerAtomMultipart($test_rootin, $test_dirin, $test_rootout, $test_fileout);
+	$test_packager = new \Swordapp\Client\PackagerAtomMultipart($test_rootin, $test_dirin, $test_rootout, $test_fileout);
 	$test_packager->setTitle("If SWORD is the answer, what is the question? Use of the Simple Web service Offering Repository Deposit protocol");
     $test_packager->setIdentifier("10.1108/00330330910998057");
     $test_packager->addEntryAuthor("Stuart Lewis, Leonie Hayes, Vanessa Newton-Wade, Antony Corfield, Richard Davis, Tim Donohue, Scott Wilson");
@@ -40,7 +40,7 @@
     $test_fileout = 'atom_multipart_package2';
 
     // Create the test package
-	$test_packager = new PackagerAtomMultipart($test_rootin, $test_dirin, $test_rootout, $test_fileout);
+	$test_packager = new \Swordapp\Client\PackagerAtomMultipart($test_rootin, $test_dirin, $test_rootout, $test_fileout);
 	$test_packager->setTitle("A photo of Stuart Lewis");
     $test_packager->setIdentifier("facebook.com/stuartlewis");
     $test_packager->addEntryAuthor("Stuart Lewis");
@@ -53,5 +53,3 @@
     $test_packager->addMetadata("title", "Stuart Lewis");
     $test_packager->addFile('stuartlewis.jpg');
 	$test_packager->create();
-
-?>

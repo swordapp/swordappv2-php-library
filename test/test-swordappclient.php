@@ -9,6 +9,9 @@
 	
 	// The password of the user (if required)
 	$testpw = "sword";
+
+	// On behalf of
+	$testobo = '';
 	
 	// The on-behalf-of user (if required)
 	//$testobo = "user@swordapp.com";
@@ -42,9 +45,8 @@
 
 	// The packaging format of the test file
 	$testpackaging = "http://purl.org/net/sword/package/SimpleZip";
-	
-	require("../swordappclient.php");
-    $testsac = new SWORDAPPClient();
+
+    $testsac = new \Swordapp\Client\SWORDAPPClient();
 
 	if (false) {
 		print "About to request servicedocument from " . $testurl . "\n";
@@ -329,5 +331,3 @@
 
         print "\n\n";
     }
-
-?>

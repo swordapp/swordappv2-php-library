@@ -1,6 +1,9 @@
 <?php
 
-class SWORDAppStatementEntry {
+namespace Swordapp\Client;
+
+class SWORDAppStatementEntry
+{
 
     // The scheme of the entry
     public $sac_scheme;
@@ -26,36 +29,66 @@ class SWORDAppStatementEntry {
     // Who deposited it
     public $sac_deposited_by;
 
-    // Construct a new statement atom entry
-    function __construct($sac_scheme, $sac_term, $sac_label) {
+    /**
+     *
+     * @param string $sac_scheme
+     * @param string $sac_term
+     * @param string $sac_label
+     */
+    function __construct($sac_scheme, $sac_term, $sac_label)
+    {
         $this->sac_scheme = $sac_scheme;
         $this->sac_term = $sac_term;
         $this->sac_label = $sac_label;
     }
 
-    // Set the content type and source
-    function addContent($sac_type, $sac_src) {
+    /**
+     * Set the content type and source
+     *
+     * @param string $sac_type
+     * @param string $sac_src
+     */
+    function addContent($sac_type, $sac_src)
+    {
         $this->sac_content_type = $sac_type;
         $this->sac_content_source = $sac_src;
     }
 
-    // Set the packaging
-    function setPackaging($sac_packaging) {
+    /**
+     * Set the packaging
+     *
+     * @param string $sac_packaging
+     */
+    function setPackaging($sac_packaging)
+    {
         $this->sac_packaging = $sac_packaging;
     }
 
-    // Set the deposited date
-    function setDepositedOn($sac_deposited_on) {
+    /**
+     * Set the deposited date
+     *
+     * @param string $sac_deposited_on
+     */
+    function setDepositedOn($sac_deposited_on)
+    {
         $this->sac_deposited_on = $sac_deposited_on;
     }
 
-    // Set the deposited by
-    function setDepositedBy($sac_deposited_by) {
+    /**
+     * Set the deposited by
+     *
+     * @param string $sac_deposited_by
+     */
+    function setDepositedBy($sac_deposited_by)
+    {
         $this->sac_deposited_by = $sac_deposited_by;
     }
 
-    // Print out a representation of the statement
-    function toString() {
+    /**
+     * Print out a representation of the statement
+     */
+    function toString()
+    {
         print "  - Entry:\n";
         print "   - Scheme: " . $this->sac_scheme . "\n";
         print "   - Term: " . $this->sac_term . "\n";
@@ -66,5 +99,3 @@ class SWORDAppStatementEntry {
         print "   - Deposited By: " . $this->sac_deposited_by . "\n";
     }
 }
-
-?>

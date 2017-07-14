@@ -1,0 +1,23 @@
+{
+  "name": "swordapp/swordappv2-php-library",
+  "description": "The SWORDAPP v2 PHP client library is a PHP library designed to assist with the creation of SWORD deposit tools.",
+  "license": "BSD-3-clause",
+  "keywords": [
+    "SWORD"
+  ],
+  "authors": [
+    {
+      "name": "Stuart Lewis",
+      "email": "stuart@stuartlewis.com"
+    }
+  ],
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "~5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Swordapp\\Client\\": "src"
+    }
+  }
+}

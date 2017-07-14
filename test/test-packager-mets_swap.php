@@ -49,7 +49,7 @@
 	// MIME type of file
 	$test_mimetype = 'application/pdf';
 	
-	$test_packager = new PackagerMetsSwap($test_rootin, $test_dirin, $test_rootout, $test_fileout);
+	$test_packager = new \Swordapp\Client\PackagerMetsSwap($test_rootin, $test_dirin, $test_rootout, $test_fileout);
 	$test_packager->setCustodian($test_custodian);
 	$test_packager->setType($test_type);
 	$test_packager->setTitle($test_title);
@@ -65,4 +65,3 @@
 	$test_packager->addFile($test_file, $test_mimetype);
 
 	$test_packager->create();
-?>
