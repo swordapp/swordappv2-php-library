@@ -1,5 +1,6 @@
 <?php
 
+require_once(__DIR__ . '/../../vendor/autoload.php');
 
 // Settings
 $atom = __DIR__ . '/test-files/archivematica/atom.xml';
@@ -76,8 +77,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 curl_setopt($curl, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
-        'Content-Length: ' . strlen($data_string))
-);
+        'Content-Length: ' . strlen($data_string)));
 $token = curl_exec($curl);
 print 'DSpace login token is: ' . $token . "\n\n";
 
