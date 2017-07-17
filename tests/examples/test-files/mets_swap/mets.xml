@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<mets ID="sort-mets_mets" OBJID="sword-mets" LABEL="DSpace SWORD Item" PROFILE="DSpace METS SIP Profile 1.0" xmlns="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd">
+	<metsHdr CREATEDATE="2008-09-04T00:00:00">
+		<agent ROLE="CUSTODIAN" TYPE="ORGANIZATION">
+			<name>Julie Allinson, Sebastien Francois, Stuart Lewis</name>
+		</agent>
+	</metsHdr>
+<dmdSec ID="sword-mets-dmd-1" GROUPID="sword-mets-dmd-1_group-1">
+<mdWrap LABEL="SWAP Metadata" MDTYPE="OTHER" OTHERMDTYPE="EPDCX" MIMETYPE="text/xml">
+<xmlData>
+<epdcx:descriptionSet xmlns:epdcx="http://purl.org/eprint/epdcx/2006-11-16/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://purl.org/eprint/epdcx/2006-11-16/ http://purl.org/eprint/epdcx/xsd/2006-11-16/epdcx.xsd">
+<epdcx:description epdcx:resourceId="sword-mets-epdcx-1">
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/type" epdcx:vesURI="http://purl.org/eprint/terms/Type" epdcx:valueURI="http://purl.org/eprint/entityType/ScholarlyWork" />
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/title">
+<epdcx:valueString>SWORD: Simple Web-service Offering Repository Deposit</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/terms/abstract">
+<epdcx:valueString>This article offers a twofold introduction to the JISC-funded SWORD Project which ran for eight months in mid-2007. Firstly it presents an overview of the methods and madness that led us to where we currently are, including a timeline of how this work moved through an informal working group to a lightweight, distributed project. Secondly, it offers an explanation of the outputs produced for the SWORD Project and their potential benefits for the repositories community. SWORD, which stands for Simple Web service Offering Repository Deposit, came into being in March 2007 but was preceded by a series of discussions and activities which have contributed much to the project, known as the &apos;Deposit API&apos;. The project itself was funded under the JISC Repositories and Preservation Programme, Tools and Innovation strand, with the over-arching aim of scoping, defining, developing and testing a standard mechanism for depositing into repositories and other systems. The motivation was that there was no standard way of doing this currently and increasingly scenarios were arising that might usefully leverage such a standard.</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/creator">
+<epdcx:valueString>Allinson, Julie</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/creator">
+<epdcx:valueString>Francois, Sebastien</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/creator">
+<epdcx:valueString>Lewis, Stuart</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/identifier">
+<epdcx:valueString>http://www.ariadne.ac.uk/issue54/allinson-et-al/</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/eprint/terms/isExpressedAs" epdcx:valueRef="sword-mets-expr-1" />
+</epdcx:description>
+<epdcx:description epdcx:resourceId="sword-mets-expr-1">
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/type" epdcx:valueURI="http://purl.org/eprint/entityType/Expression" />
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/elements/1.1/type" epdcx:vesURI="http://purl.org/eprint/terms/Type" epdcx:valueURI="http://purl.org/eprint/entityType/Expression" />
+<epdcx:statement epdcx:propertyURI="http://purl.org/dc/terms/available">
+<epdcx:valueString epdcx:sesURI="http://purl.org/dc/terms/W3CDTF">2008-01</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/eprint/terms/Status" epdcx:vesURI="http://purl.org/eprint/terms/Status" epdcx:valueURI="http://purl.org/eprint/status/PeerReviewed" />
+<epdcx:statement epdcx:propertyURI="http://purl.org/eprint/terms/copyrightHolder">
+<epdcx:valueString>Julie Allinson, Sebastien Francois, Stuart Lewis</epdcx:valueString>
+</epdcx:statement>
+<epdcx:statement epdcx:propertyURI="http://purl.org/eprint/terms/bibliographicCitation">
+<epdcx:valueString>Allinson, J., Francois, S., Lewis, S. SWORD: Simple Web-service Offering Repository Deposit, Ariadne, Issue 54, January 2008. Online at http://www.ariadne.ac.uk/issue54/</epdcx:valueString>
+</epdcx:statement>
+</epdcx:description>
+</epdcx:descriptionSet>
+</xmlData>
+</mdWrap>
+</dmdSec>
+	<fileSec>
+		<fileGrp ID="sword-mets-fgrp-1" USE="CONTENT">
+			<file GROUPID="sword-mets-fgid-0" ID="sword-mets-file-0" MIMETYPE="application/pdf">
+				<FLocat LOCTYPE="URL" xlink:href="SWORD Ariadne Jan 2008.pdf" />
+			</file>
+		</fileGrp>
+	</fileSec>
+	<structMap ID="sword-mets-struct-1" LABEL="structure" TYPE="LOGICAL">
+		<div ID="sword-mets-div-1" DMDID="sword-mets-dmd-1" TYPE="SWORD Object">
+			<div ID="sword-mets-div-2" TYPE="File">
+				<fptr FILEID="sword-mets-file-0" />
+			</div>
+		</div>
+	</structMap>
+</mets>
