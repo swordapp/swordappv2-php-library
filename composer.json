@@ -1,6 +1,6 @@
 {
-  "name": "swordapp/swordappv2-php-library",
-  "description": "The SWORDAPP v2 PHP client library is a PHP library designed to assist with the creation of SWORD deposit tools.",
+  "name": "pressbooks/swordapp",
+  "description": "The SWORDAPP v2 PHP client library is a PHP library designed to assist with the creation of SWORD deposit tools. This is the Pressbooks fork.",
   "license": "BSD-3-clause",
   "keywords": [
     "SWORD"

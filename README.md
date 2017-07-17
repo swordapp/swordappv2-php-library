@@ -1,23 +1,24 @@
 Welcome to the SWORD v2 PHP client library!
 -------------------------------------------
-Version: 0.2.0
 
-The SWORDAPP v2 PHP client library is a PHP library designed to assist with the creation of SWORD deposit tools. The 
-client library allows PHP code to easily make use of the two SWORD functions:
+The SWORDAPP v2 PHP client library is a PHP library designed to assist with the creation of 
+[SWORD deposit tools](http://swordapp.org/about/). This client library allows PHP code to easily make use of SWORD 
+functions:
 
  + **GETting** a Service Document
  + **POSTing** a package or file into a repository
  + **PUTting** an updated file into a repository
  + **DELETEing** a file or item from a repository
 
-The library was originally written by Stuart Lewis (stuart@stuartlewis.com) as part of the JISC funded SWORD2 project. 
-Limited support for the library is availble via the sword-app-tech email list:
+The library was originally written by Stuart Lewis (stuart@stuartlewis.com) as part of the JISC funded SWORD2 project.
 
- + https://lists.sourceforge.net/lists/listinfo/sword-app-tech
+This is the Pressbooks fork that library. The latest version of can be installed using Composer
 
-The latest version of the library can be downloaded from GitHub:
+    composer require pressbooks/swordapp  
 
- + https://github.com/stuartlewis/swordappv2-php-library/
+Limited support for this forked version of the library is available on GitHub:
+
+ + https://github.com/pressbooks/swordappv2-php-library
 
 Licence
 -------
@@ -87,15 +88,22 @@ The SWORD v2 specification can be seen at:
 Packages
 --------
 Deposits can be made using packages.  By default, all SWORD v2 interfaces should accept Atom Multipart packages.  These 
-can be generated using the `PackagerAtomMultipart.php` class.
+can be generated using the `PackagerAtomMultipart.php` class. Some repositories will accept METS+SWAP packages. 
+These can be generated using the `PackagerMetsSwap.php` class.
 
-Some repositories will accept METS+SWAP packages. These can be generated using the `PackagerMetsSwap.php` class.
 
+Differences in Pressbooks' version of SWORD Client v2
+-----------------------------------------------------
+
+ + PSR2 coding standards with namespaces
+ + Can be installed using [Composer](https://getcomposer.org/)
 
 Changes
 -------
 0.2.0 (July 2017)
- + Refactor library so that it can be installed using Composer.
+ + Refactor
+ + PSR2 coding standards with namespaces
+ + Composer compatible
 
 0.1 (18th October 2011)
  - First release, forked from version 1 of the library
