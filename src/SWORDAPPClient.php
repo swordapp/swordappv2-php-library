@@ -190,7 +190,7 @@ class SWORDAPPClient
                 $sac_p,
                 $sac_obo,
                 $sac_package,
-                "POST",
+                'POST',
                 $sac_inprogress
             );
         } catch (\Exception $e) {
@@ -599,7 +599,7 @@ class SWORDAPPClient
      */
     public function addExtraAtomEntry($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, $sac_inprogress = false)
     {
-        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo, "POST", $sac_fname, $sac_inprogress);
+        return $this->depositAtomEntryByMethod($sac_url, $sac_u, $sac_p, $sac_obo, 'POST', $sac_fname, $sac_inprogress);
     }
 
     /**
@@ -704,7 +704,7 @@ class SWORDAPPClient
                 throw new \Exception("Error parsing statement (" . $e->getMessage() . ")");
             }
         } else {
-            $sac_atomstatement = new SWORDAPPStatement($sac_url, $sac_status);
+            $sac_atomstatement = new SWORDAPPStatement($sac_status);
         }
 
             // Return the atom statement object
@@ -816,7 +816,7 @@ class SWORDAPPClient
         );
 
         // Set the appropriate method
-        if ($sac_method == "PUT") {
+        if ($sac_method == 'PUT') {
             curl_setopt($sac_curl, CURLOPT_PUT, true);
             curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_package, 'rb'));
             curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_package));
@@ -915,7 +915,7 @@ class SWORDAPPClient
         }
 
         // Set the appropriate method
-        if ($sac_method == "PUT") {
+        if ($sac_method == 'PUT') {
             curl_setopt($sac_curl, CURLOPT_PUT, true);
             curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
             curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));

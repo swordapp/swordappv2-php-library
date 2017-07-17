@@ -6,6 +6,13 @@ class SWORDAPPStatement
 {
 
     /**
+     * HTTP status
+     *
+     * @var int
+     */
+    public $sac_status;
+
+    /**
      * The XML returned by the deposit
      *
      * @var string
@@ -41,7 +48,7 @@ class SWORDAPPStatement
      */
     public function __construct($sac_newstatus, $sac_thexml = '')
     {
-        // Store the xml
+        $this->sac_status = $sac_newstatus;
         $this->sac_xml = $sac_thexml;
 
         // Initalise entries

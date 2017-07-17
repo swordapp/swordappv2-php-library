@@ -27,13 +27,13 @@ Content-Disposition: attachment; name="atom"
 </entry>
 --===============SWORDPARTS==
 Content-Type: application/zip
-Content-MD5: cb52ce40b1ffa8057fb07346000ef139
+Content-MD5: 0a858b670f0fbf6b4fff0bd6f917b59f
 MIME-Version: 1.0
 Content-Disposition: attachment; name="payload"; filename="package.zip"
 Packaging: http://purl.org/net/sword/package/SimpleZip
 Content-Transfer-Encoding: base64
 
-UEsDBBQAAAAIAMiglT7MRA/WYMQDAK0uBAAaAAAAaWYtc3dvcmQtaXMtdGhlLWFuc3dlci5wZGbM
+UEsDBBQAAAAIAJRq7krMRA/WYMQDAK0uBAAaAAAAaWYtc3dvcmQtaXMtdGhlLWFuc3dlci5wZGbM
 /AV0HcmSLozKYpbFzMy0xczMzMzMTBZYzGAxSxYzs4UWg8XMzMxP7u6Ze+Z035l7/wfr7dq1syoy
 KzMy4ovIiJRWkcoLi9Iy0gHgSLe2J2bgoJkBzAQMBHaGlnDc3PTSFrYmBo4WnibGBIz00gRMbAAG
 DmZ6OQJmACu9CAEbOzMHC70sASOAXpmAiZWNkZ2FXpxAi4CRgYONgJWdXYeXF87E1vh3XwT/8oGD
@@ -4365,6 +4365,6 @@ bzAYIT04nBBDgEEEGBJBoAcciIISYCCCmMS5jRCDIgn7wiCE7eBwQr4IgjiFwZFgCCH2G5lRhP5A
 AAltigAS2hQBAYIIMRiMAIOiCOnBYIT0fiMzNhUT+AMJJMgbWAxJ2A4M+Q2GIpAZmwBhhBhBTMKB
 BHMeGBvhiL2ywMG4b9nuxfDfqN2LEdgZjuUCJMAQYEJ6SNBev8HhSII5+Xdz91/sL/YX+4v9xf5i
 f7G/2F/sL/YX+4v9xf5if7G/2F/sL/b/IeaOMbN1sMRQU+Ce7rX1tcTd4ZKQoKZwczfDuG/f9QKB
-4NQUnJxyavLUFP8HUEsBAgAAFAAAAAgAyKCVPsxED9ZgxAMArS4EABoAAAAAAAAAAAAAAAAAAAAA
+4NQUnJxyavLUFP8HUEsBAhQDFAAAAAgAlGruSsxED9ZgxAMArS4EABoAAAAAAAAAAAAAALaBAAAA
 AGlmLXN3b3JkLWlzLXRoZS1hbnN3ZXIucGRmUEsFBgAAAAABAAEASAAAAJjEAwAAAA==
 --===============SWORDPARTS==--

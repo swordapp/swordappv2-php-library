@@ -50,7 +50,8 @@ $testpackaging = "http://purl.org/net/sword/package/SimpleZip";
 
 $testsac = new \Swordapp\Client\SWORDAPPClient();
 
-if (false) {
+$testsdr = null;
+if (true) {
     print "About to request servicedocument from " . $testurl . "\n";
     if (empty($testuser)) {
         print "As: anonymous\n";
@@ -67,6 +68,7 @@ if (false) {
     print "\n\n";
 }
 
+$statement_ore = '';
 if (true) {
     print "About to deposit multipart file (" . $testmultipart . ") to " . $testdepositurl . "\n";
     if (empty($testuser)) {
@@ -74,7 +76,7 @@ if (true) {
     } else {
         print "As: " . $testuser . "\n";
     }
-    $testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testmultipart, $testpackaging, false);
+    $testdr = $testsac->depositMultipart($testdepositurl, $testuser, $testpw, $testobo, $testmultipart, false);
     print "Received HTTP status code: " . $testdr->sac_status . " (" . $testdr->sac_statusmessage . ")\n";
 
     if (($testdr->sac_status >= 200) || ($testdr->sac_status < 300)) {
@@ -173,7 +175,7 @@ if (false) {
     } else {
         print "As: " . $testuser . "\n";
     }
-    $testdr = $testsac->replaceMetadataAndFile($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, $testpackaging, false);
+    $testdr = $testsac->replaceMetadataAndFile($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, false);
     print "Received HTTP status code: " . $testdr->sac_status .
         " (" . $testdr->sac_statusmessage . ")\n";
 
@@ -245,7 +247,7 @@ if (false) {
     } else {
         print "As: " . $testuser . "\n";
     }
-    $testdr = $testsac->addExtraMultipartPackage($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, $testpackaging, false);
+    $testdr = $testsac->addExtraMultipartPackage($edit_iri, $testuser, $testpw, $testobo, $testmultipart2, false);
     print "Received HTTP status code: " . $testdr->sac_status .
         " (" . $testdr->sac_statusmessage . ")\n";
 
@@ -294,6 +296,7 @@ if (false) {
     print "\n\n";
 }
 
+$edit_iri = '';
 if (false) {
     print "About to deposit atom entry (" . $testatomentry . ") to " . $testdepositurl . "\n";
     if (empty($testuser)) {
