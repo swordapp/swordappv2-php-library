@@ -76,7 +76,7 @@ class Collection
      *
      * @param string $sac_newcolltitle
      */
-    function __construct($sac_newcolltitle)
+    public function __construct($sac_newcolltitle)
     {
         // Store the title
         $this->sac_colltitle = sac_clean($sac_newcolltitle);
@@ -92,7 +92,7 @@ class Collection
      *
      * @param mixed $ap
      */
-    function addAcceptPackaging($ap)
+    public function addAcceptPackaging($ap)
     {
         $format = (string)$ap[0];
         $q = (string)$ap[0]['q'];

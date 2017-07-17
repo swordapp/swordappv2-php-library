@@ -1,6 +1,4 @@
 <?php
-    require('../packager_mets_swap.php');
-	
 	// The location of the files (without final directory)
     $test_rootin = 'test-files';
 

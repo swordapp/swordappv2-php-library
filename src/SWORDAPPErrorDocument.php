@@ -32,7 +32,7 @@ class SWORDAPPErrorDocument extends SWORDAPPEntry
      * @param int $sac_newstatus
      * @param string $sac_thexml
      */
-    function __construct($sac_newstatus, $sac_thexml)
+    public function __construct($sac_newstatus, $sac_thexml)
     {
         // Call the super constructor
         parent::__construct($sac_newstatus, $sac_thexml);
@@ -44,7 +44,7 @@ class SWORDAPPErrorDocument extends SWORDAPPEntry
      * @param \SimpleXMLElement $sac_dr
      * @param array $sac_ns
      */
-    function buildhierarchy($sac_dr, $sac_ns)
+    public function buildhierarchy($sac_dr, $sac_ns)
     {
         // Call the super version
         parent::buildhierarchy($sac_dr, $sac_ns);

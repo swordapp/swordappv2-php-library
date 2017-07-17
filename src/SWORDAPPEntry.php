@@ -203,7 +203,7 @@ class SWORDAPPEntry
      * @param int $sac_newstatus
      * @param string $sac_thexml
      */
-    function __construct($sac_newstatus, $sac_thexml)
+    public function __construct($sac_newstatus, $sac_thexml)
     {
         // Store the status
         $this->sac_status = $sac_newstatus;
@@ -213,36 +213,36 @@ class SWORDAPPEntry
 
         // Store the status message
         switch ($this->sac_status) {
-        case 200:
-            $this->sac_statusmessage = "OK";
-            break;
-        case 201:
-            $this->sac_statusmessage = "Created";
-            break;
-        case 202:
-            $this->sac_statusmessage = "Accepted";
-            break;
-        case 400:
-            $this->sac_statusmessage = "Bad request";
-            break;
-        case 401:
-            $this->sac_statusmessage = "Unauthorized";
-            break;
-        case 403:
-            $this->sac_statusmessage = "Forbidden";
-            break;
-        case 412:
-            $this->sac_statusmessage = "Precondition failed";
-            break;
-        case 413:
-            $this->sac_statusmessage = "Request entity too large";
-            break;
-        case 415:
-            $this->sac_statusmessage = "Unsupported media type";
-            break;
-        default:
-            $this->sac_statusmessage = "Unknown error (status code " . $this->sac_status . ")";
-            break;
+            case 200:
+                $this->sac_statusmessage = "OK";
+                break;
+            case 201:
+                $this->sac_statusmessage = "Created";
+                break;
+            case 202:
+                $this->sac_statusmessage = "Accepted";
+                break;
+            case 400:
+                $this->sac_statusmessage = "Bad request";
+                break;
+            case 401:
+                $this->sac_statusmessage = "Unauthorized";
+                break;
+            case 403:
+                $this->sac_statusmessage = "Forbidden";
+                break;
+            case 412:
+                $this->sac_statusmessage = "Precondition failed";
+                break;
+            case 413:
+                $this->sac_statusmessage = "Request entity too large";
+                break;
+            case 415:
+                $this->sac_statusmessage = "Unsupported media type";
+                break;
+            default:
+                $this->sac_statusmessage = "Unknown error (status code " . $this->sac_status . ")";
+                break;
         }
 
         // Initalise arrays
@@ -261,15 +261,18 @@ class SWORDAPPEntry
      * @param \SimpleXMLElement $sac_dr
      * @param array $sac_ns
      */
-    function buildhierarchy($sac_dr, $sac_ns)
+    public function buildhierarchy($sac_dr, $sac_ns)
     {
         // Set the default namespace
         $sac_dr->registerXPathNamespace('atom', 'http://www.w3.org/2005/Atom');
-        if (!isset($sac_ns['atom'])) { $sac_ns['atom'] = 'http://www.w3.org/2005/Atom';
+        if (!isset($sac_ns['atom'])) {
+            $sac_ns['atom'] = 'http://www.w3.org/2005/Atom';
         }
-        if (!isset($sac_ns['dcterms'])) { $sac_ns['dcterms'] = 'http://purl.org/dc/terms/';
+        if (!isset($sac_ns['dcterms'])) {
+            $sac_ns['dcterms'] = 'http://purl.org/dc/terms/';
         }
-        if (!isset($sac_ns['sword'])) { $sac_ns['sword'] = 'http://purl.org/net/sword/';
+        if (!isset($sac_ns['sword'])) {
+            $sac_ns['sword'] = 'http://purl.org/net/sword/';
         }
 
         // Parse the results
@@ -294,31 +297,37 @@ class SWORDAPPEntry
 
         // Store the links
         foreach ($sac_dr->xpath("atom:link") as $sac_link) {
-            $sac_linkobject = new SWORDAPPLink($sac_link->attributes()->rel, $sac_link->attributes()->href, $sac_link->attributes()->type);
+            $sac_linkobject = new SWORDAPPLink(
+                $sac_link->attributes()->rel,
+                $sac_link->attributes()->href,
+                $sac_link->attributes()->type
+            );
             array_push($this->sac_links, $sac_linkobject);
 
             // Store the Edit IRI
-            if ($sac_linkobject->sac_linkrel == 'edit') { $this->sac_edit_iri = $sac_linkobject->sac_linkhref;
+            if ($sac_linkobject->sac_linkrel == 'edit') {
+                $this->sac_edit_iri = $sac_linkobject->sac_linkhref;
             }
 
             // Store the SE-IRI
-            if ($sac_linkobject->sac_linkrel == 'http://purl.org/net/sword/terms/add') { $this->sac_se_iri = $sac_linkobject->sac_linkhref;
+            if ($sac_linkobject->sac_linkrel == 'http://purl.org/net/sword/terms/add') {
+                $this->sac_se_iri = $sac_linkobject->sac_linkhref;
             }
 
             // Store the Statement IRIs
             if ($sac_linkobject->sac_linkrel == 'http://purl.org/net/sword/terms/statement') {
-                if (($sac_linkobject->sac_linktype == 'application/atom+xml;type=feed') 
+                if (($sac_linkobject->sac_linktype == 'application/atom+xml;type=feed')
                     || ($sac_linkobject->sac_linktype == 'application/atom+xml; type=feed')
                 ) {
                     $this->sac_state_iri_atom = $sac_linkobject->sac_linkhref;
-                } else if ($sac_linkobject->sac_linktype == 'application/rdf+xml') {
+                } elseif ($sac_linkobject->sac_linktype == 'application/rdf+xml') {
                     $this->sac_state_iri_ore = $sac_linkobject->sac_linkhref;
                 }
             }
             // Store the Edit Media IRIs
             if ($sac_linkobject->sac_linkrel == 'edit-media') {
                 // Edit media IRI as Atom feed
-                if (($sac_linkobject->sac_linktype == 'application/atom+xml;type=feed') 
+                if (($sac_linkobject->sac_linktype == 'application/atom+xml;type=feed')
                     || ($sac_linkobject->sac_linktype == 'application/atom+xml; type=feed')
                 ) {
                     $this->sac_edit_media_iri_atom = $sac_linkobject->sac_linkhref;
@@ -375,7 +384,7 @@ class SWORDAPPEntry
     /**
      *  Print out a representation of the entry
      */
-    function toString()
+    public function toString()
     {
         print " - ID: " . $this->sac_id . "\n";
         print " - Title: " . $this->sac_title . "\n";

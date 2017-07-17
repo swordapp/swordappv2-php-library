@@ -67,7 +67,7 @@ class SWORDAppStatementEntry
      * @param string $sac_term
      * @param string $sac_label
      */
-    function __construct($sac_scheme, $sac_term, $sac_label)
+    public function __construct($sac_scheme, $sac_term, $sac_label)
     {
         $this->sac_scheme = $sac_scheme;
         $this->sac_term = $sac_term;
@@ -80,7 +80,7 @@ class SWORDAppStatementEntry
      * @param string $sac_type
      * @param string $sac_src
      */
-    function addContent($sac_type, $sac_src)
+    public function addContent($sac_type, $sac_src)
     {
         $this->sac_content_type = $sac_type;
         $this->sac_content_source = $sac_src;
@@ -91,7 +91,7 @@ class SWORDAppStatementEntry
      *
      * @param string $sac_packaging
      */
-    function setPackaging($sac_packaging)
+    public function setPackaging($sac_packaging)
     {
         $this->sac_packaging = $sac_packaging;
     }
@@ -101,7 +101,7 @@ class SWORDAppStatementEntry
      *
      * @param string $sac_deposited_on
      */
-    function setDepositedOn($sac_deposited_on)
+    public function setDepositedOn($sac_deposited_on)
     {
         $this->sac_deposited_on = $sac_deposited_on;
     }
@@ -111,7 +111,7 @@ class SWORDAppStatementEntry
      *
      * @param string $sac_deposited_by
      */
-    function setDepositedBy($sac_deposited_by)
+    public function setDepositedBy($sac_deposited_by)
     {
         $this->sac_deposited_by = $sac_deposited_by;
     }
@@ -119,7 +119,7 @@ class SWORDAppStatementEntry
     /**
      * Print out a representation of the statement
      */
-    function toString()
+    public function toString()
     {
         print "  - Entry:\n";
         print "   - Scheme: " . $this->sac_scheme . "\n";

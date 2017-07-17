@@ -1,11 +1,10 @@
 <?php
 
-require_once('../../swordappclient.php');
 
 // Settings
-$atom = 'atom.xml';
-$contentzip = 'content.zip';
-$metadatazip = 'metadata.zip';
+$atom = __DIR__ . '/test-files/archivematica/atom.xml';
+$contentzip = __DIR__ . '/test-files/archivematica/content.zip';
+$metadatazip = __DIR__ . '/test-files/archivematica/metadata.zip';
 $servicedocument = 'http://demo.dspace.org/swordv2/servicedocument';
 $depositlocation = 'http://demo.dspace.org/swordv2/collection/10673/11';
 $dspacerest = 'https://demo.dspace.org/rest';
@@ -13,7 +12,7 @@ $user = 'dspacedemo+admin@gmail.com';
 $password = 'dspace';
 
 // Initiatiate the SWORD client
-$sword = new SWORDAPPClient();
+$sword = new \Swordapp\Client\SWORDAPPClient();
 
 // Get the service document
 print "About to request servicedocument from " . $servicedocument . "\n";
@@ -97,5 +96,3 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 $response = curl_exec($curl);
 print 'DSpace item ID: ' . $response . "\n\n";
-
-?>

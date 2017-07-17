@@ -33,11 +33,10 @@ class SWORDAPPLink
      * @param string $href
      * @param string $type (optional)
      */
-    function __construct($rel, $href, $type = '')
+    public function __construct($rel, $href, $type = '')
     {
         $this->sac_linkrel = $rel;
         $this->sac_linkhref = $href;
         $this->sac_linktype = $type;
     }
 }
-

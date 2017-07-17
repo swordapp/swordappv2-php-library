@@ -115,7 +115,7 @@ class PackagerAtomMultipart
      * @param string $sac_rootout
      * @param string $sac_fileout
      */
-    function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout)
+    public function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout)
     {
         // Store the values
         $this->sac_root_in = $sac_rootin;
@@ -137,7 +137,7 @@ class PackagerAtomMultipart
     /**
      * @param string $sac_thetitle
      */
-    function setTitle($sac_thetitle)
+    public function setTitle($sac_thetitle)
     {
         $this->sac_entry_title = $this->clean($sac_thetitle);
     }
@@ -145,7 +145,7 @@ class PackagerAtomMultipart
     /**
      * @param string $sac_theID
      */
-    function setIdentifier($sac_theID)
+    public function setIdentifier($sac_theID)
     {
         $this->sac_entry_id = $this->clean($sac_theID);
     }
@@ -153,7 +153,7 @@ class PackagerAtomMultipart
     /**
      * @param string $sac_theUpdated
      */
-    function setUpdated($sac_theUpdated)
+    public function setUpdated($sac_theUpdated)
     {
         $this->sac_entry_updated = $this->clean($sac_theUpdated);
     }
@@ -161,7 +161,7 @@ class PackagerAtomMultipart
     /**
      * @param string $sac_theauthor
      */
-    function addEntryAuthor($sac_theauthor)
+    public function addEntryAuthor($sac_theauthor)
     {
         array_push($this->sac_entry_authors, $this->clean($sac_theauthor));
     }
@@ -169,7 +169,7 @@ class PackagerAtomMultipart
     /**
      * @param string $sac_theSummary
      */
-    function setSummary($sac_theSummary)
+    public function setSummary($sac_theSummary)
     {
         $this->sac_entry_summary = $this->clean($sac_theSummary);
     }
@@ -179,7 +179,7 @@ class PackagerAtomMultipart
      * @param string $sac_theValue
      * @param array $sac_theAttributes
      */
-    function addMetadata($sac_theElement, $sac_theValue, $sac_theAttributes = array())
+    public function addMetadata($sac_theElement, $sac_theValue, $sac_theAttributes = array())
     {
         array_push($this->sac_entry_dctermsFields, $this->clean($sac_theElement));
         array_push($this->sac_entry_dctermsValues, $this->clean($sac_theValue));
@@ -193,7 +193,7 @@ class PackagerAtomMultipart
     /**
      * @param string $sac_thefile
      */
-    function addFile($sac_thefile)
+    public function addFile($sac_thefile)
     {
         array_push($this->sac_files, $sac_thefile);
         $this->sac_filecount++;
@@ -202,7 +202,7 @@ class PackagerAtomMultipart
     /**
      * @throws \Exception
      */
-    function create()
+    public function create()
     {
         // Write the atom entry manifest
         $sac_atom = $this->sac_root_in . '/' . $this->sac_dir_in . '/atom';
@@ -241,7 +241,8 @@ class PackagerAtomMultipart
                     $dcElement .= " $attrName=\"$attrValue\"";
                 }
             }
-            $dcElement .= ">" . $this->sac_entry_dctermsValues[$i] . "</dcterms:" . $this->sac_entry_dctermsFields[$i] . ">\n";
+            $dcElement .= ">" . $this->sac_entry_dctermsValues[$i] . "</dcterms:" .
+                $this->sac_entry_dctermsFields[$i] . ">\n";
             fwrite($fh, $dcElement);
         }
 
@@ -292,9 +293,8 @@ class PackagerAtomMultipart
      * @param string $data
      * @return string
      */
-    function clean($data)
+    public function clean($data)
     {
         return str_replace('&#039;', '&apos;', htmlspecialchars($data, ENT_QUOTES));
     }
 }
-

@@ -1,6 +1,4 @@
 <?php
-    require('../packager_atom_multipart.php');
-	
 	// The location of the files (without final directory)
     $test_rootin = 'test-files';
 

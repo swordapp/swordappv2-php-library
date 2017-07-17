@@ -74,7 +74,7 @@ class SWORDAPPServiceDocument
      * @param int $sac_newstatus
      * @param string $sac_thexml (optional)
      */
-    function __construct($sac_theurl, $sac_newstatus, $sac_thexml = '')
+    public function __construct($sac_theurl, $sac_newstatus, $sac_thexml = '')
     {
         // Store the URL
         $this->sac_url = $sac_theurl;
@@ -87,25 +87,26 @@ class SWORDAPPServiceDocument
 
         // Store the status message
         switch ($this->sac_status) {
-        case 200:
-            $this->sac_statusmessage = "OK";
-            break;
-        case 401:
-            $this->sac_statusmessage = "Unauthorized";
-            break;
-        case 404:
-            $this->sac_statusmessage = "Service document not found";
-            break;
-        default:
-            $this->sac_statusmessage = "Unknown error (status code " . $this->sac_status . ")";
-            break;
+            case 200:
+                $this->sac_statusmessage = "OK";
+                break;
+            case 401:
+                $this->sac_statusmessage = "Unauthorized";
+                break;
+            case 404:
+                $this->sac_statusmessage = "Service document not found";
+                break;
+            default:
+                $this->sac_statusmessage = "Unknown error (status code " . $this->sac_status . ")";
+                break;
         }
 
         // Parse the xml if there is some
         if ($sac_thexml != '') {
             $sac_xml = @new \SimpleXMLElement($sac_thexml);
             $sac_ns = $sac_xml->getNamespaces(true);
-            if (!isset($sac_ns['sword'])) { $sac_ns['sword'] = 'http://purl.org/net/sword/terms/';
+            if (!isset($sac_ns['sword'])) {
+                $sac_ns['sword'] = 'http://purl.org/net/sword/terms/';
             }
             $this->sac_version = $sac_xml->children($sac_ns['sword'])->version;
             $this->sac_verbose = $sac_xml->children($sac_ns['sword'])->verbose;
@@ -125,12 +126,14 @@ class SWORDAPPServiceDocument
     /**
      *  Print out a representation of the document
      */
-    function toString()
+    public function toString()
     {
         print " - Version: " . $this->sac_version . "\n";
-        if (!empty($this->sac_verbose)) { print " - Supports Verbose: " . $this->sac_verbose . "\n";
+        if (!empty($this->sac_verbose)) {
+            print " - Supports Verbose: " . $this->sac_verbose . "\n";
         }
-        if (!empty($this->sac_noop)) { print " - Supports NoOp: " . $this->sac_noop . "\n";
+        if (!empty($this->sac_noop)) {
+            print " - Supports NoOp: " . $this->sac_noop . "\n";
         }
         print " - Maximum uplaod size: ";
         if (!empty($this->sac_maxuploadsize)) {

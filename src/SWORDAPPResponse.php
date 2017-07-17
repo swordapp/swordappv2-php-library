@@ -11,11 +11,9 @@ class SWORDAPPResponse extends SWORDAPPEntry
      * @param int $sac_newstatus
      * @param string $sac_thexml
      */
-    function __construct($sac_newstatus, $sac_thexml)
+    public function __construct($sac_newstatus, $sac_thexml)
     {
         // Call the super constructor
         parent::__construct($sac_newstatus, $sac_thexml);
-
     }
-
 }

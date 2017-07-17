@@ -27,7 +27,7 @@ class Workspace
      *
      * @param string $sac_newworkspacetitle
      */
-    function __construct($sac_newworkspacetitle)
+    public function __construct($sac_newworkspacetitle)
     {
         // Store the title
         $this->sac_workspacetitle = $sac_newworkspacetitle;
@@ -39,7 +39,7 @@ class Workspace
      * @param \SimpleXMLElement[] $sac_colls
      * @param array $sac_ns
      */
-    function buildhierarchy($sac_colls, $sac_ns)
+    public function buildhierarchy($sac_colls, $sac_ns)
     {
         // Build the collections
         foreach ($sac_colls as $sac_collection) {
@@ -66,7 +66,9 @@ class Workspace
             }
 
             // Add the collection policy
-            $sac_newcollection->sac_collpolicy = sac_clean($sac_collection->children($sac_ns['sword'])->collectionPolicy);
+            $sac_newcollection->sac_collpolicy = sac_clean(
+                $sac_collection->children($sac_ns['sword'])->collectionPolicy
+            );
 
             // Add the collection abstract
             // Check if dcterms is in the known namespaces. If not, might not be an abstract

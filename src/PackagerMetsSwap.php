@@ -172,7 +172,7 @@ class PackagerMetsSwap
      * @param string $sac_rootout
      * @param string $sac_fileout
      */
-    function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout)
+    public function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout)
     {
         // Store the values
         $this->sac_root_in = $sac_rootin;
@@ -191,7 +191,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thetype
      */
-    function setType($sac_thetype)
+    public function setType($sac_thetype)
     {
         $this->sac_type = $sac_thetype;
     }
@@ -199,7 +199,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thetitle
      */
-    function setTitle($sac_thetitle)
+    public function setTitle($sac_thetitle)
     {
         $this->sac_title = $this->clean($sac_thetitle);
     }
@@ -207,7 +207,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thetitle
      */
-    function setAbstract($sac_thetitle)
+    public function setAbstract($sac_thetitle)
     {
         $this->sac_abstract = $this->clean($sac_thetitle);
     }
@@ -215,7 +215,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_creator
      */
-    function addCreator($sac_creator)
+    public function addCreator($sac_creator)
     {
         array_push($this->sac_creators, $this->clean($sac_creator));
     }
@@ -223,7 +223,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_subject
      */
-    function addSubject($sac_subject)
+    public function addSubject($sac_subject)
     {
         array_push($this->sac_subjects, $this->clean($sac_subject));
     }
@@ -231,7 +231,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_provenance
      */
-    function addProvenance($sac_provenance)
+    public function addProvenance($sac_provenance)
     {
         array_push($this->sac_provenances, $this->clean($sac_provenance));
     }
@@ -239,7 +239,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_right
      */
-    function addRights($sac_right)
+    public function addRights($sac_right)
     {
         array_push($this->sac_rights, $this->clean($sac_right));
     }
@@ -247,7 +247,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_theidentifier
      */
-    function setIdentifier($sac_theidentifier)
+    public function setIdentifier($sac_theidentifier)
     {
         $this->sac_identifier = $sac_theidentifier;
     }
@@ -255,7 +255,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thestatus
      */
-    function setStatusStatement($sac_thestatus)
+    public function setStatusStatement($sac_thestatus)
     {
         $this->sac_statusstatement = $sac_thestatus;
     }
@@ -263,7 +263,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thecopyrightholder
      */
-    function setCopyrightHolder($sac_thecopyrightholder)
+    public function setCopyrightHolder($sac_thecopyrightholder)
     {
         $this->sac_copyrightholder = $this->clean($sac_thecopyrightholder);
     }
@@ -271,7 +271,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thecustodian
      */
-    function setCustodian($sac_thecustodian)
+    public function setCustodian($sac_thecustodian)
     {
         $this->sac_custodian = $this->clean($sac_thecustodian);
     }
@@ -279,7 +279,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thecitation
      */
-    function setCitation($sac_thecitation)
+    public function setCitation($sac_thecitation)
     {
         $this->sac_citation = $this->clean($sac_thecitation);
     }
@@ -287,7 +287,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thelanguage
      */
-    function setLanguage($sac_thelanguage)
+    public function setLanguage($sac_thelanguage)
     {
         $this->sac_language = $this->clean($sac_thelanguage);
     }
@@ -295,7 +295,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thedta
      */
-    function setDateAvailable($sac_thedta)
+    public function setDateAvailable($sac_thedta)
     {
         $this->sac_dateavailable = $sac_thedta;
     }
@@ -303,7 +303,7 @@ class PackagerMetsSwap
     /**
      * @param string $sac_thepublisher
      */
-    function setPublisher($sac_thepublisher)
+    public function setPublisher($sac_thepublisher)
     {
         $this->sac_publisher = $sac_thepublisher;
     }
@@ -312,7 +312,7 @@ class PackagerMetsSwap
      * @param string $sac_thefile
      * @param string $sac_themimetype
      */
-    function addFile($sac_thefile, $sac_themimetype)
+    public function addFile($sac_thefile, $sac_themimetype)
     {
         array_push($this->sac_files, $sac_thefile);
         array_push($this->sac_mimetypes, $sac_themimetype);
@@ -323,7 +323,7 @@ class PackagerMetsSwap
      * @param string $sac_theelement
      * @param string $sac_thevalue
      */
-    function addMetadata($sac_theelement, $sac_thevalue)
+    public function addMetadata($sac_theelement, $sac_thevalue)
     {
         switch ($sac_theelement) {
             case "abstract":
@@ -353,7 +353,7 @@ class PackagerMetsSwap
     /**
      * @throws \Exception
      */
-    function create()
+    public function create()
     {
         // Write the metadata (mets) file
         $fh = @fopen($this->sac_root_in . '/' . $this->sac_dir_in . '/' . $this->sac_metadata_filename, 'w');
@@ -389,10 +389,13 @@ class PackagerMetsSwap
     /**
      * @param resource $fh
      */
-    function writeheader($fh)
+    public function writeheader($fh)
     {
         fwrite($fh, "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\" ?" . ">\n");
-        fwrite($fh, "<mets ID=\"sort-mets_mets\" OBJID=\"sword-mets\" LABEL=\"DSpace SWORD Item\" PROFILE=\"DSpace METS SIP Profile 1.0\" xmlns=\"http://www.loc.gov/METS/\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd\">\n");
+        fwrite(
+            $fh,
+            "<mets ID=\"sort-mets_mets\" OBJID=\"sword-mets\" LABEL=\"DSpace SWORD Item\" PROFILE=\"DSpace METS SIP Profile 1.0\" xmlns=\"http://www.loc.gov/METS/\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd\">\n" // @codingStandardsIgnoreLine
+        );
         fwrite($fh, "\t<metsHdr CREATEDATE=\"2008-09-04T00:00:00\">\n");
         fwrite($fh, "\t\t<agent ROLE=\"CUSTODIAN\" TYPE=\"ORGANIZATION\">\n");
         if (isset($this->sac_custodian)) {
@@ -400,19 +403,22 @@ class PackagerMetsSwap
         } else {
             fwrite($fh, "\t\t\t<name>Unknown</name>\n");
         }
-        fwrite($fh, "\t\t</agent>\n");
-        fwrite($fh, "\t</metsHdr>\n");
+            fwrite($fh, "\t\t</agent>\n");
+            fwrite($fh, "\t</metsHdr>\n");
     }
 
     /**
      * @param resource $fh
      */
-    function writeDmdSec($fh)
+    public function writeDmdSec($fh)
     {
         fwrite($fh, "<dmdSec ID=\"sword-mets-dmd-1\" GROUPID=\"sword-mets-dmd-1_group-1\">\n");
         fwrite($fh, "<mdWrap LABEL=\"SWAP Metadata\" MDTYPE=\"OTHER\" OTHERMDTYPE=\"EPDCX\" MIMETYPE=\"text/xml\">\n");
         fwrite($fh, "<xmlData>\n");
-        fwrite($fh, "<epdcx:descriptionSet xmlns:epdcx=\"http://purl.org/eprint/epdcx/2006-11-16/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://purl.org/eprint/epdcx/2006-11-16/ http://purl.org/eprint/epdcx/xsd/2006-11-16/epdcx.xsd\">\n");
+        fwrite(
+            $fh,
+            "<epdcx:descriptionSet xmlns:epdcx=\"http://purl.org/eprint/epdcx/2006-11-16/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://purl.org/eprint/epdcx/2006-11-16/ http://purl.org/eprint/epdcx/xsd/2006-11-16/epdcx.xsd\">\n" // @codingStandardsIgnoreLine
+        );
         fwrite($fh, "<epdcx:description epdcx:resourceId=\"sword-mets-epdcx-1\">\n");
 
         if (isset($this->sac_type)) {
@@ -489,7 +495,8 @@ class PackagerMetsSwap
         }
 
         fwrite(
-            $fh, "<epdcx:statement epdcx:propertyURI=\"http://purl.org/eprint/terms/isExpressedAs\" " .
+            $fh,
+            "<epdcx:statement epdcx:propertyURI=\"http://purl.org/eprint/terms/isExpressedAs\" " .
             "epdcx:valueRef=\"sword-mets-expr-1\" />\n"
         );
 
@@ -566,16 +573,20 @@ class PackagerMetsSwap
     /**
      * @param resource $fh
      */
-    function writeFileGrp($fh)
+    public function writeFileGrp($fh)
     {
         fwrite($fh, "\t<fileSec>\n");
         fwrite($fh, "\t\t<fileGrp ID=\"sword-mets-fgrp-1\" USE=\"CONTENT\">\n");
         for ($i = 0; $i < $this->sac_filecount; $i++) {
             fwrite(
-                $fh, "\t\t\t<file GROUPID=\"sword-mets-fgid-0\" ID=\"sword-mets-file-" . $i . "\" " .
+                $fh,
+                "\t\t\t<file GROUPID=\"sword-mets-fgid-0\" ID=\"sword-mets-file-" . $i . "\" " .
                 "MIMETYPE=\"" . $this->sac_mimetypes[$i] . "\">\n"
             );
-            fwrite($fh, "\t\t\t\t<FLocat LOCTYPE=\"URL\" xlink:href=\"" . $this->clean($this->sac_files[$i]) . "\" />\n");
+            fwrite(
+                $fh,
+                "\t\t\t\t<FLocat LOCTYPE=\"URL\" xlink:href=\"" . $this->clean($this->sac_files[$i]) . "\" />\n"
+            );
             fwrite($fh, "\t\t\t</file>\n");
         }
         fwrite($fh, "\t\t</fileGrp>\n");
@@ -585,7 +596,7 @@ class PackagerMetsSwap
     /**
      * @param resource $fh
      */
-    function writeStructMap($fh)
+    public function writeStructMap($fh)
     {
         fwrite($fh, "\t<structMap ID=\"sword-mets-struct-1\" LABEL=\"structure\" TYPE=\"LOGICAL\">\n");
         fwrite($fh, "\t\t<div ID=\"sword-mets-div-1\" DMDID=\"sword-mets-dmd-1\" TYPE=\"SWORD Object\">\n");
@@ -601,7 +612,7 @@ class PackagerMetsSwap
     /**
      * @param resource $fh
      */
-    function writeFooter($fh)
+    public function writeFooter($fh)
     {
         fwrite($fh, "</mets>\n");
     }
@@ -610,7 +621,7 @@ class PackagerMetsSwap
      * @param string $value
      * @return string
      */
-    function valueString($value)
+    public function valueString($value)
     {
         return "<epdcx:valueString>" .
             $value .
@@ -622,7 +633,7 @@ class PackagerMetsSwap
      * @param string $value
      * @return string
      */
-    function valueStringSesURI($sesURI, $value)
+    public function valueStringSesURI($sesURI, $value)
     {
         return "<epdcx:valueString epdcx:sesURI=\"" . $sesURI . "\">" .
             $value .
@@ -634,10 +645,11 @@ class PackagerMetsSwap
      * @param string $propertyURI
      * @param string $value
      */
-    function statement($fh, $propertyURI, $value)
+    public function statement($fh, $propertyURI, $value)
     {
         fwrite(
-            $fh, "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\">\n" .
+            $fh,
+            "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\">\n" .
             $value .
             "</epdcx:statement>\n"
         );
@@ -648,10 +660,11 @@ class PackagerMetsSwap
      * @param string $propertyURI
      * @param string $value
      */
-    function statementValueURI($fh, $propertyURI, $value)
+    public function statementValueURI($fh, $propertyURI, $value)
     {
         fwrite(
-            $fh, "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\" " .
+            $fh,
+            "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\" " .
             "epdcx:valueURI=\"" . $value . "\" />\n"
         );
     }
@@ -662,10 +675,11 @@ class PackagerMetsSwap
      * @param string $vesURI
      * @param string $value
      */
-    function statementVesURI($fh, $propertyURI, $vesURI, $value)
+    public function statementVesURI($fh, $propertyURI, $vesURI, $value)
     {
         fwrite(
-            $fh, "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\" " .
+            $fh,
+            "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\" " .
             "epdcx:vesURI=\"" . $vesURI . "\">\n" .
             $value .
             "</epdcx:statement>\n"
@@ -678,10 +692,11 @@ class PackagerMetsSwap
      * @param string $vesURI
      * @param string $value
      */
-    function statementVesURIValueURI($fh, $propertyURI, $vesURI, $value)
+    public function statementVesURIValueURI($fh, $propertyURI, $vesURI, $value)
     {
         fwrite(
-            $fh, "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\" " .
+            $fh,
+            "<epdcx:statement epdcx:propertyURI=\"" . $propertyURI . "\" " .
             "epdcx:vesURI=\"" . $vesURI . "\" " .
             "epdcx:valueURI=\"" . $value . "\" />\n"
         );
@@ -691,7 +706,7 @@ class PackagerMetsSwap
      * @param string $data
      * @return string
      */
-    function clean($data)
+    public function clean($data)
     {
         return str_replace('&#039;', '&apos;', htmlspecialchars($data, ENT_QUOTES));
     }

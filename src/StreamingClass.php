@@ -10,7 +10,7 @@ class StreamingClass
     /**
      * @var resource
      */
-    var $data;
+    public $data;
 
     /**
      * @param $handle
@@ -18,9 +18,8 @@ class StreamingClass
      * @param int $length
      * @return bool|string
      */
-    function stream_function($handle, $fd, $length)
+    public function streamFunction($handle, $fd, $length)
     {
         return fread($this->data, $length);
     }
 }
-

@@ -39,7 +39,7 @@ class SWORDAPPStatement
      * @param int $sac_newstatus
      * @param string $sac_thexml (optional)
      */
-    function __construct($sac_newstatus, $sac_thexml = '')
+    public function __construct($sac_newstatus, $sac_thexml = '')
     {
         // Store the xml
         $this->sac_xml = $sac_thexml;
@@ -51,9 +51,11 @@ class SWORDAPPStatement
         if ($sac_thexml != '') {
             $sac_statement = @new \SimpleXMLElement($sac_thexml);
             $sac_ns = $sac_statement->getNamespaces(true);
-            if (!array_key_exists('atom', $sac_ns)) { $sac_ns['atom'] = 'http://www.w3.org/2005/Atom';
+            if (!array_key_exists('atom', $sac_ns)) {
+                $sac_ns['atom'] = 'http://www.w3.org/2005/Atom';
             }
-            if (!array_key_exists('sword', $sac_ns)) { $sac_ns['sword'] = 'http://purl.org/net/sword/';
+            if (!array_key_exists('sword', $sac_ns)) {
+                $sac_ns['sword'] = 'http://purl.org/net/sword/';
             }
             $sac_state = $sac_statement->children($sac_ns['sword'])->state;
             if (!empty($sac_state)) {
@@ -91,7 +93,7 @@ class SWORDAPPStatement
     /**
      *  Print out a representation of the statement
      */
-    function toString()
+    public function toString()
     {
         print ' - State href: ' . $this->sac_state_href . "\n";
         print ' - State description: ' . $this->sac_state_description . "\n";
