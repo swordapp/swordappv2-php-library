@@ -8,84 +8,201 @@ use function Swordapp\Client\Utils\sac_clean;
 
 class SWORDAPPEntry
 {
-    // The HTTP status code returned
+    /**
+     * The HTTP status code returned
+     *
+     * @var int
+     */
     public $sac_status;
 
-    // The XML returned by the deposit
+    /**
+     * The XML returned by the deposit
+     *
+     * @var string
+     */
     public $sac_xml;
 
-    // The human readable status code
+    /**
+     * The human readable status code
+     *
+     * @var string
+     */
     public $sac_statusmessage;
 
-    // The atom:id identifier
+    /**
+     * The atom:id identifier
+     *
+     * @var string
+     */
     public $sac_id;
 
-    // The atom:content values
+    /**
+     * atom:content values
+     *
+     * @var string
+     */
     public $sac_content_src;
+
+    /**
+     * atom:content values
+     *
+     * @var string
+     */
     public $sac_content_type;
 
-    // The authors
+    /**
+     * The authors
+     *
+     * @var array
+     */
     public $sac_authors;
 
-    // The contributors
+    /**
+     * The contributors
+     *
+     * @var array
+     */
     public $sac_contributors;
 
-    // The links
+    /**
+     * The links
+     *
+     * @var array
+     */
     public $sac_links;
 
-    // The title
+    /**
+     * The title
+     *
+     * @var string
+     */
     public $sac_title;
 
-    // The summary
+    /**
+     * The summary
+     *
+     * @var string
+     */
     public $sac_summary;
 
-    // The rights
+    /**
+     * The rights
+     *
+     * @var string
+     */
     public $sac_rights;
 
-    // The treatment
+    /**
+     * The treatment
+     *
+     * @var string
+     */
     public $sac_treatment;
 
-    // The verbose description
+    /**
+     * The verbose description
+     *
+     * @var string
+     */
     public $sac_verbose_treatment;
 
-    // The update date
+    /**
+     * The update date
+     *
+     * @var $sac_updated
+     */
     public $sac_updated;
 
-    // The packaging format used
+    /**
+     * The packaging format used
+     *
+     * @var $sac_packaging
+     */
     public $sac_packaging;
 
-    // The generator
+    /**
+     * The generator
+     *
+     * @var string
+     */
     public $sac_generator;
+
+    /**
+     * The generator uri
+     *
+     * @var string
+     */
     public $sac_generator_uri;
 
-    // The user agent
+    /**
+     * The user agent
+     *
+     * @var string
+     */
     public $sac_useragent;
 
-    // The noOp status
+    /**
+     * The noOp status
+     *
+     * @var bool
+     */
     public $sac_noOp;
 
-    // Any dcterms metadata
+    /**
+     * Any dcterms metadata
+     *
+     * @var array
+     */
     public $sac_dcterms;
 
-    // The Edit IRI
+    /**
+     * The Edit IRI
+     *
+     * @var string
+     */
     public $sac_edit_iri;
 
-    // The SE-IRI
+    /**
+     * The SE-IRI
+     *
+     * @var string
+     */
     public $sac_se_iri;
 
-    // The Atom Statement IRI
+    /**
+     * The Atom Statement IRI
+     *
+     * @var string
+     */
     public $sac_state_iri_atom;
 
-    // The Atom Statement IRI
+    /**
+     * The Atom Statement IRI
+     *
+     * @var string
+     */
     public $sac_state_iri_ore;
 
-    // The Edit Media IRI
+    /**
+     * The Edit Media IRI
+     *
+     * @var string
+     */
     public $sac_edit_media_iri;
 
-    // The Atom feed representation of media resources
+    /**
+     * The Atom feed representation of media resources
+     *
+     * @var string
+     */
     public $sac_edit_media_iri_atom;
 
-    // Construct a new deposit response by passing in the http status code
+    /**
+     * Construct a new deposit response by passing in the http status code
+     *
+     * @param int $sac_newstatus
+     * @param string $sac_thexml
+     */
     function __construct($sac_newstatus, $sac_thexml)
     {
         // Store the status
@@ -255,6 +372,9 @@ class SWORDAPPEntry
         }
     }
 
+    /**
+     *  Print out a representation of the entry
+     */
     function toString()
     {
         print " - ID: " . $this->sac_id . "\n";

@@ -5,19 +5,40 @@ namespace Swordapp\Client;
 class SWORDAPPStatement
 {
 
-    // The XML returned by the deposit
+    /**
+     * The XML returned by the deposit
+     *
+     * @var string
+     */
     public $sac_xml;
 
-    // The state of the item
+    /**
+     * The state of the item
+     *
+     * @var string
+     */
     public $sac_state_href;
 
-    // A description of the state of the item
+    /**
+     * A description of the state of the item
+     *
+     * @var string
+     */
     public $sac_state_description;
 
-    // An array of entries
+    /**
+     * An array of entries
+     *
+     * @var array
+     */
     public $sac_entries;
 
-    // Construct a new SWORD statement by passing in the http status code
+    /**
+     * Construct a new SWORD statement by passing in the http status code
+     *
+     * @param int $sac_newstatus
+     * @param string $sac_thexml (optional)
+     */
     function __construct($sac_newstatus, $sac_thexml = '')
     {
         // Store the xml
@@ -67,6 +88,9 @@ class SWORDAPPStatement
         }
     }
 
+    /**
+     *  Print out a representation of the statement
+     */
     function toString()
     {
         print ' - State href: ' . $this->sac_state_href . "\n";

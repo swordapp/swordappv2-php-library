@@ -22,7 +22,11 @@ class Workspace
      */
     public $sac_collections;
 
-    // Construct a new workspace by passing in a title
+    /**
+     * Construct a new workspace by passing in a title
+     *
+     * @param string $sac_newworkspacetitle
+     */
     function __construct($sac_newworkspacetitle)
     {
         // Store the title
@@ -33,7 +37,7 @@ class Workspace
      * Build the collection hierarchy
      *
      * @param \SimpleXMLElement[] $sac_colls
-     * @param array               $sac_ns
+     * @param array $sac_ns
      */
     function buildhierarchy($sac_colls, $sac_ns)
     {

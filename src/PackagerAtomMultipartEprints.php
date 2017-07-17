@@ -9,45 +9,111 @@ use function Swordapp\Client\Utils\base64chunk;
 class PackagerAtomMultipartEprints
 {
 
-    // The location of the files (without final directory)
+    /**
+     * The location of the files (without final directory)
+     *
+     * @var string
+     */
     private $sac_root_in;
 
-    // The directory to zip up in the $sac_root_in directory
+    /**
+     * The directory to zip up in the $sac_root_in directory
+     *
+     * @var string
+     */
     private $sac_dir_in;
 
-    // The location to write the package out to
+    /**
+     * The location to write the package out to
+     *
+     * @var string
+     */
     private $sac_root_out;
 
-    // The filename to save the package as
+    /**
+     * The filename to save the package as
+     *
+     * @var string
+     */
     private $sac_file_out;
 
-    // File names
+    /**
+     * File names
+     *
+     * @var array
+     */
     private $sac_files;
 
-    // Number of files added
+    /**
+     * Number of files added
+     *
+     * @var int
+     */
     private $sac_filecount;
 
-    // The dcterms metadata
+    /**
+     * dcterms metadata
+     *
+     * @var array
+     */
     private $sac_entry_dctermsFields;
+
+    /**
+     * dcterms metadata
+     *
+     * @var array
+     */
     private $sac_entry_dctermsValues;
+
+    /**
+     * dcterms metadata
+     *
+     * @var array
+     */
     private $sac_entry_dctermsAttributes;
 
-    // The entry title
+    /**
+     * The entry title
+     *
+     * @var string
+     */
     private $sac_entry_title;
 
-    // The entry id
+    /**
+     * The entry id
+     *
+     * @var string
+     */
     private $sac_entry_id;
 
-    // The entry updated date / time stamp
+    /**
+     * The entry updated date / time stamp
+     *
+     * @var string
+     */
     private $sac_entry_updated;
 
-    // The entry author names
+    /**
+     * The entry author names
+     *
+     * @var array
+     */
     private $sac_entry_authors;
 
-    // The entry summary text
+    /**
+     * The entry summary text
+     *
+     * @var string
+     */
     private $sac_entry_summary;
 
 
+    /**
+     * @param string $sac_rootin
+     * @param string $sac_dirin
+     * @param string $sac_rootout
+     * @param string $sac_fileout
+     */
     function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout)
     {
         // Store the values
@@ -67,31 +133,51 @@ class PackagerAtomMultipartEprints
         $this->sac_entry_authors = array();
     }
 
+    /**
+     * @param string $sac_thetitle
+     */
     function setTitle($sac_thetitle)
     {
         $this->sac_entry_title = $this->clean($sac_thetitle);
     }
 
+    /**
+     * @param string $sac_theID
+     */
     function setIdentifier($sac_theID)
     {
         $this->sac_entry_id = $this->clean($sac_theID);
     }
 
+    /**
+     * @param string $sac_theUpdated
+     */
     function setUpdated($sac_theUpdated)
     {
         $this->sac_entry_updated = $this->clean($sac_theUpdated);
     }
 
+    /**
+     * @param string $sac_theauthor
+     */
     function addEntryAuthor($sac_theauthor)
     {
         array_push($this->sac_entry_authors, $this->clean($sac_theauthor));
     }
 
+    /**
+     * @param string $sac_theSummary
+     */
     function setSummary($sac_theSummary)
     {
         $this->sac_entry_summary = $this->clean($sac_theSummary);
     }
 
+    /**
+     * @param string $sac_theElement
+     * @param string $sac_theValue
+     * @param array $sac_theAttributes (optional)
+     */
     function addMetadata($sac_theElement, $sac_theValue, $sac_theAttributes = array())
     {
         array_push($this->sac_entry_dctermsFields, $this->clean($sac_theElement));
@@ -103,12 +189,18 @@ class PackagerAtomMultipartEprints
         array_push($this->sac_entry_dctermsAttributes, $sac_cleanAttributes);
     }
 
+    /**
+     * @param string $sac_thefile
+     */
     function addFile($sac_thefile)
     {
         array_push($this->sac_files, $sac_thefile);
         $this->sac_filecount++;
     }
 
+    /**
+     * @throws \Exception
+     */
     function create()
     {
         // Write the atom entry manifest
@@ -186,6 +278,10 @@ class PackagerAtomMultipartEprints
         file_put_contents($temp, $xml, FILE_APPEND);
     }
 
+    /**
+     * @param string $data
+     * @return string
+     */
     function clean($data)
     {
         return str_replace('&#039;', '&apos;', htmlspecialchars($data, ENT_QUOTES));

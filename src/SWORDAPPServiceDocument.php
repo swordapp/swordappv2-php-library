@@ -4,34 +4,76 @@ namespace Swordapp\Client;
 
 class SWORDAPPServiceDocument
 {
-    // The URL of this Service Document
+    /**
+     * The URL of this Service Document
+     *
+     * @var string
+     */
     public $sac_url;
 
-    // The HTTP status code returned
+    /**
+     * The HTTP status code returned
+     *
+     * @var int
+     */
     public $sac_status;
 
-    // The XML of the service doucment
+    /**
+     * The XML of the service document
+     *
+     * @var string
+     */
     public $sac_xml;
 
-    // The human readable status code
+    /**
+     * The human readable status code
+     *
+     * @var string
+     */
     public $sac_statusmessage;
 
-    // The version of the SWORD server
+    /**
+     * The version of the SWORD server
+     *
+     * @var \SimpleXMLElement
+     */
     public $sac_version;
 
-    // Whether or not verbose output is supported
+    /**
+     * Whether or not verbose output is supported
+     *
+     * @var \SimpleXMLElement
+     */
     public $sac_verbose;
 
-    // Whether or not the noOp command is supported
+    /**
+     * Whether or not the noOp command is supported
+     *
+     * @var \SimpleXMLElement
+     */
     public $sac_noop;
 
-    // The max upload size of deposits
+    /**
+     * The max upload size of deposits
+     *
+     * @var \SimpleXMLElement
+     */
     public $sac_maxuploadsize;
 
-    // Workspaces in the servicedocument
+    /**
+     * Workspaces in the service document
+     *
+     * @var array
+     */
     public $sac_workspaces;
 
-    // Construct a new servicedocument
+    /**
+     * Construct a new servicedocument
+     *
+     * @param string $sac_theurl
+     * @param int $sac_newstatus
+     * @param string $sac_thexml (optional)
+     */
     function __construct($sac_theurl, $sac_newstatus, $sac_thexml = '')
     {
         // Store the URL
@@ -80,6 +122,9 @@ class SWORDAPPServiceDocument
         }
     }
 
+    /**
+     *  Print out a representation of the document
+     */
     function toString()
     {
         print " - Version: " . $this->sac_version . "\n";

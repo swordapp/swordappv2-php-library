@@ -4,76 +4,174 @@ namespace Swordapp\Client;
 
 class PackagerMetsSwap
 {
-    // The location of the files (without final directory)
+    /**
+     * The location of the files (without final directory)
+     *
+     * @var string
+     */
     public $sac_root_in;
 
-    // The directory to zip up in the $sac_root_in directory
+    /**
+     * The directory to zip up in the $sac_root_in directory
+     *
+     * @var string
+     */
     public $sac_dir_in;
 
-    // The location to write the package out to
+    /**
+     * The location to write the package out to
+     *
+     * @var string
+     */
     public $sac_root_out;
 
-    // The filename to save the package as
+    /**
+     * The filename to save the package as
+     *
+     * @var string
+     */
     public $sac_file_out;
 
-    // The name of the metadata file
-    public $sac_metadata_filename = "mets.xml";
+    /**
+     * The name of the metadata file
+     *
+     * @var string
+     */
+    public $sac_metadata_filename = 'mets.xml';
 
-    // The type (e.g. ScholarlyWork)
+    /**
+     * The type (e.g. ScholarlyWork)
+     *
+     * @var string
+     */
     public $sac_type;
 
-    // The title of the item
+    /**
+     * The title of the item
+     *
+     * @var string
+     */
     public $sac_title;
 
-    // The abstract of the item
+    /**
+     * The abstract of the item
+     *
+     * @var string
+     */
     public $sac_abstract;
 
-    // Creators
+    /**
+     * Creators
+     *
+     * @var array
+     */
     public $sac_creators;
 
-    // Subjects
+    /**
+     * Subjects
+     *
+     * @var array
+     */
     public $sac_subjects;
 
-    // Identifier
+    /**
+     * Identifier
+     *
+     * @var string
+     */
     public $sac_identifier;
 
-    // Date made available
+    /**
+     * Date made available
+     *
+     * @var
+     */
     public $sac_dateavailable;
 
-    // Status
+    /**
+     * Status
+     *
+     * @var string
+     */
     public $sac_statusstatement;
 
-    // Copyright holder
+    /**
+     * Copyright holder
+     *
+     * @var string
+     */
     public $sac_copyrightholder;
 
-    // Custodian
+    /**
+     * Custodian
+     *
+     * @var string
+     */
     public $sac_custodian;
 
-    // Bibliographic citation
+    /**
+     * Bibliographic citation
+     *
+     * @var string
+     */
     public $sac_citation;
 
-    // Language
+    /**
+     * Language
+     *
+     * @var string
+     */
     public $sac_language;
 
-    // File name
+    /**
+     * File name
+     *
+     * @var array
+     */
     public $sac_files;
 
-    // MIME type
+    /**
+     * MIME type
+     *
+     * @var array
+     */
     public $sac_mimetypes;
 
-    // Provenances
+    /**
+     * Provenances
+     *
+     * @var array
+     */
     public $sac_provenances;
 
-    // Rights
+    /**
+     * Rights
+     *
+     * @var array
+     */
     public $sac_rights;
 
-    // Publisher
+    /**
+     * Publisher
+     *
+     * @var string
+     */
     public $sac_publisher;
 
-    // Number of files added
+    /**
+     * Number of files added
+     *
+     * @var int
+     */
     public $sac_filecount;
 
 
+    /**
+     * @param string $sac_rootin
+     * @param string $sac_dirin
+     * @param string $sac_rootout
+     * @param string $sac_fileout
+     */
     function __construct($sac_rootin, $sac_dirin, $sac_rootout, $sac_fileout)
     {
         // Store the values
@@ -90,81 +188,130 @@ class PackagerMetsSwap
         $this->sac_filecount = 0;
     }
 
+    /**
+     * @param string $sac_thetype
+     */
     function setType($sac_thetype)
     {
         $this->sac_type = $sac_thetype;
     }
 
+    /**
+     * @param string $sac_thetitle
+     */
     function setTitle($sac_thetitle)
     {
         $this->sac_title = $this->clean($sac_thetitle);
     }
 
+    /**
+     * @param string $sac_thetitle
+     */
     function setAbstract($sac_thetitle)
     {
         $this->sac_abstract = $this->clean($sac_thetitle);
     }
 
+    /**
+     * @param string $sac_creator
+     */
     function addCreator($sac_creator)
     {
         array_push($this->sac_creators, $this->clean($sac_creator));
     }
 
+    /**
+     * @param string $sac_subject
+     */
     function addSubject($sac_subject)
     {
         array_push($this->sac_subjects, $this->clean($sac_subject));
     }
 
+    /**
+     * @param string $sac_provenance
+     */
     function addProvenance($sac_provenance)
     {
         array_push($this->sac_provenances, $this->clean($sac_provenance));
     }
 
+    /**
+     * @param string $sac_right
+     */
     function addRights($sac_right)
     {
         array_push($this->sac_rights, $this->clean($sac_right));
     }
 
+    /**
+     * @param string $sac_theidentifier
+     */
     function setIdentifier($sac_theidentifier)
     {
         $this->sac_identifier = $sac_theidentifier;
     }
 
+    /**
+     * @param string $sac_thestatus
+     */
     function setStatusStatement($sac_thestatus)
     {
         $this->sac_statusstatement = $sac_thestatus;
     }
 
+    /**
+     * @param string $sac_thecopyrightholder
+     */
     function setCopyrightHolder($sac_thecopyrightholder)
     {
         $this->sac_copyrightholder = $this->clean($sac_thecopyrightholder);
     }
 
+    /**
+     * @param string $sac_thecustodian
+     */
     function setCustodian($sac_thecustodian)
     {
         $this->sac_custodian = $this->clean($sac_thecustodian);
     }
 
+    /**
+     * @param string $sac_thecitation
+     */
     function setCitation($sac_thecitation)
     {
         $this->sac_citation = $this->clean($sac_thecitation);
     }
 
+    /**
+     * @param string $sac_thelanguage
+     */
     function setLanguage($sac_thelanguage)
     {
         $this->sac_language = $this->clean($sac_thelanguage);
     }
 
+    /**
+     * @param string $sac_thedta
+     */
     function setDateAvailable($sac_thedta)
     {
         $this->sac_dateavailable = $sac_thedta;
     }
 
+    /**
+     * @param string $sac_thepublisher
+     */
     function setPublisher($sac_thepublisher)
     {
         $this->sac_publisher = $sac_thepublisher;
     }
 
+    /**
+     * @param string $sac_thefile
+     * @param string $sac_themimetype
+     */
     function addFile($sac_thefile, $sac_themimetype)
     {
         array_push($this->sac_files, $sac_thefile);
@@ -172,6 +319,10 @@ class PackagerMetsSwap
         $this->sac_filecount++;
     }
 
+    /**
+     * @param string $sac_theelement
+     * @param string $sac_thevalue
+     */
     function addMetadata($sac_theelement, $sac_thevalue)
     {
         switch ($sac_theelement) {
@@ -199,6 +350,9 @@ class PackagerMetsSwap
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     function create()
     {
         // Write the metadata (mets) file
@@ -232,6 +386,9 @@ class PackagerMetsSwap
         $zip->close();
     }
 
+    /**
+     * @param resource $fh
+     */
     function writeheader($fh)
     {
         fwrite($fh, "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\" ?" . ">\n");
@@ -247,6 +404,9 @@ class PackagerMetsSwap
         fwrite($fh, "\t</metsHdr>\n");
     }
 
+    /**
+     * @param resource $fh
+     */
     function writeDmdSec($fh)
     {
         fwrite($fh, "<dmdSec ID=\"sword-mets-dmd-1\" GROUPID=\"sword-mets-dmd-1_group-1\">\n");
@@ -403,6 +563,9 @@ class PackagerMetsSwap
         fwrite($fh, "</dmdSec>\n");
     }
 
+    /**
+     * @param resource $fh
+     */
     function writeFileGrp($fh)
     {
         fwrite($fh, "\t<fileSec>\n");
@@ -419,6 +582,9 @@ class PackagerMetsSwap
         fwrite($fh, "\t</fileSec>\n");
     }
 
+    /**
+     * @param resource $fh
+     */
     function writeStructMap($fh)
     {
         fwrite($fh, "\t<structMap ID=\"sword-mets-struct-1\" LABEL=\"structure\" TYPE=\"LOGICAL\">\n");
@@ -432,11 +598,18 @@ class PackagerMetsSwap
         fwrite($fh, "\t</structMap>\n");
     }
 
+    /**
+     * @param resource $fh
+     */
     function writeFooter($fh)
     {
         fwrite($fh, "</mets>\n");
     }
 
+    /**
+     * @param string $value
+     * @return string
+     */
     function valueString($value)
     {
         return "<epdcx:valueString>" .
@@ -444,6 +617,11 @@ class PackagerMetsSwap
             "</epdcx:valueString>\n";
     }
 
+    /**
+     * @param string $sesURI
+     * @param string $value
+     * @return string
+     */
     function valueStringSesURI($sesURI, $value)
     {
         return "<epdcx:valueString epdcx:sesURI=\"" . $sesURI . "\">" .
@@ -451,6 +629,11 @@ class PackagerMetsSwap
             "</epdcx:valueString>\n";
     }
 
+    /**
+     * @param resource $fh
+     * @param string $propertyURI
+     * @param string $value
+     */
     function statement($fh, $propertyURI, $value)
     {
         fwrite(
@@ -460,6 +643,11 @@ class PackagerMetsSwap
         );
     }
 
+    /**
+     * @param resource $fh
+     * @param string $propertyURI
+     * @param string $value
+     */
     function statementValueURI($fh, $propertyURI, $value)
     {
         fwrite(
@@ -468,6 +656,12 @@ class PackagerMetsSwap
         );
     }
 
+    /**
+     * @param resource $fh
+     * @param string $propertyURI
+     * @param string $vesURI
+     * @param string $value
+     */
     function statementVesURI($fh, $propertyURI, $vesURI, $value)
     {
         fwrite(
@@ -478,6 +672,12 @@ class PackagerMetsSwap
         );
     }
 
+    /**
+     * @param resource $fh
+     * @param string $propertyURI
+     * @param string $vesURI
+     * @param string $value
+     */
     function statementVesURIValueURI($fh, $propertyURI, $vesURI, $value)
     {
         fwrite(
@@ -487,6 +687,10 @@ class PackagerMetsSwap
         );
     }
 
+    /**
+     * @param string $data
+     * @return string
+     */
     function clean($data)
     {
         return str_replace('&#039;', '&apos;', htmlspecialchars($data, ENT_QUOTES));

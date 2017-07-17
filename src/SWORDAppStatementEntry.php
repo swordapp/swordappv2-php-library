@@ -5,28 +5,60 @@ namespace Swordapp\Client;
 class SWORDAppStatementEntry
 {
 
-    // The scheme of the entry
+    /**
+     * The scheme of the entry
+     *
+     * @var string
+     */
     public $sac_scheme;
 
-    // The term of the entry
+    /**
+     * The term of the entry
+     *
+     * @var string
+     */
     public $sac_term;
 
-    // The label for the entry
+    /**
+     * The label for the entry
+     *
+     * @var string
+     */
     public $sac_label;
 
-    // The content type
+    /**
+     * The content type
+     *
+     * @var string
+     */
     public $sac_content_type;
 
-    // The content source
+    /**
+     * // The content source
+     *
+     * @var string
+     */
     public $sac_content_source;
 
-    // The packaging format used
+    /**
+     * The packaging format used
+     *
+     * @var string
+     */
     public $sac_packaging;
 
-    // When it was deposited
+    /**
+     * When it was deposited
+     *
+     * @var string
+     */
     public $sac_deposited_on;
 
-    // Who deposited it
+    /**
+     * Who deposited it
+     *
+     * @var string
+     */
     public $sac_deposited_by;
 
     /**
