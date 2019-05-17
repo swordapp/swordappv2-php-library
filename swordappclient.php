@@ -24,7 +24,7 @@ class SWORDAPPClient {
         // Get the service document
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -59,7 +59,7 @@ class SWORDAPPClient {
 
         curl_setopt($sac_curl, CURLOPT_POST, true);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         array_push($headers, "Content-MD5: " . md5_file($sac_fname));
@@ -154,7 +154,7 @@ class SWORDAPPClient {
 
         curl_setopt($sac_curl, CURLOPT_POST, true);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -181,7 +181,7 @@ class SWORDAPPClient {
         // Retrieve the content
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -203,7 +203,7 @@ class SWORDAPPClient {
         // Retrieve the content
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -260,7 +260,7 @@ class SWORDAPPClient {
 
         curl_setopt($sac_curl, CURLOPT_PUT, true);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         array_push($headers, "Content-MD5: " . md5_file($sac_fname));
@@ -324,7 +324,7 @@ class SWORDAPPClient {
 
         curl_setopt($sac_curl, CURLOPT_POST, true);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         array_push($headers, "Content-MD5: " . md5_file($sac_fname));
@@ -419,7 +419,7 @@ class SWORDAPPClient {
 
         curl_setopt($sac_curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -445,7 +445,7 @@ class SWORDAPPClient {
         // Get the Atom statement
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -477,7 +477,7 @@ class SWORDAPPClient {
         // Get the OAI-ORE statement
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -524,7 +524,7 @@ class SWORDAPPClient {
                                               $sac_inprogress = false) {
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p, $sac_obo);
 
-        $headers = array();
+        $headers = $this->_init_headers();
 
         if ($sac_inprogress) {
             array_push($headers, "In-Progress: true");
@@ -606,7 +606,7 @@ class SWORDAPPClient {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -677,7 +677,7 @@ class SWORDAPPClient {
         // Get the service document
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        $headers = array();
+        $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
         if (!empty($sac_obo)) {
@@ -689,6 +689,13 @@ class SWORDAPPClient {
 
         // Return the response
         return $sac_resp;
+    }
+
+    function _init_headers() {
+        if (array_key_exists(CURLOPT_HTTPHEADER, $this->curl_opts)) {
+            return $this->curl_opts[CURLOPT_HTTPHEADER];
+        }
+        return array();
     }
 }
 
