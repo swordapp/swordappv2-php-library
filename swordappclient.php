@@ -57,8 +57,6 @@ class SWORDAPPClient {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        curl_setopt($sac_curl, CURLOPT_POST, true);
-
         $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -72,7 +70,6 @@ class SWORDAPPClient {
         if (!empty($sac_contenttype)) {
             array_push($headers, "Content-Type: " . $sac_contenttype);
         }
-        array_push($headers, "Content-Length: " . filesize($sac_fname));
         if ($sac_inprogress) {
             array_push($headers, "In-Progress: true");
         } else {
@@ -88,7 +85,10 @@ class SWORDAPPClient {
             $sac_fname_trimmed = $sac_fname;
         }
         array_push($headers, "Content-Disposition: attachment; filename=" . $sac_fname_trimmed);
-        curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
+        curl_setopt($sac_curl, CURLOPT_PUT, 1);
+        curl_setopt($sac_curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
+        curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
         $sac_resp = curl_exec($sac_curl);
@@ -322,8 +322,6 @@ class SWORDAPPClient {
         // Perform the deposit
         $sac_curl = $this->curl_init($sac_url, $sac_u, $sac_p);
 
-        curl_setopt($sac_curl, CURLOPT_POST, true);
-
         $headers = $this->_init_headers();
         global $sal_useragent;
         array_push($headers, $sal_useragent);
@@ -339,7 +337,6 @@ class SWORDAPPClient {
         } else {
             array_push($headers, "Metadata-Relevant: false");
         }
-        array_push($headers, "Content-Length: " . filesize($sac_fname));
 
         // Set the Content-Disposition header
         $index = strpos(strrev($sac_fname), '/');
@@ -350,8 +347,11 @@ class SWORDAPPClient {
             $sac_fname_trimmed = $sac_fname;
         }
         array_push($headers, "Content-Disposition: attachment; filename=" . $sac_fname_trimmed);
-        
-        curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
+
+        curl_setopt($sac_curl, CURLOPT_PUT, 1);
+        curl_setopt($sac_curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
+        curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
         $sac_resp = curl_exec($sac_curl);
@@ -620,16 +620,11 @@ class SWORDAPPClient {
         }
 
         // Set the appropriate method
-        if ($sac_method == "PUT") {
-            curl_setopt($sac_curl, CURLOPT_PUT, true);
-            curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
-            curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
-        } else {
-            curl_setopt($sac_curl, CURLOPT_POST, true);
-            curl_setopt($sac_curl, CURLOPT_READDATA, fopen($sac_fname, 'rb'));
-            array_push($headers, "Content-Length: " . filesize($sac_fname));
-        }
+        curl_setopt($sac_curl, CURLOPT_PUT, 1);
+        if ($sac_method == "POST") curl_setopt($sac_curl, CURLOPT_CUSTOMREQUEST, 'POST');
 
+        curl_setopt($sac_curl, CURLOPT_INFILESIZE, filesize($sac_fname));
+        curl_setopt($sac_curl, CURLOPT_INFILE, fopen($sac_fname, 'rb'));
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
         $sac_resp = curl_exec($sac_curl);
