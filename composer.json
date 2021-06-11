@@ -1,0 +1,8 @@
+{
+    "name": "swordapp/swordappv2-php-library",
+    "description": "SWORD v2 PHP API library ",
+    "license": "BSD-3-Clause-Clear",
+    "require": {
+        "php": ">=5.0"
+    }
+}
