@@ -163,6 +163,10 @@ class SWORDAPPClient {
         array_push($headers, "Content-Length: 0");
         array_push($headers, "In-Progress: false");
 
+        curl_setopt($sac_curl, CURLOPT_POSTFIELDS, array(
+            'file' => '@' .realpath('-')
+        ));
+
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
         $sac_resp = curl_exec($sac_curl);
