@@ -509,6 +509,10 @@ class SWORDAPPClient {
         if(!empty($sac_user) && !empty($sac_password)) {
             curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_user . ":" . $sac_password);
         }
+
+        if(!empty($sac_user) && empty($sac_password)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_user . ": ");
+        }
         
         // Set user-specified curl opts
         foreach ($this->curl_opts as $opt => $val) {
