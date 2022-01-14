@@ -57,7 +57,7 @@
 
                 $cache = base64_decode($b64);
             } else {
-                if (!$eof && $b64{75} == '=') {
+                if (!$eof && $b64[75] == '=') {
                    $cache = $row;
                 } else {
                     $put = $b64."\r\n";
