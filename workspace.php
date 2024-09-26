@@ -1,10 +1,10 @@
 <?php
 
-require_once('saccollection.php');
+use SwordApp\Collection;
 require_once("utils.php");
 
 class Workspace {
-	
+
 	// The title of the workspace
 	public $sac_workspacetitle;
 
@@ -22,12 +22,12 @@ class Workspace {
 		// Build the collections
 		foreach ($sac_colls as $sac_collection) {
 			// Create the new collection object
-			$sac_newcollection = new SacCollection(sac_clean($sac_collection->children($sac_ns['atom'])->title));
+			$sac_newcollection = new Collection(sac_clean($sac_collection->children($sac_ns['atom'])->title));
 
 			// The location of the service document
 			$href = $sac_collection->xpath("@href");
 			$sac_newcollection->sac_href = $href[0]['href'];
-			
+
 			// An array of the accepted deposit types
 		    foreach ($sac_collection->accept as $sac_accept) {
                 if ($sac_accept->attributes()->alternate == 'multipart-related') {
@@ -36,7 +36,7 @@ class Workspace {
                     $sac_newcollection->sac_accept[] = $sac_accept;
                 }
             }
-            
+
 			// An array of the accepted packages
 			$sac_collection->registerXPathNamespace('sword', 'http://purl.org/net/sword/terms/');
             foreach ($sac_collection->xpath("sword:acceptPackaging") as $sac_acceptpackaging) {
@@ -45,7 +45,7 @@ class Workspace {
 
 			// Add the collection policy
 			$sac_newcollection->sac_collpolicy = sac_clean($sac_collection->children($sac_ns['sword'])->collectionPolicy);
-			
+
 			// Add the collection abstract
 			// Check if dcterms is in the known namespaces. If not, might not be an abstract
 			if (array_key_exists('dcterms', $sac_ns)) {
@@ -58,7 +58,7 @@ class Workspace {
 			} else {
 				$sac_newcollection->sac_mediation = false;
 			}
-			
+
 			// Add a nested service document if there is one
 			$sac_newcollection->sac_service = sac_clean($sac_collection->children($sac_ns['sword'])->service);
 
