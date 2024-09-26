@@ -29,17 +29,17 @@ class Workspace {
 			$sac_newcollection->sac_href = $href[0]['href'];
 
 			// An array of the accepted deposit types
-		    foreach ($sac_collection->accept as $sac_accept) {
-                if ($sac_accept->attributes()->alternate == 'multipart-related') {
-                    $sac_newcollection->sac_acceptalternative[] = $sac_accept;
-                } else {
-                    $sac_newcollection->sac_accept[] = $sac_accept;
-                }
-            }
+			foreach ($sac_collection->accept as $sac_accept) {
+				if ($sac_accept->attributes()->alternate == 'multipart-related') {
+					$sac_newcollection->sac_acceptalternative[] = $sac_accept;
+				} else {
+					$sac_newcollection->sac_accept[] = $sac_accept;
+				}
+			}
 
 			// An array of the accepted packages
 			$sac_collection->registerXPathNamespace('sword', 'http://purl.org/net/sword/terms/');
-            foreach ($sac_collection->xpath("sword:acceptPackaging") as $sac_acceptpackaging) {
+			foreach ($sac_collection->xpath("sword:acceptPackaging") as $sac_acceptpackaging) {
 				$sac_newcollection->addAcceptPackaging($sac_acceptpackaging[0]);
 			}
 

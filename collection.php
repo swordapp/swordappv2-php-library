@@ -3,7 +3,7 @@ namespace SwordApp;
 require_once("utils.php");
 
 class Collection {
-	
+
 	// The title of the collection
 	public $sac_colltitle;
 
@@ -38,8 +38,8 @@ class Collection {
 
 		// Create the accepts arrays
 		$sac_accept = array();
-        $sac_acceptalternative = array();
-        $sac_acceptpackaging = array();
+		$sac_acceptalternative = array();
+		$sac_acceptpackaging = array();
 	}
 
 	// Add a new supported packaging type
