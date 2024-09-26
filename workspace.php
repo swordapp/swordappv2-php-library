@@ -1,6 +1,6 @@
 <?php
 
-require_once('collection.php');
+require_once('saccollection.php');
 require_once("utils.php");
 
 class Workspace {
@@ -22,8 +22,8 @@ class Workspace {
 		// Build the collections
 		foreach ($sac_colls as $sac_collection) {
 			// Create the new collection object
-			$sac_newcollection = new Collection(sac_clean($sac_collection->children($sac_ns['atom'])->title));
-			
+			$sac_newcollection = new SacCollection(sac_clean($sac_collection->children($sac_ns['atom'])->title));
+
 			// The location of the service document
 			$href = $sac_collection->xpath("@href");
 			$sac_newcollection->sac_href = $href[0]['href'];
