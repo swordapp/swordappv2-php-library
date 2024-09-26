@@ -3,7 +3,7 @@ namespace SwordApp;
 require_once("utils.php");
 
 class Collection {
-
+	
 	// The title of the collection
 	public $sac_colltitle;
 
