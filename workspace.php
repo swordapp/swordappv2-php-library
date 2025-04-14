@@ -1,6 +1,6 @@
 <?php
 
-use SwordApp\Collection;
+require_once("collection.php");
 require_once("utils.php");
 
 class Workspace {
