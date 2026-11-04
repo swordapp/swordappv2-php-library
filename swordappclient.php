@@ -14,8 +14,8 @@ class SWORDAPPClient {
     private $debug = false;
     private $curl_opts = array();
     
-    function SWORDAPPClient($curl_opts = array()) {
-      $this->curl_opts = $curl_opts;
+    function __construct($curl_opts = array()) {
+        $this->curl_opts = $curl_opts;
     }
     
     // Request a Service Document from the specified url, with the specified credentials,
