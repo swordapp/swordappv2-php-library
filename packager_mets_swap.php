@@ -35,6 +35,9 @@ class PackagerMetsSwap {
     // Identifier
     public $sac_identifier;
 
+    // Identifiers
+    public $sac_identifiers;
+
     // Date made available
     public $sac_dateavailable;
 
@@ -84,6 +87,7 @@ class PackagerMetsSwap {
         $this->sac_mimetypes = array();
         $this->sac_provenances = array();
         $this->sac_rights = array();
+        $this->sac_identifiers = array();
         $this->sac_filecount = 0;
     }
 
@@ -117,6 +121,10 @@ class PackagerMetsSwap {
 
     function setIdentifier($sac_theidentifier) {
         $this->sac_identifier = $sac_theidentifier;
+    }
+
+    function addIdentifier($sac_theidentifier) {
+        array_push($this->sac_identifiers, $sac_theidentifier);
     }
     
     function setStatusStatement($sac_thestatus) {
@@ -270,6 +278,12 @@ class PackagerMetsSwap {
             $this->statement($fh,
                              "http://purl.org/dc/elements/1.1/identifier", 
                              $this->valueString($this->sac_identifier));
+        }
+
+        foreach ($this->sac_identifiers as $sac_identifier) {
+            $this->statement($fh,
+                             "http://purl.org/dc/elements/1.1/identifier",
+                             $this->valueString($sac_identifier));
         }
 
         if (isset($this->sac_publisher)) {
